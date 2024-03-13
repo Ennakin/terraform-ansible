@@ -4,10 +4,30 @@ default:
     entrypoint: [""]
   timeout: 15 minutes
 
+variables:
+  STATE_FILENAME: ${TF_ENV}-${TF_STATE}
+  TF_ADDRESS: "https://gitlab.hr-link.ru/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_FILENAME}"
+  ANSIBLE_HOST_KEY_CHECKING: "False"
+
 stages:
   - format
+  - init
 
 format:
   stage: format
   script:
     - terraform fmt
+
+download_provider:
+  when: manual
+  stage: init
+  script:
+    - terraform -chdir="./environments/${TF_ENV}/${TF_STATE}" init
+      -backend-config=address=${TF_ADDRESS}
+      -backend-config=lock_address=${TF_ADDRESS}/lock
+      -backend-config=unlock_address=${TF_ADDRESS}/lock
+      -backend-config=username=${TF_USERNAME}
+      -backend-config=password=${TF_PASSWORD}
+      -backend-config=lock_method=POST
+      -backend-config=unlock_method=DELETE
+      -backend-config=retry_wait_min=5
