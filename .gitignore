@@ -5,3 +5,21 @@
 *.venv
 
 *.log
+
+.terraform/
+
+creds.tfvars
+
+cloud-config
+
+*.lock
+*.info
+
+# *.hcl
+
+*.tfstate
+*.backup
+
+inventory
+inventory-*
+inventory_*
