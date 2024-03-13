@@ -1,8 +1,8 @@
-default:
-  image:
-    name: hashicorp/terraform
-    entrypoint: [""]
-  timeout: 15 minutes
+# default:
+#   image:
+#     name: hashicorp/terraform
+#     entrypoint: [""]
+#   timeout: 15 minutes
 
 stages:
   - format
@@ -10,4 +10,5 @@ stages:
 format:
   stage: format
   script:
-    - terraform fmt
+    - echo test
+    #- terraform fmt
