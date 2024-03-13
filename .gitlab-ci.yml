@@ -10,5 +10,5 @@ stages:
 format:
   stage: format
   script:
-    - echo test
+  - echo test
     #- terraform fmt
