@@ -27,6 +27,8 @@ format:
     - if: $TF_ENV && $TF_STATE
       when: always
   script:
+    - pwd
+    - whoami
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   cache: []
 
