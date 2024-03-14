@@ -14,20 +14,11 @@ variables:
   TF_ADDRESS: "https://gitlab.hr-link.ru/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_FILENAME}"
   ANSIBLE_HOST_KEY_CHECKING: "False"
 
-# script_check_variable: &script_check_variable |
-#   if [ -z "${TF_ENV}" ]; then
-#     echo "TF_ENV is required!";
-#   elif [ -z "{TF_STATE}" ]; then
-#     echo "TF_STATE is required!";
-#   else
-#     echo "TF_ENV is ${TF_ENV}";
-#     echo "TF_STATE is ${TF_ENV}";
-#   fi
-
 stages:
   - format
   - init
   - plan
+  - apply
 
 format:
   stage: format
@@ -64,5 +55,15 @@ plan:
       when: always
   script:
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
+  artifacts:
+    name: "${CI_JOB_NAME}-${CI_JOB_ID}"
+
+apply_configuration: 
+  stage: apply
+  rules:
+    - if: $TF_ENV && $TF_STATE
+      when: always
+  script:
+    - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
