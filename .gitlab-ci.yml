@@ -29,6 +29,7 @@ format:
   script:
     - pwd
     - whoami
+    - ls -al
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   cache: []
 
