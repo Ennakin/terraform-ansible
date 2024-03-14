@@ -22,7 +22,7 @@ download_provider:
   when: manual
   stage: init
   script:
-    - terraform -chdir="./environments/${TF_ENV}/${TF_STATE}" init
+    - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
       -backend-config=address=${TF_ADDRESS}
       -backend-config=lock_address=${TF_ADDRESS}/lock
       -backend-config=unlock_address=${TF_ADDRESS}/lock
