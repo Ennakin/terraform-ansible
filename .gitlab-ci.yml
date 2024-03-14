@@ -3,6 +3,11 @@ default:
     name: hashicorp/terraform
     entrypoint: [""]
   timeout: 15 minutes
+  cache:
+    - key: $CI_PIPELINE_ID-terraform-cache
+      paths:
+        - ./terraform/environments/${TF_ENV}/${TF_STATE}/.terraform/
+        - ./terraform/environments/${TF_ENV}/${TF_STATE}/.terraform.lock.hcl
 
 variables:
   STATE_FILENAME: ${TF_ENV}-${TF_STATE}
@@ -19,6 +24,7 @@ format:
   stage: format
   script:
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
+  cache: []
 
 download_provider:
 #   when: manual
@@ -42,3 +48,5 @@ plan:
   stage: plan
   script:
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
+  artifacts:
+    name: "${CI_JOB_NAME}-${CI_JOB_ID}"
