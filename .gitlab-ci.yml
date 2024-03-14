@@ -32,6 +32,7 @@ format:
     - ls -al
     - ls -al /root
     - ls /root/all.env >/dev/null && source /root/all.env
+    - ls /root/test.env >/dev/null && source /root/test.env
     - echo $TF_VAR_network_name
     - echo $TEST
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
@@ -64,7 +65,7 @@ plan:
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
 
-apply_configuration: 
+apply_configuration:
   stage: apply
   rules:
     - if: $TF_ENV && $TF_STATE
@@ -74,7 +75,7 @@ apply_configuration:
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
 
-destroy: 
+destroy:
   stage: destroy
   rules:
     - if: $TF_ENV && $TF_STATE
