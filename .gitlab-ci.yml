@@ -37,7 +37,7 @@ format:
     - echo "TF_STATE is ${TF_STATE}"
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   rules:
-    - if: ${TF_ENV} && ${TF_STATE}
+    - if: $TF_ENV && $TF_STATE
       #when: always
   cache: []
 
