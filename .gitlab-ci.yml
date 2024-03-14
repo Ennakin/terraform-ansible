@@ -10,14 +10,9 @@ variables:
   ANSIBLE_HOST_KEY_CHECKING: "False"
 
 stages:
-#   - mirror
   - format
   - init
-
-# copy_terraform_rc:
-#   stage: mirror
-#   script:
-#     - cp ./terraform/.terraformrc ~/.terraformrc
+  - plan
 
 format:
   when: manual
@@ -41,3 +36,9 @@ download_provider:
       -backend-config=lock_method=POST
       -backend-config=unlock_method=DELETE
       -backend-config=retry_wait_min=5
+
+plan:
+  when: manual
+  stage: plan
+  script:
+    - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
