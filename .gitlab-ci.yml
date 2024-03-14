@@ -30,6 +30,7 @@ format:
     - pwd
     - whoami
     - ls -al
+    - ls -al /
     - echo "TEST is ${TEST}"
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   cache: []
