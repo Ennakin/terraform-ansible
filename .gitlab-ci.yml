@@ -10,13 +10,19 @@ variables:
   ANSIBLE_HOST_KEY_CHECKING: "False"
 
 stages:
+  - mirror
   - format
   - init
+
+copy_terraform_rc:
+  stage: mirror
+  script:
+    - /bin/bash cp ./terraform/.terraformrc ~/.terraformrc
 
 format:
   stage: format
   script:
-    - terraform fmt
+    - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" terraform fmt
 
 download_provider:
   when: manual
