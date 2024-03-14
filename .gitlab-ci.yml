@@ -31,7 +31,9 @@ format:
     - whoami
     - ls -al
     - ls -al /root
-    - source /root/all.env && echo $TF_VAR_network_name
+    - ls /root/all.env >/dev/null && source /root/all.env
+    - echo $TF_VAR_network_name
+    - echo $TEST
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   cache: []
 
