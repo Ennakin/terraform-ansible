@@ -15,13 +15,13 @@ stages:
   - plan
 
 format:
-  when: manual
+#   when: manual
   stage: format
   script:
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
 
 download_provider:
-  when: manual
+#   when: manual
   stage: init
   script:
     - cp ./terraform/.terraformrc ~/.terraformrc
@@ -38,7 +38,7 @@ download_provider:
       -backend-config=retry_wait_min=5
 
 plan:
-  when: manual
+#   when: manual
   stage: plan
   script:
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
