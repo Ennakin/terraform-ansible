@@ -19,6 +19,7 @@ stages:
   - init
   - plan
   - apply
+  - destroy
 
 format:
   stage: format
@@ -36,8 +37,6 @@ download_provider:
       when: always
   script:
     - cp ./terraform/.terraformrc ~/.terraformrc
-    - ls -al ~/
-    - cat ~/.terraformrc
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
       -backend-config=address=${TF_ADDRESS}
       -backend-config=lock_address=${TF_ADDRESS}/lock
@@ -65,5 +64,15 @@ apply_configuration:
       when: always
   script:
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve
+  artifacts:
+    name: "${CI_JOB_NAME}-${CI_JOB_ID}"
+
+destroy: 
+  stage: destroy
+  rules:
+    - if: $TF_ENV && $TF_STATE && $DESTROY
+      when: manual
+  script:
+    - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
