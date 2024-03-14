@@ -2,9 +2,6 @@ default:
   image:
     name: hashicorp/terraform
     entrypoint: [""]
-  rules:
-    - if: $TF_ENV && $TF_STATE
-      when: always
   timeout: 15 minutes
   cache:
     - key: $CI_PIPELINE_ID-terraform-cache
@@ -34,12 +31,18 @@ stages:
 
 format:
   stage: format
+  rules:
+    - if: $TF_ENV && $TF_STATE
+      when: always
   script:
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   cache: []
 
 download_provider:
   stage: init
+  rules:
+    - if: $TF_ENV && $TF_STATE
+      when: always
   script:
     - cp ./terraform/.terraformrc ~/.terraformrc
     - ls -al ~/
@@ -56,6 +59,9 @@ download_provider:
 
 plan:
   stage: plan
+  rules:
+    - if: $TF_ENV && $TF_STATE
+      when: always
   script:
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
   artifacts:
