@@ -27,12 +27,6 @@ format:
     - if: $TF_ENV && $TF_STATE
       when: always
   script:
-    - pwd
-    - whoami
-    - ls -al
-    - ls -al /root/envs/prod/
-    - ls /root/envs/prod/all.env >/dev/null && source /root/envs/prod/all.env
-    - ls /root/envs/prod/$TF_ENV.env >/dev/null && source /root/envs/prod/$TF_ENV.env
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   cache: []
 
@@ -59,6 +53,12 @@ plan:
     - if: $TF_ENV && $TF_STATE
       when: always
   script:
+    - pwd
+    - whoami
+    - ls -al
+    - ls -al /root/envs/prod/
+    - ls /root/envs/prod/all.env >/dev/null && source /root/envs/prod/all.env
+    - ls /root/envs/prod/$TF_ENV.env >/dev/null && source /root/envs/prod/$TF_ENV.env
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
@@ -69,6 +69,12 @@ apply_configuration:
     - if: $TF_ENV && $TF_STATE
       when: always
   script:
+    - pwd
+    - whoami
+    - ls -al
+    - ls -al /root/envs/prod/
+    - ls /root/envs/prod/all.env >/dev/null && source /root/envs/prod/all.env
+    - ls /root/envs/prod/$TF_ENV.env >/dev/null && source /root/envs/prod/$TF_ENV.env
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
@@ -79,6 +85,12 @@ destroy:
     - if: $TF_ENV && $TF_STATE
       when: manual
   script:
+    - pwd
+    - whoami
+    - ls -al
+    - ls -al /root/envs/prod/
+    - ls /root/envs/prod/all.env >/dev/null && source /root/envs/prod/all.env
+    - ls /root/envs/prod/$TF_ENV.env >/dev/null && source /root/envs/prod/$TF_ENV.env
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
