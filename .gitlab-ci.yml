@@ -70,7 +70,7 @@ apply_configuration:
 destroy: 
   stage: destroy
   rules:
-    - if: $TF_ENV && $TF_STATE && $DESTROY
+    - if: $TF_ENV && $TF_STATE
       when: manual
   script:
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
