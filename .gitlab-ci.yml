@@ -17,7 +17,7 @@ stages:
 copy_terraform_rc:
   stage: mirror
   script:
-    - /bin/bash cp ./terraform/.terraformrc ~/.terraformrc
+    - cp ./terraform/.terraformrc ~/.terraformrc
 
 format:
   stage: format
