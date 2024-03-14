@@ -10,14 +10,14 @@ variables:
   ANSIBLE_HOST_KEY_CHECKING: "False"
 
 stages:
-  - mirror
+#   - mirror
   - format
   - init
 
-copy_terraform_rc:
-  stage: mirror
-  script:
-    - cp ./terraform/.terraformrc ~/.terraformrc
+# copy_terraform_rc:
+#   stage: mirror
+#   script:
+#     - cp ./terraform/.terraformrc ~/.terraformrc
 
 format:
   when: manual
@@ -29,6 +29,9 @@ download_provider:
   when: manual
   stage: init
   script:
+    - cp ./terraform/.terraformrc ~/.terraformrc
+    - ls -al ~/
+    - cat ~/.terraformrc
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
       -backend-config=address=${TF_ADDRESS}
       -backend-config=lock_address=${TF_ADDRESS}/lock
