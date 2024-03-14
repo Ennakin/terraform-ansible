@@ -30,7 +30,6 @@ stages:
   - plan
 
 format:
-#   when: manual
   stage: format
   script:
     - echo "TF_ENV is ${TF_ENV}"
@@ -38,11 +37,10 @@ format:
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   rules:
     - if: $TF_ENV && $TF_STATE
-      #when: always
+      when: always
   cache: []
 
 download_provider:
-#   when: manual
   stage: init
   script:
     - cp ./terraform/.terraformrc ~/.terraformrc
@@ -57,17 +55,16 @@ download_provider:
       -backend-config=lock_method=POST
       -backend-config=unlock_method=DELETE
       -backend-config=retry_wait_min=5
-#   rules:
-#     - if: ${TF_ENV} != null && ${TF_ENV} != "" && ${TF_STATE} != null && ${TF_STATE} != ""
-#       when: always
+  rules:
+    - if: $TF_ENV && $TF_STATE
+      when: always
 
 plan:
-#   when: manual
   stage: plan
   script:
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
-#   rules:
-#     - if: ${TF_ENV} != null && ${TF_ENV} != "" && ${TF_STATE} != null && ${TF_STATE} != ""
-#       when: always
+  rules:
+    - if: $TF_ENV && $TF_STATE
+      when: always
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
