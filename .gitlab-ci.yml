@@ -20,9 +20,10 @@ copy_terraform_rc:
     - cp ./terraform/.terraformrc ~/.terraformrc
 
 format:
+  when: manual
   stage: format
   script:
-    - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" terraform fmt
+    - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
 
 download_provider:
   when: manual
