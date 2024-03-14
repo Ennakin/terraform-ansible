@@ -36,9 +36,9 @@ format:
     - echo "TF_ENV is ${TF_ENV}"
     - echo "TF_STATE is ${TF_STATE}"
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
-  #rules:
-  #  - if: ${TF_ENV} != "" && ${TF_STATE} != ""
-  #    when: always
+  rules:
+    - if: ${TF_ENV} && ${TF_STATE}
+      #when: always
   cache: []
 
 download_provider:
