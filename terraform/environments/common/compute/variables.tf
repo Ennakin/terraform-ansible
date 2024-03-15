@@ -28,6 +28,10 @@ variable "boot_disk_size" {
 variable "filesystem_name" {}
 variable "filesystem_device_name" {}
 
+variable "cloud_config_file_path" {
+  description = "PATH to cloud-config file"
+}
+
 variable "vm_hosts_result_file_path" {
   description = "PATH to inventory result file"
 }

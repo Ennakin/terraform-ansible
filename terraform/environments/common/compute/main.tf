@@ -38,7 +38,7 @@ module "vm-reverse-nginx" {
   ram                = var.ram
   boot_disk_image_id = var.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file("../../../configs/cloud-config")
+  cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id          = data.yandex_vpc_subnet.subnetwork.id
   filesystem_id          = data.yandex_compute_filesystem.fs.id
