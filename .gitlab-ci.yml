@@ -17,8 +17,11 @@ variables:
 stages:
   - format
   - init
+  - validate
+  - security-scan
   - plan
   - apply
+  - configure
   - destroy
 
 format:
@@ -29,6 +32,7 @@ format:
   script:
     - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
   cache: []
+  allow_failure: true
 
 download_provider:
   stage: init
@@ -47,6 +51,27 @@ download_provider:
       -backend-config=unlock_method=DELETE
       -backend-config=retry_wait_min=5
 
+validate:
+  stage: validate
+  rules:
+    - if: $TF_ENV && $TF_STATE
+      when: always
+  script:
+    - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" validate
+  allow_failure: true
+
+.scan:
+  stage: security-scan
+#   rules:
+#     - if: $TF_ENV && $TF_STATE
+#       when: always
+  image: 
+    name: aquasec/tfsec-ci
+    entrypoint: [""]
+  script:
+    - tfsec . # путь к запускаемому проекту?..
+  allow_failure: true
+
 plan:
   stage: plan
   rules:
@@ -60,8 +85,10 @@ plan:
     - ls /root/envs/prod/all.env >/dev/null && source /root/envs/prod/all.env
     - ls /root/envs/prod/$TF_ENV.env >/dev/null && source /root/envs/prod/$TF_ENV.env
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
-  artifacts:
-    name: "${CI_JOB_NAME}-${CI_JOB_ID}"
+
+#   # TODO сделать артефактом файл с результатом plan, в apply использовать этот артефакт
+#   artifacts:
+#     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
 
 apply_configuration:
   stage: apply
@@ -76,10 +103,27 @@ apply_configuration:
     - ls /root/envs/prod/all.env >/dev/null && source /root/envs/prod/all.env
     - ls /root/envs/prod/$TF_ENV.env >/dev/null && source /root/envs/prod/$TF_ENV.env
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve
+  
+  # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
+    paths:
+      - ./terraform/inventories/inventory-${TF_ENV}
+    expire_in: 1 day
 
-destroy:
+.ansible:
+  image: 
+    name: alpinelinux/ansible
+    entrypoint: [""]
+#   rules:
+#     - if: $TF_ENV && $TF_STATE
+#       when: always
+  stage: configure
+  script:
+    - echo ansible...
+  cache: []
+
+destroy_infra:
   stage: destroy
   rules:
     - if: $TF_ENV && $TF_STATE
@@ -92,5 +136,5 @@ destroy:
     - ls /root/envs/prod/all.env >/dev/null && source /root/envs/prod/all.env
     - ls /root/envs/prod/$TF_ENV.env >/dev/null && source /root/envs/prod/$TF_ENV.env
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
-  artifacts:
-    name: "${CI_JOB_NAME}-${CI_JOB_ID}"
+#   artifacts:
+#     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
