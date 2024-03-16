@@ -20,13 +20,19 @@ variable "nat" {
   default = true
 }
 
-variable "boot_disk_image_id" {}
+variable "boot_disk_image_id" {
+  default = null
+}
 variable "boot_disk_size" {
   default = 15
 }
 
-variable "filesystem_name" {}
-variable "filesystem_device_name" {}
+variable "filesystem_name" {
+  default = null
+}
+variable "filesystem_device_name" {
+  default = null
+}
 
 variable "cloud_config_file_path" {
   description = "PATH to cloud-config file"

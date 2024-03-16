@@ -22,8 +22,9 @@ data "yandex_vpc_subnet" "subnetwork" {
   name = "${var.subnetwork_name}-public"
 }
 
+# sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
 data "yandex_compute_filesystem" "fs" {
-  name = var.filesystem_name
+  name = var.filesystem_name != null ? var.filesystem_name : null
 }
 
 module "vm-reverse-nginx" {
@@ -41,8 +42,8 @@ module "vm-reverse-nginx" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id          = data.yandex_vpc_subnet.subnetwork.id
-  filesystem_id          = data.yandex_compute_filesystem.fs.id
-  filesystem_device_name = var.filesystem_device_name
+  filesystem_id          = var.filesystem_name != null ? data.yandex_compute_filesystem.fs.id : null
+  filesystem_device_name = var.filesystem_name != null ? var.filesystem_device_name : null
 }
 
 # вывод в файл полученных hostname и ip vm-ок

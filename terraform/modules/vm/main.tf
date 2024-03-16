@@ -34,7 +34,7 @@ resource "yandex_compute_instance" "vm" {
     nat       = var.nat
   }
 
-  # sudo mkdir /mnt/$filesystem_device_name && sudo mount -t virtiofs $filesystem_device_name /mnt/$filesystem_device_name
+  # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
   dynamic "filesystem" {
     for_each = var.filesystem_id != null ? [1] : []
     content {

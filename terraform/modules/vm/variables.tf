@@ -35,11 +35,6 @@ variable "boot_disk_size" {
   default     = 15
 }
 
-variable "create_secondary_disk" {
-  description = "Create and mount secondaty disk?"
-  default     = false
-}
-
 variable "secondary_disk_image_id" {
   description = "ID secondary disk image for VM"
   default     = null
@@ -56,10 +51,12 @@ variable "nat" {
 
 variable "filesystem_id" {
   description = "ID filesystem"
+  default     = null
 }
 
 variable "filesystem_device_name" {
   description = "Filesystem device name"
+  default     = null
 }
 
 variable "cloud_config_path" {
