@@ -19,7 +19,7 @@ provider "yandex" {
 }
 
 data "yandex_vpc_subnet" "subnetwork" {
-  name = "${var.subnetwork_name}-public"
+  name = "${var.subnetwork_name}-private"
 }
 
 # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
@@ -28,13 +28,19 @@ data "yandex_compute_filesystem" "fs" {
   name  = var.filesystem_name
 }
 
-module "vm-reverse-nginx" {
+data "yandex_compute_disk" "secondary_disk" {
+  count = var.secondary_disk_name != "" ? var.vm_count : 0
+  name  = var.secondary_disk_name != "" ? "${var.secondary_disk_name}-${count.index}" : ""
+}
+
+module "vm" {
   source = "../../../modules/vm"
 
-  name        = "hrl-reverse-nginx"
-  hostname    = "hrl-reverse-nginx"
+  count       = var.vm_count
+  name        = "${var.vm_name}-${count.index}"
+  hostname    = "${var.vm_name}-${count.index}"
   preemptible = var.preemptible
-  nat         = true
+  nat         = false
 
   cpu                = var.cpu
   ram                = var.ram
@@ -42,7 +48,9 @@ module "vm-reverse-nginx" {
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.cloud_config_file_path)
 
-  subnetwork_id          = data.yandex_vpc_subnet.subnetwork.id
+  subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
+  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk[count.index].id : ""
+
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? var.filesystem_device_name : ""
 }
@@ -52,8 +60,8 @@ resource "local_file" "vm_ips" {
 
   content = templatefile("${path.module}/inventory.tpl",
     {
-      vm_hostnames_reverse = module.vm-reverse-nginx.*.hostname
-      vm_ips_reverse       = module.vm-reverse-nginx.*.public_ip
+      vm_hostnames = module.vm.*.hostname
+      vm_ips       = module.vm.*.internal_ip
     }
   )
 

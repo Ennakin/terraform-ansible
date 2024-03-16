@@ -15,7 +15,8 @@ cloud-config
 *.lock
 *.info
 
-# *.hcl
+# фиксация версии нужна, позже будет закомментировано
+*.hcl
 
 *.tfstate
 *.backup

@@ -17,12 +17,16 @@ variable "preemptible" {
 }
 
 variable "nat" {
-  default = true
+  default = false
 }
 
 variable "boot_disk_image_id" {}
 variable "boot_disk_size" {
   default = 15
+}
+
+variable "secondary_disk_name" {
+  default = ""
 }
 
 variable "filesystem_name" {
@@ -39,3 +43,6 @@ variable "cloud_config_file_path" {
 variable "vm_hosts_result_file_path" {
   description = "PATH to inventory result file"
 }
+
+variable "vm_name" {}
+variable "vm_count" {}
