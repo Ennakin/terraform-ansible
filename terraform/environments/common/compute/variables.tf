@@ -21,17 +21,17 @@ variable "nat" {
 }
 
 variable "boot_disk_image_id" {
-  default = null
+  default = ""
 }
 variable "boot_disk_size" {
   default = 15
 }
 
 variable "filesystem_name" {
-  default = null
+  default = ""
 }
 variable "filesystem_device_name" {
-  default = null
+  default = ""
 }
 
 variable "cloud_config_file_path" {

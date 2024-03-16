@@ -19,7 +19,7 @@ resource "yandex_compute_instance" "vm" {
   }
 
   dynamic "secondary_disk" {
-    for_each = var.secondary_disk_image_id != null ? [1] : []
+    for_each = var.secondary_disk_image_id != "" ? [1] : []
     content {
       disk_id = var.secondary_disk_image_id
     }
@@ -36,7 +36,7 @@ resource "yandex_compute_instance" "vm" {
 
   # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
   dynamic "filesystem" {
-    for_each = var.filesystem_id != null ? [1] : []
+    for_each = var.filesystem_id != "" ? [1] : []
     content {
       filesystem_id = var.filesystem_id
       device_name   = var.filesystem_device_name

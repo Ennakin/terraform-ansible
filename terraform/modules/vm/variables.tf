@@ -37,7 +37,7 @@ variable "boot_disk_size" {
 
 variable "secondary_disk_image_id" {
   description = "ID secondary disk image for VM"
-  default     = null
+  default     = ""
 }
 
 variable "subnetwork_id" {
@@ -51,12 +51,12 @@ variable "nat" {
 
 variable "filesystem_id" {
   description = "ID filesystem"
-  default     = null
+  default     = ""
 }
 
 variable "filesystem_device_name" {
   description = "Filesystem device name"
-  default     = null
+  default     = ""
 }
 
 variable "cloud_config_path" {
