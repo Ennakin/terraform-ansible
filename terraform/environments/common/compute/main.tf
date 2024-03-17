@@ -28,13 +28,32 @@ data "yandex_compute_filesystem" "fs" {
   name  = var.filesystem_name
 }
 
+module "vm-open-vpn" {
+  source = "../../../modules/vm"
+
+  name        = "hrl-open-vpn"
+  hostname    = "hrl-open-vpn"
+  preemptible = var.preemptible
+  nat         = true
+
+  cpu                = var.cpu
+  ram                = var.ram
+  boot_disk_image_id = var.boot_disk_image_id
+  boot_disk_size     = var.boot_disk_size
+  cloud_config_path  = file(var.cloud_config_file_path)
+
+  subnetwork_id          = data.yandex_vpc_subnet.subnetwork.id
+  filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs[0].id : ""
+  filesystem_device_name = var.filesystem_name != "" ? var.filesystem_device_name : ""
+}
+
 module "vm-reverse-nginx" {
   source = "../../../modules/vm"
 
   name        = "hrl-reverse-nginx"
   hostname    = "hrl-reverse-nginx"
   preemptible = var.preemptible
-  nat         = true
+  nat         = false
 
   cpu                = var.cpu
   ram                = var.ram
