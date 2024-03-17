@@ -8,7 +8,7 @@ variable "hostname" {
 
 variable "platform" {
   description = "Platform YCloud"
-  default     = "standard-v1"
+  default     = "standard-v3"
 }
 
 variable "preemptible" {
