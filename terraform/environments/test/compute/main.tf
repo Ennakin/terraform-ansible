@@ -67,4 +67,3 @@ resource "local_file" "vm_ips" {
 
   filename = var.vm_hosts_result_file_path
 }
-
