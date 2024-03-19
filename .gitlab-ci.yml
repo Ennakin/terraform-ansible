@@ -103,6 +103,7 @@ apply_configuration:
     - ls /root/envs/prod/all.env >/dev/null && source /root/envs/prod/all.env
     - ls /root/envs/prod/$TF_ENV.env >/dev/null && source /root/envs/prod/$TF_ENV.env
     - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve
+    - ls -al ./ansible/inventory/$TF_ENV
   
   # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
   artifacts:
