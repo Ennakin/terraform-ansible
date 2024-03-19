@@ -109,7 +109,7 @@ apply_configuration:
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
     paths:
-      - ./ansible/inventory/${TF_ENV}/inventory
+      - ./ansible/inventory/$TF_ENV/inventory
     expire_in: 1 day
 
 ansible:
@@ -120,6 +120,8 @@ ansible:
     - if: $TF_ENV && $TF_STATE
       when: always
   stage: configure
+  dependencies:
+    - apply
   script:
     - eval $(ssh-agent -s)
     - chmod 400 "$SSH_PRIVATE_KEY"
@@ -130,7 +132,7 @@ ansible:
     - ls -al
     - echo "$SSH_PRIVATE_KEY"
     - cat "$SSH_PRIVATE_KEY"
-    - ls -al ./ansible/inventory/$TF_ENV
+    - ls -al ./ansible/inventory/$TF_ENV/
     # - ansible-playbook ./ansible/playbooks/$TF_ENV.yaml
   cache: []
 
