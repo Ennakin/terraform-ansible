@@ -1,0 +1,5 @@
+- name: standart server playbook
+  hosts: staging
+  become: true
+  roles:
+    - configure-server

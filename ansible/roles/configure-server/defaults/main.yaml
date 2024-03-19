@@ -1,0 +1,9 @@
+app_list:
+    - htop
+    - vim
+    - nano
+    - screen
+    - curl
+    - jq
+    - mc
+    - unzip
