@@ -121,7 +121,7 @@ ansible:
       when: always
   stage: configure
   dependencies:
-    - apply
+    - apply_configuration
   script:
     - eval $(ssh-agent -s)
     - chmod 400 "$SSH_PRIVATE_KEY"
