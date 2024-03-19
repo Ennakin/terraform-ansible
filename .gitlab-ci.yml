@@ -125,7 +125,7 @@ ansible:
   script:
     - eval $(ssh-agent -s)
     - chmod 400 "$SSH_PRIVATE_KEY"
-    # - ssh-add "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - pwd
@@ -133,7 +133,7 @@ ansible:
     - echo "$SSH_PRIVATE_KEY"
     - cat "$SSH_PRIVATE_KEY"
     - ls -al ./ansible/inventory/$TF_ENV/
-    # - ansible-playbook ./ansible/playbooks/$TF_ENV.yaml
+    - ansible-playbook ./ansible/playbooks/$TF_ENV.yaml
   cache: []
 
 destroy_infra:
