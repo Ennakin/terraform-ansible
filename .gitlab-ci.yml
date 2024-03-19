@@ -123,6 +123,10 @@ ansible:
     - eval $(ssh-agent -s)
     - chmod 400 "$SSH_PRIVATE_KEY"
     - ssh-add "$SSH_PRIVATE_KEY"
+    - pwd
+    - ls -al
+    - echo "$SSH_PRIVATE_KEY"
+    - cat "$SSH_PRIVATE_KEY"
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ansible-playbook ./ansible/playbooks/$TF_ENV.yaml
