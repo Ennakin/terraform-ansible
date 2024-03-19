@@ -130,8 +130,6 @@ ansible:
     - chmod 700 ~/.ssh
     - pwd
     - ls -al
-    - echo "$SSH_PRIVATE_KEY"
-    - cat "$SSH_PRIVATE_KEY"
     - ls -al ./ansible/inventory/$TF_ENV/
     - ansible-playbook ./ansible/playbooks/$TF_ENV.yaml
   cache: []
