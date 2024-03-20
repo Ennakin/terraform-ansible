@@ -50,9 +50,8 @@ download_provider:
     script:
         - cat $CLOUD_CONFIG
         - realpath $CLOUD_CONFIG
-        - cat $ALL
-        - echo $TF_ENV
-        - echo ${TF_ENV^^}
+        - cat $all_env
+        - echo ${TF_ENV}_env
         #- ls $ALL >/dev/null && source $ALL
         #- ls ${TF_ENV^^} >/dev/null && source ${TF_ENV^^}
         - cp ./terraform/.terraformrc ~/.terraformrc
