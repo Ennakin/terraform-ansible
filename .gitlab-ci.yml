@@ -57,6 +57,7 @@ download_provider:
         - env_name="${TF_ENV}_env"
         - value_of_env=$(eval "echo \$$env_name")
         - echo $value_of_env
+        - cat $value_of_env
         #- ls $ALL >/dev/null && source $ALL
         #- ls ${TF_ENV^^} >/dev/null && source ${TF_ENV^^}
         - cp ./terraform/.terraformrc ~/.terraformrc
