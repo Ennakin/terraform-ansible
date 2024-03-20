@@ -49,7 +49,7 @@ download_provider:
           when: always
     script:
         - cat $CLOUD_CONFIG
-        - realtpath $CLOUD_CONFIG
+        - realpath $CLOUD_CONFIG
         - cat $ALL
         - echo $TF_ENV
         - echo ${TF_ENV^^}
