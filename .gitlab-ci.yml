@@ -51,6 +51,7 @@ download_provider:
         - cat $CLOUD_CONFIG
         - realpath $CLOUD_CONFIG
         - cat $all_env
+        - cat $common_env
         - echo ${TF_ENV}_env
         # - cat ${TF_ENV}_env
         - export env_name=${TF_ENV}_env
