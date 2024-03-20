@@ -71,9 +71,13 @@ resource "local_file" "vm_ips" {
 
   content = templatefile("${path.module}/inventory.tpl",
     {
-      vm_hostnames_reverse = module.vm-reverse-nginx.*.hostname
-      vm_ips_reverse       = module.vm-reverse-nginx.*.public_ip
-    }
+      vm_hostnames_open_vpn = module.vm-open-vpn.*.hostname
+      vm_ips_open_vpn       = module.vm-open-vpn.*.public_ip
+    },
+    # {
+    #   vm_hostnames_reverse = module.vm-reverse-nginx.*.hostname
+    #   vm_ips_reverse       = module.vm-reverse-nginx.*.public_ip
+    # }
   )
 
   filename = var.vm_hosts_result_file_path

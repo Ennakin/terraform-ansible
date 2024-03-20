@@ -120,7 +120,7 @@ apply_configuration:
             - ./ansible/inventory/$TF_ENV/inventory
         expire_in: 1 day
 
-.ansible:
+ansible:
     image:
         name: alpinelinux/ansible
         entrypoint: [""]
@@ -142,7 +142,7 @@ apply_configuration:
         - ansible-playbook ./ansible/playbooks/$TF_ENV.yaml
     cache: []
 
-.destroy_infra:
+destroy_infra:
     stage: destroy
     rules:
         - if: $TF_ENV && $TF_STATE

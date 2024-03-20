@@ -1,5 +1,34 @@
-- name: standart server playbook
-  hosts: common
+---
+# - name: study-ansible playbook
+
+  # хосты на которых нужно запускаться, указывается группа
+- hosts: group-one
+ # позволяет запускать task-и playbook-а с sudo правами, если запуск производится не под root
   become: true
+ 
+ # роли, названия соответствуют названиям директорий в roles/
   roles:
-    - configure-server
+   configure-server
+  #  - check-file
+#  # переменная используется в task-ах роли check-file
+#   vars:
+#     file: "/etc/nginx/nginx.conf"
+
+
+# ---
+# - hosts: all
+#   become: yes
+#   remote_user: ec2-user
+#   tasks:
+#     - name: install httpd
+#       yum: 
+#         name: httpd
+#         state: latest
+#     - name: start httpd
+#       service:
+#         name: httpd
+#         state: started
+#     - name: copy custom index.html file
+#       copy: 
+#         src: ./index.html
+#         dest: /var/www/html/index.html
