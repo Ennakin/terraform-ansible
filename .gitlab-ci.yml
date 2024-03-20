@@ -16,11 +16,12 @@ variables:
 
 #   # предполагается что в самом gitlab-е КАК ФАЙЛ определены переменные ALL & COMMON & TEST & STAGING
 #   # внутри этих файлов должны быть записаны собственно переменные окружения необходимые проекту
-#   CLOUD_CONFIG
-#   ALL
-#   COMMON
-#   TEST
-#   STAGING
+#   all_env
+#   common_env
+#   test_env
+#   staging_env
+#   cloud_config
+#   ssh_private_key
 
 stages:
     - format
@@ -135,9 +136,7 @@ ansible:
         - ssh-add "$ssh_private_key"
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh
-        - cd ./ansible
-        - ansible-playbook ./playbooks/$TF_ENV.yaml
-        - cd -
+        - cd ./ansible && ansible-playbook ./playbooks/$TF_ENV.yaml && cd -
     cache: []
 
 destroy_infra:
