@@ -137,18 +137,10 @@ ansible:
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh
         - cd ./ansible
-        - pwd
-        - ls -al
-        - chmod 664 ansible.cfg 
-        - ls -al
-        - cat ansible.cfg
-        - ls -al playbooks/
-        - ls -al roles/
-        - ls -al inventory/
-        - ls -al inventory/$TF_ENV
         - ansible-config view
+        - ansible-doc -l | grep authorized_key
         - ansible-playbook ./playbooks/$TF_ENV.yaml
-        # - cd ./ansible && pwd && ansible-playbook ./playbooks/$TF_ENV.yaml && cd -
+        - cd -
     cache: []
 
 .destroy_infra:
