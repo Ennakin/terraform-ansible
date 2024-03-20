@@ -23,6 +23,9 @@ variables:
 #   cloud_config
 #   ssh_private_key
 
+#   # в этой переменной должен быть записан абсолютный путь до ansible.cfg, иначе ansible внутри контейнера игнорирует конфиг
+#   ANSIBLE_CONFIG
+
 stages:
     - format
     - init
