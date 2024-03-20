@@ -139,7 +139,7 @@ ansible:
         - cd ./ansible
         - pwd
         - ls -al
-        - chmod 664
+        - chmod 664 ansible.cfg 
         - ls -al
         - cat ansible.cfg
         - ls -al playbooks/
