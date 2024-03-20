@@ -111,7 +111,6 @@ apply_configuration:
         - ls $all_env >/dev/null && source $all_env
         - ls $env_file >/dev/null && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve
-        - ls -al ./ansible/inventory/$TF_ENV
 
     # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
     artifacts:
@@ -136,11 +135,8 @@ ansible:
         - ssh-add "$ssh_private_key"
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh
-        - pwd
-        - ls -al
-        - ls -al ./ansible/inventory/$TF_ENV/
         - cd ./ansible
-        - ansible-playbook ./playbooks/$TF_ENV.yaml &&
+        - ansible-playbook ./playbooks/$TF_ENV.yaml
         - cd -
     cache: []
 
