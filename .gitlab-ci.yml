@@ -43,7 +43,7 @@ stages:
     cache: []
     allow_failure: true
 
-download_provider:
+.download_provider:
     stage: init
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -64,7 +64,7 @@ download_provider:
           -backend-config=unlock_method=DELETE
           -backend-config=retry_wait_min=5
 
-validate:
+.validate:
     stage: validate
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -85,7 +85,7 @@ validate:
         - tfsec . # путь к запускаемому проекту?..
     allow_failure: true
 
-plan:
+.plan:
     stage: plan
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -101,7 +101,7 @@ plan:
 #   artifacts:
 #     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
 
-apply_configuration:
+.apply_configuration:
     stage: apply
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -139,7 +139,7 @@ ansible:
         - cd ./ansible && pwd && ansible-playbook ./playbooks/$TF_ENV.yaml && cd -
     cache: []
 
-destroy_infra:
+.destroy_infra:
     stage: destroy
     rules:
         - if: $TF_ENV && $TF_STATE
