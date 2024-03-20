@@ -141,6 +141,7 @@ ansible:
         - chmod 700 ~/.ssh
         - cd ./ansible
         - ansible-config view
+        - ansible-galaxy collection install ansible.posix
         - ansible-doc -l | grep authorized_key
         - ansible-playbook ./playbooks/$TF_ENV.yaml
         - cd -
