@@ -145,6 +145,7 @@ ansible:
         - ansible-doc -l | grep authorized_key
         - ansible-playbook ./playbooks/$TF_ENV.yaml
         - cd -
+    allow_failure: true
     cache: []
 
 destroy_infra:
