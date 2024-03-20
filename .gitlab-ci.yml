@@ -144,6 +144,7 @@ ansible:
         - ls -al roles/
         - ls -al inventory/
         - ls -al inventory/$TF_ENV
+        - ansible-config view
         - ansible-playbook ./playbooks/$TF_ENV.yaml
         # - cd ./ansible && pwd && ansible-playbook ./playbooks/$TF_ENV.yaml && cd -
     cache: []
