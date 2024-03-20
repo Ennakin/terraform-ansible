@@ -139,7 +139,9 @@ ansible:
         - pwd
         - ls -al
         - ls -al ./ansible/inventory/$TF_ENV/
-        - ansible-playbook ./ansible/playbooks/$TF_ENV.yaml
+        - cd ./ansible
+        - ansible-playbook ./playbooks/$TF_ENV.yaml &&
+        - cd -
     cache: []
 
 destroy_infra:
