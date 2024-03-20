@@ -136,7 +136,7 @@ ansible:
         - ssh-add "$ssh_private_key"
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh
-        - ansible-playbook ./ansible/playbooks/$TF_ENV.yaml
+        - ansible-playbook ansible/playbooks/$TF_ENV.yaml
         # - cd ./ansible && pwd && ansible-playbook ./playbooks/$TF_ENV.yaml && cd -
     cache: []
 
