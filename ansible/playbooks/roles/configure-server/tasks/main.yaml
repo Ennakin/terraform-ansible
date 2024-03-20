@@ -1,7 +1,0 @@
-- import_tasks: install-packages-ubuntu.yaml
-  when: ansible_facts['distribution'] in ubuntu_list
-
-- import_tasks: install-docker.yaml
-  when: ansible_facts['distribution'] in ubuntu_list
-
-- import_tasks: add-pubkeys.yaml
