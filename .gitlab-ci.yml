@@ -23,6 +23,11 @@ variables:
 #   cloud_config
 #   ssh_private_key
 
+#   TF_USERNAME
+#   TF_PASSWORD
+
+#   SSH_USER
+
 #   # в этой переменной должен быть записан абсолютный путь до ansible.cfg, иначе ansible внутри контейнера игнорирует конфиг
 #   ANSIBLE_CONFIG
 
@@ -143,7 +148,7 @@ ansible:
         - ansible-config view
         - ansible-galaxy collection install ansible.posix
         - ansible-doc -l | grep authorized_key
-        - ansible-playbook ./playbooks/$TF_ENV.yaml
+        - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
         - cd -
     allow_failure: true
     cache: []
