@@ -16,12 +16,12 @@ variables:
 
 #   # предполагается что в самом gitlab-е КАК ФАЙЛ определены переменные ALL & COMMON & TEST & STAGING
 #   # внутри этих файлов должны быть записаны собственно переменные окружения необходимые проекту
-#   all_env
-#   common_env
-#   test_env
-#   staging_env
 #   cloud_config
 #   ssh_private_key
+#   env_all
+#   env_common
+#   env_test
+#   env_staging
 
 #   TF_USERNAME
 #   TF_PASSWORD
@@ -59,7 +59,7 @@ download_provider:
     script:
         - env_name="${TF_ENV}_env"
         - env_file=$(eval "echo \$$env_name")
-        - ls $all_env >/dev/null && source $all_env
+        - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
         - cp ./terraform/.terraformrc ~/.terraformrc
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
@@ -101,7 +101,7 @@ plan:
     script:
         - env_name="${TF_ENV}_env"
         - env_file=$(eval "echo \$$env_name")
-        - ls $all_env >/dev/null && source $all_env
+        - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
 
@@ -117,7 +117,7 @@ apply_configuration:
     script:
         - env_name="${TF_ENV}_env"
         - env_file=$(eval "echo \$$env_name")
-        - ls $all_env >/dev/null && source $all_env
+        - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve
 
@@ -147,7 +147,6 @@ ansible:
         - cd ./ansible
         - ansible-config view
         - ansible-galaxy collection install ansible.posix
-        - ansible-doc -l | grep authorized_key
         - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
         - cd -
     allow_failure: true
@@ -161,6 +160,6 @@ destroy_infra:
     script:
         - env_name="${TF_ENV}_env"
         - env_file=$(eval "echo \$$env_name")
-        - ls $all_env >/dev/null && source $all_env
+        - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
