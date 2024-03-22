@@ -57,7 +57,7 @@ download_provider:
         - if: $TF_ENV && $TF_STATE
           when: always
     script:
-        - env_name="${TF_ENV}_env"
+        - env_name="$env_{TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
         - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
@@ -99,7 +99,7 @@ plan:
         - if: $TF_ENV && $TF_STATE
           when: always
     script:
-        - env_name="${TF_ENV}_env"
+        - env_name="$env_{TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
         - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
@@ -115,7 +115,7 @@ apply_configuration:
         - if: $TF_ENV && $TF_STATE
           when: always
     script:
-        - env_name="${TF_ENV}_env"
+        - env_name="$env_{TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
         - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
@@ -158,7 +158,7 @@ destroy_infra:
         - if: $TF_ENV && $TF_STATE
           when: manual
     script:
-        - env_name="${TF_ENV}_env"
+        - env_name="$env_{TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
         - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
