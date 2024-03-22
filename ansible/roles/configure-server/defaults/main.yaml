@@ -7,3 +7,4 @@ app_list:
     - jq
     - mc
     - unzip
+    - nginx
