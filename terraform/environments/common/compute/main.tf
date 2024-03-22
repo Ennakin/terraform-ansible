@@ -75,8 +75,8 @@ resource "local_file" "vm_ips" {
     #   vm_ips_open_vpn       = module.vm-open-vpn.*.public_ip
     # },
     {
-      vm_hostnames_reverse = module.vm-reverse-nginx.*.hostname
-      vm_ips_reverse       = module.vm-reverse-nginx.*.public_ip
+      hostnames = module.vm-reverse-nginx.*.hostname
+      ipaddress = module.vm-reverse-nginx.*.public_ip
     }
   )
 
