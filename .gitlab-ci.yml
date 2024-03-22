@@ -61,6 +61,7 @@ download_provider:
         - env_file=$(eval "echo \$$env_name")
         - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
+        - realpath $env_file
         - cp ./terraform/.terraformrc ~/.terraformrc
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
           -backend-config=address=${TF_ADDRESS}

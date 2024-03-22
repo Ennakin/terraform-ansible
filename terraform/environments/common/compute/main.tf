@@ -53,7 +53,7 @@ module "vm-reverse-nginx" {
   name        = "app-trf"
   hostname    = "app-trf"
   preemptible = var.preemptible
-  nat         = false
+  nat         = true
 
   cpu                = var.cpu
   ram                = var.ram
@@ -75,8 +75,8 @@ resource "local_file" "vm_ips" {
     #   vm_ips_open_vpn       = module.vm-open-vpn.*.public_ip
     # },
     {
-      hostnames = module.vm-reverse-nginx.*.hostname
-      ipaddress = module.vm-reverse-nginx.*.public_ip
+      hostnames = module.vm-reverse-nginx.hostname
+      ipaddress = module.vm-reverse-nginx.public_ip
     }
   )
 
