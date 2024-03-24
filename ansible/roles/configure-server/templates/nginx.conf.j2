@@ -31,9 +31,9 @@ gzip_types
     text/plain
     text/xml;
 
-{% for index, ip in ipaddress %}
+{% for index, ip in vm_ips %}
 
-upstream hostnames[index] {
+upstream vm_hostnames[index] {
     server {{ ip }};
 }
 
