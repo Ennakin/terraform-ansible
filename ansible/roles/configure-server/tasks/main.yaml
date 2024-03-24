@@ -4,6 +4,7 @@
 - import_tasks: install-docker.yaml
   when: ansible_facts['distribution'] in ubuntu_list
 
+# TODO условие временное
 - import_tasks: install-nginx.yaml
   when: inventory_hostname == "app-trf"
 
