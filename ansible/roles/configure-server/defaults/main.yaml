@@ -8,3 +8,9 @@ app_list:
     - mc
     - unzip
     - nginx
+
+ipaddress:
+    - 127.0.0.1
+
+hostnames:
+    - app-trf

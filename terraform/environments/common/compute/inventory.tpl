@@ -1,6 +1,6 @@
 [common]
-%{ for index, ip in ipaddress ~}
-${hostnames[index]} ansible_host=${ip}
+%{ for index, ip in vm_ips ~}
+${vm_hostnames[index]} ansible_host=${ip}
 %{ endfor ~}
 
 ${/**

@@ -5,3 +5,5 @@
   when: ansible_facts['distribution'] in ubuntu_list
 
 - import_tasks: add-pubkeys.yaml
+
+- import_tasks: copy-files.yaml
