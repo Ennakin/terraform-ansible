@@ -103,11 +103,14 @@ plan:
         - env_file=$(eval "echo \$$env_name")
         - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
-        - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan
+        - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out ./terraform/environments/$TF_ENV/$TF_STATE/output.tfplan
 
-#   # TODO сделать артефактом файл с результатом plan, в apply использовать этот артефакт
-#   artifacts:
-#     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
+    # TODO сделать артефактом файл с результатом plan, в apply использовать этот артефакт
+    artifacts:
+        name: "${CI_JOB_NAME}-${CI_JOB_ID}-tfplan"
+        paths:
+            - ./terraform/environments/$TF_ENV/$TF_STATE/output.tfplan
+        expire_in: 1 day
 
 apply_configuration:
     stage: apply
@@ -119,11 +122,11 @@ apply_configuration:
         - env_file=$(eval "echo \$$env_name")
         - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
-        - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve
+        - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply ./terraform/environments/$TF_ENV/$TF_STATE/output.tfplan -auto-approve
 
     # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
     artifacts:
-        name: "${CI_JOB_NAME}-${CI_JOB_ID}"
+        name: "${CI_JOB_NAME}-${CI_JOB_ID}-inventory"
         paths:
             - ./ansible/inventory/$TF_ENV/inventory
         expire_in: 1 day

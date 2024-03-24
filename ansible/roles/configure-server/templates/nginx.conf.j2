@@ -38,7 +38,6 @@ upstream {{ hostname }} {
 {% endfor %}
 
 server {
-
     listen  80;
     listen  [::]:80;
     server_name ~^.*\.(myhrlink|hr-link)\.ru$ localhost;

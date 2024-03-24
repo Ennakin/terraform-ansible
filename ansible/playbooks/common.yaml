@@ -7,8 +7,8 @@
   #   - name: Gather facts with timeout and retries
   #     setup:
   #       register: facts_result
-  #       retries: 6  # Количество попыток
-  #       delay: 10   # Задержка между попытками (в секундах)
+  #       retries: 6  # количество попыток
+  #       delay: 10   # задержка между попытками (в секундах)
   #       until: facts_result is not failed or facts_result is defined
 
   become: true
