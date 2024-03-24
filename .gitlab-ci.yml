@@ -147,6 +147,7 @@ ansible:
         - cd ./ansible
         - ansible-config view
         - ansible-galaxy collection install ansible.posix
+        - sleep 40
         - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
         - cd -
     allow_failure: true
