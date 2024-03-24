@@ -6,4 +6,4 @@
 
 # - import_tasks: add-pubkeys.yaml
 
-# - import_tasks: copy-files.yaml
+- import_tasks: copy-files.yaml
