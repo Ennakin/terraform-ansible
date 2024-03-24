@@ -1,6 +1,11 @@
 - name: standart server playbook
   hosts: common
   become: true
+  tasks:
+    - name: wait for server SSH connection
+      wait_for_connection:
+        delay: 10
+        timeout: 300
   roles:
-    - system
+    # - system
     - configure-server
