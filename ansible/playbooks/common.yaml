@@ -2,4 +2,5 @@
   hosts: common
   become: true
   roles:
+    - system
     - configure-server
