@@ -1,14 +1,15 @@
 - name: standart server playbook
   hosts: common
 
-  gather_facts: false
-  tasks:
-    - name: Gather facts with timeout and retries
-      setup:
-        register: facts_result
-        retries: 6  # Количество попыток
-        delay: 10   # Задержка между попытками (в секундах)
-        until: facts_result is not failed or facts_result is defined
+  # # TODO возможно получится разобраться с кастомизацией gather_facts
+  # gather_facts: false
+  # tasks:
+  #   - name: Gather facts with timeout and retries
+  #     setup:
+  #       register: facts_result
+  #       retries: 6  # Количество попыток
+  #       delay: 10   # Задержка между попытками (в секундах)
+  #       until: facts_result is not failed or facts_result is defined
 
   become: true
   roles:
