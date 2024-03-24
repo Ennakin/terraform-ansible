@@ -1,12 +1,19 @@
+# TODO в этом виде таймаут не работает
+# ansible пытается подключиться к серверу не проверяя проходит ли вообще подключение
+- name: wait for server SSH connection
+  wait_for_connection:
+      delay: 10
+      timeout: 300
+
 - import_tasks: install-packages-ubuntu.yaml
   when: ansible_facts['distribution'] in ubuntu_list
 
 - import_tasks: install-docker.yaml
   when: ansible_facts['distribution'] in ubuntu_list
 
-# TODO условие временное
+# TODO условие (inventory_hostname == "app-trf") временное
 - import_tasks: install-nginx.yaml
-  when: inventory_hostname == "app-trf"
+  when: ansible_facts['distribution'] in ubuntu_list and inventory_hostname == "app-trf"
 
 - import_tasks: add-pubkeys.yaml
 

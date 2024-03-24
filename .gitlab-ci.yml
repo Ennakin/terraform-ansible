@@ -147,9 +147,12 @@ ansible:
         - cd ./ansible
         - ansible-config view
         - ansible-galaxy collection install ansible.posix
-        - sleep 40
+        # - sleep 40
         - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
         - cd -
+
+        # # TODO если получится понять как узнать $HOST, то можно использовать, заменив sleep 40
+        # - while ! ssh -q -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no -i "$ssh_private_key" $SSH_USER@$HOST "echo 2>&1"; do sleep 10; done && ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
     allow_failure: true
     cache: []
 

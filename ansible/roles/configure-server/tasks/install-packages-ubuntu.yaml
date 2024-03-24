@@ -2,3 +2,6 @@
   apt:
       name: "{{ app_list | default([]) }}"
       state: present
+#   wait_for_connection:
+#       delay: 10
+#       timeout: 300
