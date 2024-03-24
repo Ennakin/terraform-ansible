@@ -31,8 +31,8 @@ gzip_types
     text/plain
     text/xml;
 
-{% for ip in vm_ips %}
-upstream app-trf {
+{% for hostname, ip in vms.items() %}
+upstream {{ hostname }} {
     server {{ ip }};
 }
 {% endfor %}

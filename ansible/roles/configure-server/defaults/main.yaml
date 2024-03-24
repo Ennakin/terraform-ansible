@@ -9,8 +9,5 @@ app_list:
     - unzip
     - nginx
 
-vm_ips:
-    - 127.0.0.1
-
-vm_hostnames:
-    - app-trf
+vms:
+    app-trf: 127.0.0.1
