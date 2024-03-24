@@ -1,0 +1,4 @@
+- name: install reverse packages
+  apt:
+      name: "{{ app_list_reverse | default([]) }}"
+      state: present
