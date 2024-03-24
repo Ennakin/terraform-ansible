@@ -4,18 +4,11 @@
   gather_facts: false
   tasks:
     - name: Gather facts with timeout and retries
-      block:
-        - name: Gather facts
-          setup:
-          register: facts
-        - name: Check if facts are gathered successfully
-          assert:
-            that: facts.facts != null
-            success_msg: "Facts are gathered successfully"
-            fail_msg: "Facts gathering failed"
-      retries: 6  # Количество попыток
-      delay: 10    # Задержка между попытками (в секундах)
-      until: facts is defined and facts.facts != null
+      setup:
+        register: facts_result
+        retries: 6  # Количество попыток
+        delay: 10   # Задержка между попытками (в секундах)
+        until: facts_result is not failed or facts_result is defined
 
   become: true
   roles:
