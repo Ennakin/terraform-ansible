@@ -136,8 +136,8 @@ ansible:
         - if: $TF_ENV && $TF_STATE
           when: always
     stage: configure
-    # dependencies:
-    #     - apply_configuration
+    dependencies:
+        - apply_configuration
     script:
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
