@@ -18,6 +18,7 @@ cloud-config
 # фиксация версии нужна, позже будет закомментировано
 *.hcl
 
+*.tfplan
 *.tfstate
 *.backup
 
