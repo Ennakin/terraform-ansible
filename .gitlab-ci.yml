@@ -122,6 +122,7 @@ apply_configuration:
         - env_file=$(eval "echo \$$env_name")
         - ls $env_all >/dev/null && source $env_all
         - ls $env_file >/dev/null && source $env_file
+        - ls -al ./terraform/environments/$TF_ENV/$TF_STATE
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply output.tfplan -auto-approve
 
     # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
