@@ -19,7 +19,9 @@ provider "yandex" {
 }
 
 data "yandex_vpc_subnet" "subnetwork" {
-  name = "${var.subnetwork_name}-private"
+  #   name      = "${var.subnetwork_name}-private"
+  name      = var.main_folder_subnetwork_name
+  folder_id = var.main_folder_id
 }
 
 # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
