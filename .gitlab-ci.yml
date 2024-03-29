@@ -59,8 +59,8 @@ download_provider:
     script:
         - env_name="env_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_all >/dev/null && source $env_all
-        - ls $env_file >/dev/null && source $env_file
+        - ls $env_all >/dev/null 2>&1 && source $env_all
+        - ls $env_file >/dev/null 2>&1 && source $env_file
         - cp ./terraform/.terraformrc ~/.terraformrc
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
           -backend-config=address=${TF_ADDRESS}
@@ -101,8 +101,8 @@ plan:
     script:
         - env_name="env_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_all >/dev/null && source $env_all
-        - ls $env_file >/dev/null && source $env_file
+        - ls $env_all >/dev/null 2>&1 && source $env_all
+        - ls $env_file >/dev/null 2>&1 && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
 
     # TODO сделать артефактом файл с результатом plan, в apply использовать этот артефакт
@@ -120,8 +120,8 @@ apply_configuration:
     script:
         - env_name="env_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_all >/dev/null && source $env_all
-        - ls $env_file >/dev/null && source $env_file
+        - ls $env_all >/dev/null 2>&1 && source $env_all
+        - ls $env_file >/dev/null 2>&1 && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
 
     # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
@@ -150,8 +150,8 @@ ansible:
         - cd ./ansible
         - ansible-config view
         - ansible-galaxy collection install ansible.posix
-        - ls -al ./inventory/$TF_ENV >/dev/null
-        - cat ./inventory/$TF_ENV/inventory >/dev/null
+        - ls -al ./inventory/$TF_ENV >/dev/null 2>&1
+        - cat ./inventory/$TF_ENV/inventory >/dev/null 2>&1
         - sleep 40
         - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
         - cd -
@@ -169,6 +169,6 @@ destroy_infra:
     script:
         - env_name="env_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_all >/dev/null && source $env_all
-        - ls $env_file >/dev/null && source $env_file
+        - ls $env_all >/dev/null 2>&1 && source $env_all
+        - ls $env_file >/dev/null 2>&1 && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
