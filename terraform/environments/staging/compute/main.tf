@@ -40,7 +40,7 @@ module "vm-staging" {
   name        = "${var.vm_name}-${count.index}"
   hostname    = "${var.vm_name}-${count.index}"
   preemptible = var.preemptible
-  nat         = true
+  nat         = false
 
   cpu                = var.cpu
   ram                = var.ram

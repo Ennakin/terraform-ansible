@@ -53,7 +53,7 @@ module "vm-reverse-nginx" {
   name        = "hrl-reverse-nginx"
   hostname    = "hrl-reverse-nginx"
   preemptible = var.preemptible
-  nat         = true
+  nat         = false
 
   cpu                = var.cpu
   ram                = var.ram
