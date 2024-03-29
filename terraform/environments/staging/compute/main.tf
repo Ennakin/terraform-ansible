@@ -33,7 +33,7 @@ data "yandex_compute_disk" "secondary_disk" {
   name  = var.secondary_disk_name != "" ? "${var.secondary_disk_name}-${count.index}" : ""
 }
 
-module "vm" {
+module "vm-staging" {
   source = "../../../modules/vm"
 
   count       = var.vm_count
@@ -60,8 +60,8 @@ resource "local_file" "vm_ips" {
 
   content = templatefile("${path.module}/inventory.tpl",
     {
-      vm_hostnames = module.vm.*.hostname
-      vm_ips       = module.vm.*.internal_ip
+      vm_hostnames = module.vm-staging.*.hostname
+      vm_ips       = module.vm-staging.*.internal_ip
     }
   )
 
