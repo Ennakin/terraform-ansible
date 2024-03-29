@@ -22,6 +22,6 @@ cloud-config
 *.tfstate
 *.backup
 
-inventory
+# inventory
 inventory-*
 inventory_*
