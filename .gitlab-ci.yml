@@ -124,6 +124,8 @@ apply_configuration:
         - ls $env_file >/dev/null 2>&1 && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
 
+    allow_failure: true
+
     # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
     artifacts:
         name: "${CI_JOB_NAME}-${CI_JOB_ID}-inventory"
