@@ -1,4 +1,4 @@
-app_list:
+app_list_all:
     - htop
     - vim
     - nano
@@ -8,8 +8,16 @@ app_list:
     - mc
     - unzip
 
-app_list_reverse:
+app_list_reverse_nginx:
     - nginx
 
+reverse_nginx_hostname: "hrl-reverse-nginx"
+
+# TODO явный список username-ов, нужно как-то вынести в переменную
+user_list_docker:
+    - ehodkevich
+    - abalan
+    - ekovalchuk
+
 vms:
-    app-trf: 127.0.0.1
+    localhost: 127.0.0.1

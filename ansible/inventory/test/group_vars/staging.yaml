@@ -1,9 +1,9 @@
 group_list:
-    - testers
-    - engineers
-    - supports
+    - tester
+    - engineer
+    - support
 
 user_list:
-    tester: { comment: "some-tester", groups: ["testers"] }
-    engineer: { comment: "some-engineer", groups: ["engineers"] }
-    support: { comment: "some-support", groups: ["supports"] }
+    tester: { comment: "tester", groups: ["tester"] }
+    engineer: { comment: "engineer", groups: ["engineer"] }
+    support: { comment: "support", groups: ["support"] }

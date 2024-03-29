@@ -50,8 +50,8 @@ data "yandex_compute_filesystem" "fs" {
 module "vm-reverse-nginx" {
   source = "../../../modules/vm"
 
-  name        = "app-trf"
-  hostname    = "app-trf"
+  name        = "hrl-reverse-nginx"
+  hostname    = "hrl-reverse-nginx"
   preemptible = var.preemptible
   nat         = true
 

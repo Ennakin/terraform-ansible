@@ -4,10 +4,9 @@
 - import_tasks: install-docker.yaml
   when: ansible_facts['distribution'] in ubuntu_list
 
+- import_tasks: add-pubkeys.yaml
+  when: ansible_facts['distribution'] in ubuntu_list
+
 # TODO условие (inventory_hostname == "app-trf") временное
 - import_tasks: install-nginx.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and inventory_hostname == "app-trf"
-
-- import_tasks: add-pubkeys.yaml
-
-- import_tasks: copy-files.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and inventory_hostname == {{ reverse_nginx_hostname }}

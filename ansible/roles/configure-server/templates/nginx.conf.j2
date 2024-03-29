@@ -43,7 +43,7 @@ server {
     server_name ~^.*\.(myhrlink|hr-link)\.ru$ localhost;
     client_max_body_size 300M;
 
-    set $goTo app-trf;
+    set $goTo localhost;
 
     location / {
         proxy_pass http://$goTo;

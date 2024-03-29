@@ -1,4 +1,4 @@
 - name: install default packages
   apt:
-      name: "{{ app_list | default([]) }}"
+      name: "{{ app_list_all | default([]) }}"
       state: present
