@@ -2,6 +2,7 @@
   apt:
       name: "{{ app_list_reverse_nginx | default([]) }}"
       state: present
+      update_cache: yes
 
 - name: nginx config copy
   ansible.builtin.template:
