@@ -1,4 +1,4 @@
-- import_tasks: add-pubkeys.yaml
+- import_tasks: create-users.yaml
   when: ansible_facts['distribution'] in ubuntu_list
 
 - import_tasks: install-packages-ubuntu.yaml

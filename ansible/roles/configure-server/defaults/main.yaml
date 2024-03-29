@@ -19,6 +19,7 @@ reverse_nginx_hostname: "hrl-reverse-nginx"
 # TODO явный список username-ов, нужно как-то вынести в переменную
 user_list_docker:
     - jenkins
+    - tester
     - ehodkevich
     - abalan
     - ekovalchuk
