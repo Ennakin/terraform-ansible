@@ -58,10 +58,18 @@ module "vm-staging" {
 # вывод в файл полученных hostname и ip vm-ок
 resource "local_file" "vm_ips" {
 
-  content = templatefile("${path.module}/inventory.tpl",
-    {
-      vm_hostnames = module.vm-staging.*.hostname
-      vm_ips       = module.vm-staging.*.public_ip
+  content = templatefile("${path.module}/inventory.tpl", {
+    vm_hostnames = flatten(
+      [
+        module.vm-staging.*.hostname
+      ]
+    )
+
+    vm_ips = flatten(
+      [
+        module.vm-staging.*.public_ip
+      ]
+    )
     }
   )
 

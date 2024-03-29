@@ -69,14 +69,20 @@ module "vm-reverse-nginx" {
 # вывод в файл полученных hostname и ip vm-ок
 resource "local_file" "vm_ips" {
 
-  content = templatefile("${path.module}/inventory.tpl",
-    # {
-    #   vm_hostnames_open_vpn = module.vm-open-vpn.*.hostname
-    #   vm_ips_open_vpn       = module.vm-open-vpn.*.public_ip
-    # },
-    {
-      vm_hostnames = module.vm-reverse-nginx.*.hostname
-      vm_ips = module.vm-reverse-nginx.*.public_ip
+  content = templatefile("${path.module}/inventory.tpl", {
+    vm_hostnames = flatten(
+      [
+        # module.vm-open-vpn.*.hostname,
+        module.vm-reverse-nginx.*.hostname
+      ]
+    )
+
+    vm_ips = flatten(
+      [
+        # module.vm-open-vpn.*.public_ip,
+        module.vm-reverse-nginx.*.public_ip
+      ]
+    )
     }
   )
 
