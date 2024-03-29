@@ -7,9 +7,9 @@
 - import_tasks: install-docker.yaml
   when: ansible_facts['distribution'] in ubuntu_list
 
-# TODO условие (inventory_hostname == "app-trf") временное
+# TODO reverse_nginx_hostname - переменная из defaults/main.yaml
 - import_tasks: install-nginx.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and inventory_hostname == {{ reverse_nginx_hostname }}
+  when: ansible_facts['distribution'] in ubuntu_list and inventory_hostname == reverse_nginx_hostname
 
 - import_tasks: configure-jenkins-agent.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | match('test|staging'))
