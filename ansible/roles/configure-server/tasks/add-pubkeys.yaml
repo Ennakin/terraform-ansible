@@ -14,7 +14,7 @@
       shell: "{{ item.value.shell }}"
       home: "{{ item.value.home }}"
       create_home: "yes"
-      append: no
+      append: "no"
   loop: "{{ user_list | default({}) | dict2items }}"
 
 # # TODO пока нет необходимости
