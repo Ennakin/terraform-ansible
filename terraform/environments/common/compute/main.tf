@@ -79,8 +79,8 @@ resource "local_file" "vm_ips" {
 
     vm_ips = flatten(
       [
-        # module.vm-open-vpn.*.public_ip,
-        module.vm-reverse-nginx.*.public_ip
+        # module.vm-open-vpn.*.internal_ip,
+        module.vm-reverse-nginx.*.internal_ip
       ]
     )
     }

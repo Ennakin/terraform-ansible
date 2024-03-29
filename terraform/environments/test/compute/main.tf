@@ -125,9 +125,9 @@ resource "local_file" "vm_ips" {
 
     vm_ips = flatten(
       [
-        module.vm-test.*.public_ip,
-        module.vm-regress-release.*.public_ip,
-        module.vm-regress-master.*.public_ip
+        module.vm-test.*.internal_ip,
+        module.vm-regress-release.*.internal_ip,
+        module.vm-regress-master.*.internal_ip
       ]
     )
     }

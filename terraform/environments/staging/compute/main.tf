@@ -67,7 +67,7 @@ resource "local_file" "vm_ips" {
 
     vm_ips = flatten(
       [
-        module.vm-staging.*.public_ip
+        module.vm-staging.*.internal_ip
       ]
     )
     }
