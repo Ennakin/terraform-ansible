@@ -150,6 +150,8 @@ ansible:
         - cd ./ansible
         - ansible-config view
         - ansible-galaxy collection install ansible.posix
+        - ls -al ./inventory/$TF_ENV >/dev/null
+        - cat ./inventory/$TF_ENV/inventory >/dev/null
         - sleep 40
         - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
         - cd -
