@@ -2,3 +2,4 @@
   apt:
       name: "{{ app_list_all | default([]) }}"
       state: present
+      update_cache: yes
