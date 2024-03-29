@@ -40,7 +40,7 @@ module "vm-test" {
   name        = "${var.vm_name}-${count.index}"
   hostname    = "${var.vm_name}-${count.index}"
   preemptible = var.preemptible
-  nat         = false
+  nat         = true
 
   cpu                = var.cpu
   ram                = var.ram
@@ -62,7 +62,7 @@ module "vm-regress-release" {
   name        = "hrl-regress-release-${count.index}"
   hostname    = "hrl-regress-release-${count.index}"
   preemptible = var.preemptible
-  nat         = false
+  nat         = true
 
   cpu                = var.cpu
   ram                = var.ram
