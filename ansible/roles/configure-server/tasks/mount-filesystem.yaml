@@ -1,0 +1,20 @@
+- name: filesystem directory create
+  ansible.builtin.file:
+      path: "/mnt/{{ storage }}"
+      state: directory
+      mode: 0755
+
+- name: filesystem mount
+  ansible.builtin.mount:
+      src: "{{ storage }}"
+      path: "/mnt/{{ storage }}"
+      fstype: virtiofs
+      opts: defaults
+      state: mounted
+
+- name: filesystem mount add to /etc/fstab
+  ansible.builtin.lineinfile:
+      path: /etc/fstab
+      line: "{{ storage }} /mnt/{{ storage }} virtiofs rw 0 0"
+      create: yes
+      state: present
