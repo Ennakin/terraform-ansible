@@ -116,7 +116,7 @@ apply_configuration:
     stage: apply
     rules:
         - if: $TF_ENV && $TF_STATE
-          when: always
+          when: manual
     script:
         - env_name="env_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
