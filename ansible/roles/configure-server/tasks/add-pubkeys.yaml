@@ -13,8 +13,8 @@
       groups: "{{ item.value.groups }}"
       shell: "{{ item.value.shell }}"
       home: "{{ item.value.home }}"
-      create_home: "yes"
-      append: "no"
+      create_home: true
+      append: false
   loop: "{{ user_list | default({}) | dict2items }}"
 
 # # TODO пока нет необходимости
