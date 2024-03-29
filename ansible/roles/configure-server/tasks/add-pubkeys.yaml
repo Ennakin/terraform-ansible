@@ -11,7 +11,8 @@
       name: "{{ item.key }}"
       comment: "{{ item.value.comment }}"
       groups: "{{ item.value.groups }}"
-      shell: "/bin/bash"
+      shell: "{{ item.value.shell }}"
+      home: "{{ item.value.home }}"
       create_home: "yes"
   loop: "{{ user_list | default([]) | dict2items }}"
 

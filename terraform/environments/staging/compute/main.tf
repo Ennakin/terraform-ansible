@@ -40,7 +40,7 @@ module "vm-staging" {
   name        = "${var.vm_name}-${count.index}"
   hostname    = "${var.vm_name}-${count.index}"
   preemptible = var.preemptible
-  nat         = false
+  nat         = true
 
   cpu                = var.cpu
   ram                = var.ram
@@ -61,7 +61,7 @@ resource "local_file" "vm_ips" {
   content = templatefile("${path.module}/inventory.tpl",
     {
       vm_hostnames = module.vm-staging.*.hostname
-      vm_ips       = module.vm-staging.*.internal_ip
+      vm_ips       = module.vm-staging.*.public_ip
     }
   )
 

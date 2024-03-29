@@ -1,0 +1,39 @@
+- name: install java 11
+  apt:
+      name: openjdk-11-jdk-headless
+      state: present
+
+- name: jenkins agent systemctl config copy
+  ansible.builtin.template:
+      src: jenkins-agent.service.j2
+      dest: /etc/systemd/system/jenkins-agent.service
+
+- name: jenkins agent directory create
+  ansible.builtin.file:
+      path: /usr/local/jenkins-service/
+      owner: jenkins
+      group: jenkins
+      mode: 0755
+      state: directory
+
+- name: jenkins agent start script copy
+  ansible.builtin.template:
+      src: start-agent.sh.j2
+      dest: /usr/local/jenkins-service/start-agent.sh
+      mode: 0755
+      owner: jenkins
+      group: jenkins
+
+- name: jenkins agent env copy
+  ansible.builtin.template:
+      src: agent.env.j2
+      dest: /usr/local/jenkins-service/agent.env
+      mode: 0644
+      owner: jenkins
+      group: jenkins
+
+- name: jenkins user home directory set permissions
+  ansible.builtin.file:
+      path: /var/hrlink/
+      mode: 0755
+      recurse: yes

@@ -7,6 +7,7 @@ app_list_all:
     - jq
     - mc
     - unzip
+    - make
 
 app_list_reverse_nginx:
     - nginx
@@ -15,6 +16,7 @@ reverse_nginx_hostname: "hrl-reverse-nginx"
 
 # TODO явный список username-ов, нужно как-то вынести в переменную
 user_list_docker:
+    - jenkins
     - ehodkevich
     - abalan
     - ekovalchuk

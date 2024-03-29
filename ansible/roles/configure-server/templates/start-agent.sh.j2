@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd /usr/local/jenkins-service
+
+curl https://ci.myhrlink.ru/jnlpJars/agent.jar --output agent.jar
+
+source /usr/local/jenkins-service/agent.env
+
+java -jar /usr/local/jenkins-service/agent.jar -jnlpUrl "${JNLP_URL}" -secret "${SECRET}"

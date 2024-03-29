@@ -2,8 +2,10 @@ group_list:
     - tester
     - engineer
     - support
+    - jenkins
 
 user_list:
     tester: { comment: "tester", groups: ["tester"] }
     engineer: { comment: "engineer", groups: ["engineer"] }
     support: { comment: "support", groups: ["support"] }
+    jenkins: { comment: "jenkins", groups: ["jenkins"] }

@@ -84,7 +84,7 @@ module "vm-regress-master" {
   name        = "hrl-regress-master-${count.index}"
   hostname    = "hrl-regress-master-${count.index}"
   preemptible = var.preemptible
-  nat         = false
+  nat         = true
 
   cpu                = var.cpu
   ram                = var.ram
@@ -125,9 +125,9 @@ resource "local_file" "vm_ips" {
 
     vm_ips = flatten(
       [
-        module.vm-test.*.internal_ip,
-        module.vm-regress-release.*.internal_ip,
-        module.vm-regress-master.*.internal_ip
+        module.vm-test.*.public_ip,
+        module.vm-regress-release.*.public_ip,
+        module.vm-regress-master.*.public_ip
       ]
     )
     }

@@ -1,9 +1,35 @@
 group_list:
+    - jenkins
     - tester
     - engineer
     - support
 
 user_list:
-    tester: { comment: "tester", groups: ["tester"] }
-    engineer: { comment: "engineer", groups: ["engineer"] }
-    support: { comment: "support", groups: ["support"] }
+    jenkins:
+        {
+            comment: "jenkins",
+            groups: ["jenkins"],
+            shell: "/bin/bash",
+            home: "/var/hrlink/",
+        }
+    tester:
+        {
+            comment: "tester",
+            groups: ["tester"],
+            shell: "/bin/bash",
+            home: "/home/tester/",
+        }
+    engineer:
+        {
+            comment: "engineer",
+            groups: ["engineer"],
+            shell: "/bin/bash",
+            home: "/home/engineer/",
+        }
+    support:
+        {
+            comment: "support",
+            groups: ["support"],
+            shell: "/bin/bash",
+            home: "/home/support/",
+        }
