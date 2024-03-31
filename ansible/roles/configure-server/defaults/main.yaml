@@ -12,10 +12,10 @@ app_list_all:
 app_list_reverse_nginx:
     - nginx
 
-filesystem_name: lookup("env", "FILESYSTEM_NAME", default="")
+filesystem_name: "{{ lookup('env', 'FILESYSTEM_NAME', default='') }}"
 
 user_list_docker: "{{ lookup('env', 'USERS_DOCKER', default='').split(',') }}"
 
-reverse_nginx_hostname: lookup("env", "REVERSE_NGINX_HOSTNAME", default="")
+reverse_nginx_hostname: "{{ lookup('env', 'REVERSE_NGINX_HOSTNAME', default='') }}"
 vms:
     localhost: 127.0.0.1
