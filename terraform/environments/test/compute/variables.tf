@@ -47,7 +47,6 @@ variable "vm_hosts_result_file_path" {
 variable "vm_name" {}
 variable "vm_count" {}
 
-
 # переменные основной директории
-variable "main_folder_id" {}
-variable "main_folder_subnetwork_name" {}
+variable "folder_id_main_folder" {}
+variable "subnetwork_name_main_folder" {}

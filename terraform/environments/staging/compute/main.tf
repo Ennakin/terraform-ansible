@@ -18,8 +18,14 @@ provider "yandex" {
   zone      = var.zone
 }
 
+# # пока используется подсеть из основной директории
+# data "yandex_vpc_subnet" "subnetwork" {
+#   name = "${var.subnetwork_name}-private"
+# }
+
 data "yandex_vpc_subnet" "subnetwork" {
-  name = "${var.subnetwork_name}-private"
+  folder_id = var.folder_id_main_folder
+  name      = var.subnetwork_name_main_folder
 }
 
 # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME

@@ -39,3 +39,7 @@ variable "cloud_config_file_path" {
 variable "vm_hosts_result_file_path" {
   description = "PATH to inventory result file"
 }
+
+# переменные основной директории
+variable "folder_id_main_folder" {}
+variable "subnetwork_name_main_folder" {}
