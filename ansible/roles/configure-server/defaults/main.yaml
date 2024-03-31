@@ -12,17 +12,10 @@ app_list_all:
 app_list_reverse_nginx:
     - nginx
 
-storage: "hrl-filesystem"
+filesystem_name: lookup("env", "FILESYSTEM_NAME", default="")
 
-reverse_nginx_hostname: "hrl-reverse-nginx"
+user_list_docker: "{{ lookup('env', 'USERS_DOCKER', default='').split(',') }}"
 
-# TODO явный список username-ов, нужно как-то вынести в переменную
-user_list_docker:
-    - jenkins
-    - tester
-    - ehodkevich
-    - abalan
-    - ekovalchuk
-
+reverse_nginx_hostname: lookup("env", "REVERSE_NGINX_HOSTNAME", default="")
 vms:
     localhost: 127.0.0.1

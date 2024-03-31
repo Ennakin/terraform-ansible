@@ -5,7 +5,7 @@
   when: ansible_facts['distribution'] in ubuntu_list
 
 - import_tasks: mount-filesystem.yaml
-  when: ansible_facts['distribution'] in ubuntu_list
+  when: ansible_facts['distribution'] in ubuntu_list and storage != ''
 
 # TODO reverse_nginx_hostname - переменная из defaults/main.yaml
 - import_tasks: install-nginx.yaml
