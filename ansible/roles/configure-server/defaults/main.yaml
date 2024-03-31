@@ -12,7 +12,7 @@ app_list_all:
 app_list_reverse_nginx:
     - nginx
 
-storage: "hrl-tf-filesystem"
+storage: "hrl-filesystem"
 
 reverse_nginx_hostname: "hrl-reverse-nginx"
 
