@@ -25,6 +25,8 @@ variables:
 #   env_staging
 #   env_ansible
 
+#   env_ansible_dev
+
 #   TF_USERNAME
 #   TF_PASSWORD
 
@@ -161,7 +163,7 @@ ansible:
         - ls -al ./inventory/$TF_ENV 2>/dev/null
         - cat ./inventory/$TF_ENV/inventory 2>/dev/null
         - sleep 40
-        - source "$env_ansible" && ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
+        - source "$env_ansible" && source "$env_ansible_dev" && ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
         - cd -
 
         # # TODO если получится понять как узнать $HOST, то можно использовать, заменив sleep 40
