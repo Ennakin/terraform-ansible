@@ -30,7 +30,7 @@
 
 - name: change owner and group of a directory
   ansible.builtin.file:
-      path: "/home/{{ item.key }}"
+      path: "{{ item.value.home }}"
       owner: "{{ item.key }}"
       group: "{{ item.key }}"
       recurse: yes
