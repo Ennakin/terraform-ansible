@@ -29,8 +29,8 @@ if [ $# -gt 0 ]; then
 
     if [ "$TF_OPERATION" == "init" ]; then
 
-        ls ./envs/prod/all.env >/dev/null && source ./envs/prod/all.env
-        ls ./envs/prod/$TF_ENV.env >/dev/null && source ./envs/prod/$TF_ENV.env
+        ls ./envs/prod/env_tf_all.env >/dev/null && source ./envs/prod/env_tf_all.env
+        ls ./envs/prod/env_tf_${TF_ENV}.env >/dev/null && source ./envs/prod/env_tf_${TF_ENV}.env
 
         terraform -chdir="./environments/$TF_ENV/$TF_STATE" init \
             -backend-config=address=$TV_VAR_address/$TF_ENV-$TF_STATE \
@@ -44,8 +44,8 @@ if [ $# -gt 0 ]; then
             $TF_PARAMS
 
     else
-        ls ./envs/prod/all.env >/dev/null && source ./envs/prod/all.env
-        ls ./envs/prod/$TF_ENV.env >/dev/null && source ./envs/prod/$TF_ENV.env
+        ls ./envs/prod/env_tf_all.env >/dev/null && source ./envs/prod/env_tf_all.env
+        ls ./envs/prod/env_tf_${TF_ENV}.env >/dev/null && source ./envs/prod/env_tf_${TF_ENV}.env
 
         terraform -chdir="./environments/$TF_ENV/$TF_STATE" "$TF_OPERATION" \
             $TF_PARAMS
