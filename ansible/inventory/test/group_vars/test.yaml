@@ -2,7 +2,6 @@ group_list:
     - jenkins
     - tester
     - engineer
-    - support
 
 user_list:
     jenkins:
@@ -25,11 +24,4 @@ user_list:
             groups: ["engineer"],
             shell: "/bin/bash",
             home: "/home/engineer/",
-        }
-    support:
-        {
-            comment: "support",
-            groups: ["support"],
-            shell: "/bin/bash",
-            home: "/home/support/",
         }

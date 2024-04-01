@@ -17,12 +17,12 @@
       append: false
   loop: "{{ user_list | default({}) | dict2items }}"
 
-# # TODO пока нет необходимости
-# # добавление публичных ssh ключей
-# - name: get authorized keys token from file
-#   ansible.posix.authorized_key:
-#       user: "{{ item.key }}"
-#       state: present
-#       exclusive: true
-#       key: "{{ lookup('file', '{{ item.key }}.pub')}}"
-#   loop: "{{ user_list | default({}) | dict2items }}"
+# добавление публичных ssh ключей
+- name: get authorized keys token from file
+  ansible.posix.authorized_key:
+      user: "{{ item.key }}"
+      state: present
+      exclusive: true
+      key: "{{ lookup('env', item.key, default='') }}"
+  loop: "{{ user_list | default({}) | dict2items }}"
+  when: lookup('env', item.key, default='') != ''
