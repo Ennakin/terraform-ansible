@@ -28,11 +28,11 @@
       append: false
   loop: "{{ user_list | default({}) | dict2items }}"
 
-# удаление группы users создаваемой ansible-ом автоматически
-- name: remove group
-  ansible.builtin.group:
-      name: users
-      state: absent
+# # удаление группы users создаваемой ansible-ом автоматически
+# - name: remove group
+#   ansible.builtin.group:
+#       name: users
+#       state: absent
 
 # добавление публичных ssh ключей из переменных окружения
 - name: get authorized keys from environment variable
