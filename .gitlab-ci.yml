@@ -32,6 +32,9 @@ variables:
 #   # в этой переменной должен быть записан абсолютный путь до ansible.cfg, иначе ansible внутри контейнера игнорирует конфиг
 #   ANSIBLE_CONFIG
 
+#   # переменная с публичными ssh-ключами
+#   PUB_TESTER
+
 stages:
     - format
     - init

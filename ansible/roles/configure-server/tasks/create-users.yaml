@@ -18,12 +18,11 @@
   loop: "{{ user_list | default({}) | dict2items }}"
 
 # добавление публичных ssh ключей
-- name: get authorized keys token from file
+- name: get authorized keys from file or environment variable
   ansible.posix.authorized_key:
       user: "{{ item.key }}"
       state: present
       exclusive: true
-      key: "{{ lookup('env', item.key, default='') }}"
-    #   key: "{{ lookup('file', '{{ item.key }}.pub')}}"
+      key: "{{ lookup('env', 'PUB' + item.key | upper, default='') if lookup('env', 'PUB' + item.key | upper, default='') != '' else lookup('file', item.key + '.pub') }}"
   loop: "{{ user_list | default({}) | dict2items }}"
-  when: lookup('env', item.key, default='') != ''
+  when: lookup('env', 'PUB' + item.key | upper, default='') != '' or lookup('file', item.key + '.pub', errors='omit') is not none
