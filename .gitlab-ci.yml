@@ -148,6 +148,7 @@ ansible:
     dependencies:
         - apply_configuration
     script:
+        - ansible --version
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
         - ssh-add "$ssh_private_key"
