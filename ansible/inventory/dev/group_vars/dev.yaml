@@ -1,0 +1,19 @@
+group_list:
+    - jenkins
+    - developer
+
+user_list:
+    jenkins:
+        {
+            comment: "jenkins",
+            groups: ["jenkins"],
+            shell: "/bin/bash",
+            home: "/var/hrlink/",
+        }
+    developer:
+        {
+            comment: "developer",
+            groups: ["developer"],
+            shell: "/bin/bash",
+            home: "/home/developer/",
+        }

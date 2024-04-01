@@ -21,6 +21,11 @@ variable "cpu" {
   default     = 2
 }
 
+variable "core_fraction" {
+  description = "Core fraction"
+  default     = 100
+}
+
 variable "ram" {
   description = "Count ram in GB"
   default     = 2
