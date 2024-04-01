@@ -17,12 +17,32 @@
       append: false
   loop: "{{ user_list | default({}) | dict2items }}"
 
+# # добавление публичных ssh ключей из переменных окружения
+# - name: get authorized keys from file or environment variable
+#   ansible.posix.authorized_key:
+#       user: "{{ item.key }}"
+#       state: present
+#       exclusive: true
+#       key: "{{ lookup('env', 'PUB_' + item.key | upper, default='') }}"
+#   loop: "{{ user_list | default({}) | dict2items }}"
+#   when: lookup('env', 'PUB_' + item.key | upper, default='') != ''
+
+# # добавление публичных ssh ключей из файлов
+# - name: get authorized keys from file or environment variable
+#   ansible.posix.authorized_key:
+#       user: "{{ item.key }}"
+#       state: present
+#       exclusive: true
+#       key: "{{ lookup('file', item.key + '.pub', errors='omit') }}"
+#   loop: "{{ user_list | default({}) | dict2items }}"
+#   when: lookup('file', item.key + '.pub', errors='omit') is not none
+
 # добавление публичных ssh ключей
 - name: get authorized keys from file or environment variable
   ansible.posix.authorized_key:
       user: "{{ item.key }}"
       state: present
       exclusive: true
-      key: "{{ lookup('env', 'PUB_' + item.key | upper, default='') | default(lookup('file', item.key + '.pub', errors='omit') | default('')) }}"
+      key: "{{ lookup('env', 'PUB_' + item.key | upper, default='') if lookup('env', 'PUB_' + item.key | upper, default='') != '' else lookup('file', item.key + '.pub') }}"
   loop: "{{ user_list | default({}) | dict2items }}"
-  when: lookup('env', 'PUB_' + item.key | upper, default='') != '' or lookup('file', item.key + '.pub', errors='omit') | default('') != ''
+  when: lookup('env', 'PUB_' + item.key | upper, default='') != '' or lookup('file', item.key + '.pub', errors='omit') is not none
