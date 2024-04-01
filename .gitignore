@@ -26,3 +26,5 @@ cloud-config
 # inventory
 inventory-*
 inventory_*
+
+*.pub
