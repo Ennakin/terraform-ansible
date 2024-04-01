@@ -8,5 +8,5 @@ variable "filesystem_type" {
   default = "network-hdd"
 }
 variable "filesystem_size" {
-  default = 2
+  default = 30
 }
