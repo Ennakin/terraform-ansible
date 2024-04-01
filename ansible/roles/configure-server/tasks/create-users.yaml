@@ -5,6 +5,17 @@
       state: present
   loop: "{{ group_list | default([]) }}"
 
+# создание домашних директорий пользователей
+# нужно т.к. не получается сделать так чтобы ansible НЕ создавал группу users, и не отдавал этой группу домашние директории пользователей
+- name: create user home directory
+  ansible.builtin.file:
+      path: "{{ item.value.home }}"
+      state: directory
+      owner: "{{ item.key }}"
+      group: "{{ item.key }}"
+      mode: 0750
+  loop: "{{ user_list | default({}) | dict2items }}"
+
 # создание пользователей
 - name: create user
   ansible.builtin.user:
@@ -13,9 +24,15 @@
       groups: "{{ item.value.groups }}"
       shell: "{{ item.value.shell }}"
       home: "{{ item.value.home }}"
-      create_home: true
+      create_home: false
       append: false
   loop: "{{ user_list | default({}) | dict2items }}"
+
+# удаление группы users создаваемой ansible-ом автоматически
+- name: remove group
+  ansible.builtin.group:
+      name: users
+      state: absent
 
 # добавление публичных ssh ключей из переменных окружения
 - name: get authorized keys from environment variable
