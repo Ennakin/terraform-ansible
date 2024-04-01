@@ -12,9 +12,9 @@
       opts: defaults
       state: mounted
 
-- name: filesystem mount add to /etc/fstab
-  ansible.builtin.lineinfile:
-      path: /etc/fstab
-      line: "{{ filesystem_name }} /mnt/{{ filesystem_name }} virtiofs rw 0 0"
-      create: yes
-      state: present
+# - name: filesystem mount add to /etc/fstab
+#   ansible.builtin.lineinfile:
+#       path: /etc/fstab
+#       line: "{{ filesystem_name }} /mnt/{{ filesystem_name }} virtiofs rw 0 0"
+#       create: yes
+#       state: present
