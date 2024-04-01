@@ -22,5 +22,5 @@ module "fs" {
   source = "../../../modules/filesystem"
 
   filesystem_name = var.filesystem_name
-  filesystem_size = 2
+  filesystem_size = var.filesystem_size
 }
