@@ -9,9 +9,11 @@
       src: "{{ filesystem_name }}"
       path: "/mnt/{{ filesystem_name }}"
       fstype: virtiofs
-      opts: defaults
+      opts: defaults,nofail
       state: mounted
+      fstab: yes
 
+# # в таске выше добавление происходит автоматически
 # - name: filesystem mount add to /etc/fstab
 #   ansible.builtin.lineinfile:
 #       path: /etc/fstab
