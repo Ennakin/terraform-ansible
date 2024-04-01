@@ -24,5 +24,6 @@
       state: present
       exclusive: true
       key: "{{ lookup('env', item.key, default='') }}"
+    #   key: "{{ lookup('file', '{{ item.key }}.pub')}}"
   loop: "{{ user_list | default({}) | dict2items }}"
   when: lookup('env', item.key, default='') != ''
