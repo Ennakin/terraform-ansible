@@ -7,7 +7,7 @@ resource "yandex_compute_instance" "vm" {
 
   resources {
     cores         = var.cpu
-    core_fraction = 20
+    core_fraction = 100
     memory        = var.ram
   }
 
