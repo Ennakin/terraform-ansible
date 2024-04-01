@@ -64,9 +64,9 @@ download_provider:
         - if: $TF_ENV && $TF_STATE
           when: always
     script:
-        - env_name="env_${TF_ENV}"
+        - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_all 2>/dev/null && source $env_all
+        - ls $env_tf_all 2>/dev/null && source $env_tf_all
         - ls $env_file 2>/dev/null && source $env_file
         - cp ./terraform/.terraformrc ~/.terraformrc
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
@@ -106,9 +106,9 @@ plan:
         - if: $TF_ENV && $TF_STATE
           when: always
     script:
-        - env_name="env_${TF_ENV}"
+        - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_all 2>/dev/null && source $env_all
+        - ls $env_tf_all 2>/dev/null && source $env_tf_all
         - ls $env_file 2>/dev/null && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
 
@@ -125,9 +125,9 @@ apply_configuration:
         - if: $TF_ENV && $TF_STATE
           when: manual
     script:
-        - env_name="env_${TF_ENV}"
+        - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_all 2>/dev/null && source $env_all
+        - ls $env_tf_all 2>/dev/null && source $env_tf_all
         - ls $env_file 2>/dev/null && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
 
@@ -181,8 +181,8 @@ destroy_infra:
         - if: $TF_ENV && $TF_STATE
           when: manual
     script:
-        - env_name="env_${TF_ENV}"
+        - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_all 2>/dev/null && source $env_all
+        - ls $env_tf_all 2>/dev/null && source $env_tf_all
         - ls $env_file 2>/dev/null && source $env_file
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
