@@ -45,7 +45,7 @@ module "vm-staging" {
   count       = var.vm_count
   name        = "${var.vm_name}-${count.index}"
   hostname    = "${var.vm_name}-${count.index}"
-  description = "staging ${conunt.index}"
+  description = "staging ${count.index}"
   preemptible = var.preemptible
   nat         = false
 

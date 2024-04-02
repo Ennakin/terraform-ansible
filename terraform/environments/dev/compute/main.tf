@@ -45,7 +45,7 @@ module "vm-dev" {
   count       = var.vm_count
   name        = "${var.vm_name}-${count.index}"
   hostname    = "${var.vm_name}-${count.index}"
-  description = "dev ${conunt.index}"
+  description = "dev ${count.index}"
   preemptible = var.preemptible
   nat         = false
 

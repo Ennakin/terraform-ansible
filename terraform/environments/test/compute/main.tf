@@ -45,7 +45,7 @@ module "vm-test" {
   count       = var.vm_count
   name        = "${var.vm_name}-${count.index}"
   hostname    = "${var.vm_name}-${count.index}"
-  description = "test ${conunt.index}"
+  description = "test ${count.index}"
   preemptible = var.preemptible
   nat         = false
 
