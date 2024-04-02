@@ -155,7 +155,7 @@ apply_configuration:
 ansible:
     image:
         # name: alpinelinux/ansible
-        name: litmuschaos/ansible-runner:latest
+        name: litmuschaos/ansible-runner:3.5.0
         entrypoint: [""]
     rules:
         - if: $TF_ENV && $TF_STATE
