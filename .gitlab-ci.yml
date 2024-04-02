@@ -14,29 +14,39 @@ variables:
     TF_ADDRESS: "https://gitlab.hr-link.ru/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_FILENAME}"
     ANSIBLE_HOST_KEY_CHECKING: "False"
 
-#   # предполагается что в самом gitlab-е КАК ФАЙЛ определены переменные ALL & COMMON & TEST & STAGING
+#   # предполагается что в самом gitlab-е определены переменные следующие переменные
 #   # внутри этих файлов должны быть записаны собственно переменные окружения необходимые проекту
+
+#   # как ФАЙЛ
+
 #   cloud_config
 #   ssh_private_key
-#   env_all
-#   env_common
-#   env_test
-#   env_dev
-#   env_staging
-#   env_ansible
 
+#   env_tf_all
+#   env_tf_common
+#   env_tf_dev
+#   env_tf_test
+#   env_tf_staging
+
+#   env_ansible_all
+#   env_ansible_common
 #   env_ansible_dev
+#   env_ansible_test
+#   env_ansible_staging
+
+#   # как ПЕРЕМЕННАЯ
 
 #   TF_USERNAME
 #   TF_PASSWORD
 
 #   SSH_USER
 
-#   # в этой переменной должен быть записан абсолютный путь до ansible.cfg, иначе ansible внутри контейнера игнорирует конфиг
+#   # переменная с абсолютным путём до ansible.cfg, иначе ansible внутри контейнера игнорирует конфиг
 #   ANSIBLE_CONFIG
 
 #   # переменные с публичными ssh-ключами
 #   PUB_TESTER
+#   PUB_ENGINEER
 
 stages:
     - format

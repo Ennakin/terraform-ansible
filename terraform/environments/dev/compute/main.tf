@@ -42,9 +42,11 @@ data "yandex_compute_disk" "secondary_disk" {
 module "vm-dev" {
   source = "../../../modules/vm"
 
-  count       = var.vm_count
-  name        = "${var.vm_name}-${count.index}"
-  hostname    = "${var.vm_name}-${count.index}"
+  count = var.vm_count
+  #   name        = "${var.vm_name}-${count.index}"
+  #   hostname    = "${var.vm_name}-${count.index}"
+  name        = "dev-another"
+  hostname    = "dev-another"
   preemptible = var.preemptible
   nat         = false
 
