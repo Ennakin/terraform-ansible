@@ -24,8 +24,9 @@
       groups: "{{ item.value.groups }}"
       shell: "{{ item.value.shell }}"
       home: "{{ item.value.home }}"
-      create_home: yes
-      append: no
+      create_home: true
+      move_home: true
+      append: false
   loop: "{{ user_list | default({}) | dict2items }}"
 
 - name: change owner and group of a directory
@@ -33,7 +34,7 @@
       path: "{{ item.value.home }}"
       owner: "{{ item.key }}"
       group: "{{ item.key }}"
-      recurse: yes
+      recurse: true
   loop: "{{ user_list | default({}) | dict2items }}"
 
 # TODO не нашёл как сделать так чтобы ansible НЕ добавлял пользователей в стандартную группу users

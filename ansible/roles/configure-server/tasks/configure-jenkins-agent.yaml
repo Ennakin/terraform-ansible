@@ -36,14 +36,14 @@
   ansible.builtin.file:
       path: /var/hrlink/
       mode: 0755
-      #   recurse: yes
+      #   recurse: true
 
 - name: jenkins master add to hosts
   ansible.builtin.lineinfile:
       path: /etc/hosts
       line: "10.70.1.5 ci.myhrlink.ru"
       insertafter: "^127.0.0.1 localhost$"
-      create: yes
+      create: true
       state: present
 
 - name: jenkins master add to cloud templates hosts
@@ -51,5 +51,5 @@
       path: /etc/cloud/templates/hosts.debian.tmpl
       line: "10.70.1.5 ci.myhrlink.ru"
       insertafter: "^127.0.0.1 localhost$"
-      create: yes
+      create: true
       state: present

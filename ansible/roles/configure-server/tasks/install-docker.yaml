@@ -2,7 +2,7 @@
   apt:
       name: "{{ item }}"
       state: present
-      update_cache: yes
+      update_cache: true
   loop:
       - apt-transport-https
       - ca-certificates
@@ -24,7 +24,7 @@
   apt:
       name: "{{ item }}"
       state: latest
-      update_cache: yes
+      update_cache: true
   loop:
       - docker-ce
       - docker-ce-cli
@@ -36,7 +36,7 @@
   service:
       name: docker
       state: started
-      enabled: yes
+      enabled: true
 
 - name: Ensure group "docker" exists
   ansible.builtin.group:
@@ -47,5 +47,5 @@
   user:
       name: "{{ item }}"
       groups: docker
-      append: yes
+      append: true
   loop: "{{ user_list_docker | default([]) }}"

@@ -48,5 +48,5 @@
 #         ansible.builtin.lineinfile:
 #             path: /etc/fstab
 #             line: "UUID={{ disk_uuid }} /var/hrlink ext4 defaults 0 2"
-#             create: yes
+#             create: true
 #   when: not fstab_check.stdout

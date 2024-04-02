@@ -21,7 +21,7 @@
             fstype: virtiofs
             opts: defaults,nofail
             state: mounted
-            #   fstab: yes
+            #   fstab: true
   when: not fstab_check.stdout
 
 # # в таске выше добавление происходит автоматически
@@ -29,5 +29,5 @@
 #   ansible.builtin.lineinfile:
 #       path: /etc/fstab
 #       line: "{{ filesystem_name }} /mnt/{{ filesystem_name }} virtiofs rw 0 0"
-#       create: yes
+#       create: true
 #       state: present
