@@ -45,6 +45,7 @@ module "vm-test" {
   count       = var.vm_count
   name        = "${var.vm_name}-${count.index}"
   hostname    = "${var.vm_name}-${count.index}"
+  description = "test ${conunt.index}"
   preemptible = var.preemptible
   nat         = false
 
@@ -67,6 +68,7 @@ module "vm-regress-release" {
   count       = 1
   name        = "hrl-regress-release-${count.index}"
   hostname    = "hrl-regress-release-${count.index}"
+  description = "VM для разворачивания HRL во время регресса на release ветке"
   preemptible = var.preemptible
   nat         = false
 
@@ -89,6 +91,7 @@ module "vm-regress-master" {
   count       = 1
   name        = "hrl-regress-master-${count.index}"
   hostname    = "hrl-regress-master-${count.index}"
+  description = "VM для разворачивания HRL во время регресса на master ветке"
   preemptible = var.preemptible
   nat         = false
 

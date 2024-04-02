@@ -6,6 +6,10 @@ variable "hostname" {
   description = "Hostname VM"
 }
 
+variable "description" {
+  description = "Description VM"
+}
+
 variable "platform" {
   description = "Platform YCloud"
   default     = "standard-v3"

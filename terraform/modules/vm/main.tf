@@ -1,6 +1,7 @@
 resource "yandex_compute_instance" "vm" {
   name        = var.name
   hostname    = var.hostname
+  description = var.description
   platform_id = var.platform
 
   allow_stopping_for_update = true

@@ -39,6 +39,7 @@ data "yandex_compute_filesystem" "fs" {
 
 #   name        = "hrl-open-vpn"
 #   hostname    = "hrl-open-vpn"
+#   description = "Open VPN"
 #   preemptible = var.preemptible
 #   nat         = true
 
@@ -58,6 +59,7 @@ module "vm-reverse-nginx" {
 
   name        = "hrl-reverse-nginx"
   hostname    = "hrl-reverse-nginx"
+  description = "Реверс nginx"
   preemptible = var.preemptible
   nat         = false
 
