@@ -1,7 +1,12 @@
+# - name: check if /dev/vdb1 is in /etc/fstab
+#   ansible.builtin.shell: grep -q "/dev/vdb1" /etc/fstab
+#   register: fstab_check
+# #   failed_when: false
+
 - name: check if /dev/vdb1 is in /etc/fstab
-  ansible.builtin.shell: grep -q "/dev/vdb1" /etc/fstab
+  ansible.builtin.command: grep -q '/dev/vdb1' /etc/fstab
   register: fstab_check
-#   failed_when: false
+  ignore_errors: true
 
 - name: perform disk setup if /dev/vdb1 is not in /etc/fstab
   block:
@@ -40,7 +45,6 @@
             state: mounted
             opts: defaults,nofail
   when: not fstab_check.stdout
-
 # - name: add entry to /etc/fstab
 #   block:
 #       - name: add entry to /etc/fstab
