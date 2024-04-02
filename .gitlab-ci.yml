@@ -164,6 +164,8 @@ ansible:
         - apply_configuration
     script:
         - ansible --version
+        - apk add --no-cache ansible
+        - ansible --version
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
         - ssh-add "$ssh_private_key"
