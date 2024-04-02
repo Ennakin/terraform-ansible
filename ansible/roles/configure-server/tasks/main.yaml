@@ -1,14 +1,14 @@
-- import_tasks: create-users.yaml
-  when: ansible_facts['distribution'] in ubuntu_list
-
 - import_tasks: install-packages-ubuntu.yaml
   when: ansible_facts['distribution'] in ubuntu_list
 
 - import_tasks: mount-disk.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_name != ''
+  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount != 'false'
 
 - import_tasks: mount-filesystem.yaml
   when: ansible_facts['distribution'] in ubuntu_list and filesystem_name != ''
+
+- import_tasks: create-users.yaml
+  when: ansible_facts['distribution'] in ubuntu_list
 
 # TODO reverse_nginx_hostname - переменная из defaults/main.yaml
 - import_tasks: install-nginx.yaml

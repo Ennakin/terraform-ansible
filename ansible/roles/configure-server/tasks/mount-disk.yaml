@@ -1,8 +1,3 @@
-# - name: check if /dev/vdb1 is in /etc/fstab
-#   ansible.builtin.shell: grep -q "/dev/vdb1" /etc/fstab
-#   register: fstab_check
-# #   failed_when: false
-
 - name: check if /dev/vdb1 is in /etc/fstab
   ansible.builtin.command: grep -q '/dev/vdb1' /etc/fstab
   register: fstab_check
@@ -31,25 +26,27 @@
   block:
       - name: create mount point
         ansible.builtin.file:
-            path: /mnt/vdb1
+            path: /var/hrlink
             state: directory
   when: not fstab_check.stdout
 
-- name: mount /dev/vdb1 to /mnt/vdb1
+- name: mount /dev/vdb1 to //var/hrlink
   block:
-      - name: mount /dev/vdb1 to /mnt/vdb1
+      - name: mount /dev/vdb1 to //var/hrlink
         ansible.builtin.mount:
             src: /dev/vdb1
-            path: /mnt/vdb1
+            path: //var/hrlink
             fstype: ext4
             state: mounted
             opts: defaults,nofail
   when: not fstab_check.stdout
+
+# # в таске выше добавление происходит автоматически
 # - name: add entry to /etc/fstab
 #   block:
 #       - name: add entry to /etc/fstab
 #         ansible.builtin.lineinfile:
 #             path: /etc/fstab
-#             line: "UUID={{ disk_uuid }} /mnt/vdb1 ext4 defaults 0 2"
+#             line: "UUID={{ disk_uuid }} /var/hrlink ext4 defaults 0 2"
 #             create: yes
 #   when: not fstab_check.stdout
