@@ -23,7 +23,7 @@ cloud-config
 *.backup
 
 # inventory -- игнорится диретория inventory/, а нужно игнорит ь только файлы inventory
-# inventory
+inventory
 inventory-*
 inventory_*
 
