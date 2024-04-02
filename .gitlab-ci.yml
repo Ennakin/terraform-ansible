@@ -164,7 +164,11 @@ ansible:
         - apply_configuration
     script:
         - ansible --version
-        - apk add --no-cache ansible
+        - wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+        - echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories
+        - echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+        - echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+        - apk update && --no-cache ansible
         - ansible --version
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
