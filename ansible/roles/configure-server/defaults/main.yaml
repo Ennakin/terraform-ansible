@@ -12,6 +12,8 @@ app_list_all:
 app_list_reverse_nginx:
     - nginx
 
+secondary_disk_name: "{{ lookup('env', 'SECONDARY_DISK_NAME', default='') }}"
+
 filesystem_name: "{{ lookup('env', 'FILESYSTEM_NAME', default='') }}"
 
 user_list_docker: "{{ lookup('env', 'USERS_DOCKER', default='').split(',') }}"

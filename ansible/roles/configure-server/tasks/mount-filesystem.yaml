@@ -9,7 +9,7 @@
       src: "{{ filesystem_name }}"
       path: "/mnt/{{ filesystem_name }}"
       fstype: virtiofs
-      opts: "defaults,nofail"
+      opts: defaults,nofail
       state: mounted
     #   fstab: yes
 

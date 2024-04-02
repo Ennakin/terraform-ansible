@@ -1,0 +1,52 @@
+- name: check if /dev/vdb1 is in /etc/fstab
+  ansible.builtin.shell: grep -q "/dev/vdb1" /etc/fstab
+  register: fstab_check
+  changed_when: false
+
+- name: perform disk setup if /dev/vdb1 is not in /etc/fstab
+  block:
+      - name: create partition on /dev/vdb
+        ansible.builtin.parted:
+            device: /dev/vdb
+            number: 1
+            state: present
+            align: optimal
+            name: primary
+            part_end: 100%
+  when: not fstab_check.stdout
+
+- name: create ext4 filesystem on /dev/vdb1
+  block:
+      - name: Create partition on /dev/vdb
+        ansible.builtin.filesystem:
+            fstype: ext4
+            dev: /dev/vdb1
+  when: not fstab_check.stdout
+
+- name: create mount point
+  block:
+      - name: Create partition on /dev/vdb
+        ansible.builtin.file:
+            path: /mnt/vdb1
+            state: directory
+  when: not fstab_check.stdout
+
+- name: mount /dev/vdb1 to /mnt/vdb1
+  block:
+      - name: create partition on /dev/vdb
+        ansible.builtin.mount:
+            src: /dev/vdb1
+            path: /mnt/vdb1
+            fstype: ext4
+            state: mounted
+            opts: defaults,nofail
+  when: not fstab_check.stdout
+
+# - name: add entry to /etc/fstab
+#   block:
+#       - name: Create partition on /dev/vdb
+#         ansible.builtin.lineinfile:
+#             path: /etc/fstab
+#             line: "UUID={{ disk_uuid }} /mnt/vdb1 ext4 defaults 0 2"
+#             create: yes
+#   when: not fstab_check.stdout
