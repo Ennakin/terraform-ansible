@@ -154,7 +154,8 @@ apply_configuration:
 
 ansible:
     image:
-        name: alpinelinux/ansible
+        # name: alpinelinux/ansible
+        name: litmuschaos/ansible-runner:latest
         entrypoint: [""]
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -163,12 +164,12 @@ ansible:
     dependencies:
         - apply_configuration
     script:
-        - ansible --version
-        - wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
-        - echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories
-        - echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
-        - echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
-        - apk update --allow-untrusted && apk update --no-cache && apk add ansible
+        #- ansible --version
+        #- wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+        #- echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories
+        #- echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+        #- echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+        #- apk update --allow-untrusted && apk update --no-cache && apk add ansible
         - ansible --version
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
