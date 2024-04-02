@@ -30,12 +30,12 @@
             state: directory
   when: not fstab_check.stdout
 
-- name: mount /dev/vdb1 to //var/hrlink
+- name: mount /dev/vdb1 to /var/hrlink
   block:
-      - name: mount /dev/vdb1 to //var/hrlink
+      - name: mount /dev/vdb1 to /var/hrlink
         ansible.builtin.mount:
             src: /dev/vdb1
-            path: //var/hrlink
+            path: /var/hrlink
             fstype: ext4
             state: mounted
             opts: defaults,nofail
