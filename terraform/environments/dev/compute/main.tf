@@ -39,14 +39,12 @@ data "yandex_compute_disk" "secondary_disk" {
   name  = var.secondary_disk_name != "" ? "${var.secondary_disk_name}-${count.index}" : ""
 }
 
-module "vm-dev-another" {
+module "vm-dev" {
   source = "../../../modules/vm"
 
-  count = var.vm_count
-  #   name        = "${var.vm_name}-${count.index}"
-  #   hostname    = "${var.vm_name}-${count.index}"
-  name        = "dev-another"
-  hostname    = "dev-another"
+  count       = var.vm_count
+  name        = "${var.vm_name}-${count.index}"
+  hostname    = "${var.vm_name}-${count.index}"
   preemptible = var.preemptible
   nat         = false
 
@@ -70,13 +68,13 @@ resource "local_file" "vm_ips" {
   content = templatefile("${path.module}/inventory.tpl", {
     vm_hostnames = flatten(
       [
-        module.vm-dev-another.*.hostname
+        module.vm-dev.*.hostname
       ]
     )
 
     vm_ips = flatten(
       [
-        module.vm-dev-another.*.internal_ip
+        module.vm-dev.*.internal_ip
       ]
     )
     }

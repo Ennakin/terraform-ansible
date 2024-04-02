@@ -116,6 +116,7 @@ plan:
         - if: $TF_ENV && $TF_STATE
           when: always
     script:
+        - terraform -version
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
         - ls $env_tf_all 2>/dev/null && source $env_tf_all
@@ -135,6 +136,7 @@ apply_configuration:
         - if: $TF_ENV && $TF_STATE
           when: manual
     script:
+        - terraform -version
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
         - ls $env_tf_all 2>/dev/null && source $env_tf_all
