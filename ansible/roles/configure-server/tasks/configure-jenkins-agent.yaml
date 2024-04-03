@@ -34,7 +34,7 @@
 
 - name: jenkins user home directory set permissions
   ansible.builtin.file:
-      path: "{{ secondary_disk_mount }}"
+      path: "{{ secondary_disk_mount_point }}"
       mode: "0755"
       owner: jenkins
       group: jenkins
