@@ -11,5 +11,5 @@ variable "secondary_disk_size" {
   description = "Secondary disk size"
 
   # GB
-  default = 8
+  default = 50
 }
