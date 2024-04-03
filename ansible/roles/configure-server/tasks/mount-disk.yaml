@@ -26,16 +26,17 @@
   block:
       - name: create mount point
         ansible.builtin.file:
-            path: /var/hrlink
+            path: /mnt/hrlink
             state: directory
+
   when: not fstab_check.stdout
 
-- name: mount /dev/vdb1 to /var/hrlink
+- name: mount /dev/vdb1 to /mnt/hrlink
   block:
-      - name: mount /dev/vdb1 to /var/hrlink
+      - name: mount /dev/vdb1 to /mnt/hrlink
         ansible.builtin.mount:
             src: /dev/vdb1
-            path: /var/hrlink
+            path: /mnt/hrlink
             fstype: ext4
             state: mounted
             opts: defaults,nofail
@@ -47,6 +48,6 @@
 #       - name: add entry to /etc/fstab
 #         ansible.builtin.lineinfile:
 #             path: /etc/fstab
-#             line: "UUID={{ disk_uuid }} /var/hrlink ext4 defaults 0 2"
+#             line: "UUID={{ disk_uuid }} /mnt/hrlink ext4 defaults 0 2"
 #             create: true
 #   when: not fstab_check.stdout

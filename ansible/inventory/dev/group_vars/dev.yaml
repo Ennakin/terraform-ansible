@@ -8,7 +8,7 @@ user_list:
             comment: "jenkins",
             groups: ["jenkins"],
             shell: "/bin/bash",
-            home: "/var/hrlink/",
+            home: "/home/jenkins/",
         }
     developer:
         {

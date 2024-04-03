@@ -25,7 +25,7 @@
       shell: "{{ item.value.shell }}"
       home: "{{ item.value.home }}"
       create_home: true
-      move_home: true
+    #   move_home: true
       append: false
   loop: "{{ user_list | default({}) | dict2items }}"
 
