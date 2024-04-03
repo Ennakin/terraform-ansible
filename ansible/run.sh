@@ -14,8 +14,8 @@ if [ $# -gt 0 ]; then
 
     ANSIBLE_PARAMS=$@
 
-    if [ -z $TF_ENV ]; then
-        echo >&2 "$TF_ENV required..."
+    if [ -z $ANSIBLE_ENV ]; then
+        echo >&2 "$ANSIBLE_ENV required..."
         exit 1
     fi
 
