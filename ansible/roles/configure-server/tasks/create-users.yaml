@@ -37,13 +37,13 @@
       recurse: true
   loop: "{{ user_list | default({}) | dict2items }}"
 
-# TODO не нашёл как сделать так чтобы ansible НЕ добавлял пользователей в стандартную группу users
-- name: remove user from group
-  ansible.builtin.user:
-      name: "{{ item.key }}"
-      groups: users
-      state: absent
-  loop: "{{ user_list | default({}) | dict2items }}"
+# # TODO не нашёл как сделать так чтобы ansible НЕ добавлял пользователей в стандартную группу users
+# - name: remove user from group
+#   ansible.builtin.user:
+#       name: "{{ item.key }}"
+#       groups: users
+#       state: absent
+#   loop: "{{ user_list | default({}) | dict2items }}"
 
 # # удаление группы users создаваемой ansible-ом автоматически
 # - name: remove group
