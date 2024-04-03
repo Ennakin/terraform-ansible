@@ -43,12 +43,12 @@
             opts: defaults,nofail
   when: not fstab_check.stdout
 
-# # в таске выше добавление происходит автоматически
-# - name: add entry to /etc/fstab
-#   block:
-#       - name: add entry to /etc/fstab
-#         ansible.builtin.lineinfile:
-#             path: /etc/fstab
-#             line: "UUID={{ disk_uuid }} {{ secondary_disk_mount_point }} ext4 defaults 0 2"
-#             create: true
-#   when: not fstab_check.stdout
+- name: mount point set permissions
+  block:
+      - name: mount point set permissions
+        ansible.builtin.file:
+            path: "{{ secondary_disk_mount_point }}"
+            mode: "0755"
+            owner: jenkins
+            group: jenkins
+  when: not fstab_check.stdout

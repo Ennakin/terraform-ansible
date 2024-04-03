@@ -28,17 +28,9 @@
   block:
       - name: filesystem mount point set permissions
         ansible.builtin.file:
-        path: "/mnt/{{ filesystem_name }}"
-        mode: "0755"
-        owner: root
-        group: root
-        #   recurse: true
+            path: "/mnt/{{ filesystem_name }}"
+            mode: "0755"
+            owner: root
+            group: root
+            #   recurse: true
   when: not fstab_check.stdout
-
-# # в таске выше добавление происходит автоматически
-# - name: filesystem mount add to /etc/fstab
-#   ansible.builtin.lineinfile:
-#       path: /etc/fstab
-#       line: "{{ filesystem_name }} /mnt/{{ filesystem_name }} virtiofs rw 0 0"
-#       create: true
-#       state: present

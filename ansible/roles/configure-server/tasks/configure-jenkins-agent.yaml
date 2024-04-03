@@ -32,14 +32,6 @@
       owner: jenkins
       group: jenkins
 
-- name: jenkins user home directory set permissions
-  ansible.builtin.file:
-      path: "{{ secondary_disk_mount_point }}"
-      mode: "0755"
-      owner: jenkins
-      group: jenkins
-      #   recurse: true
-
 - name: jenkins master add to hosts
   ansible.builtin.lineinfile:
       path: /etc/hosts
