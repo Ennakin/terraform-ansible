@@ -13,14 +13,14 @@
       path: /usr/local/jenkins-service/
       owner: jenkins
       group: jenkins
-      mode: 0755
+      mode: "0755"
       state: directory
 
 - name: jenkins agent start script copy
   ansible.builtin.template:
       src: start-agent.sh.j2
       dest: /usr/local/jenkins-service/start-agent.sh
-      mode: 0755
+      mode: "0755"
       owner: jenkins
       group: jenkins
 
@@ -28,14 +28,14 @@
   ansible.builtin.template:
       src: agent.env.j2
       dest: /usr/local/jenkins-service/agent.env
-      mode: 0644
+      mode: "0644"
       owner: jenkins
       group: jenkins
 
 - name: jenkins user home directory set permissions
   ansible.builtin.file:
       path: /var/hrlink/
-      mode: 0755
+      mode: "0755"
       #   recurse: true
 
 - name: jenkins master add to hosts

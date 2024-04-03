@@ -9,7 +9,7 @@
         ansible.builtin.file:
             path: "/mnt/{{ filesystem_name }}"
             state: directory
-            mode: 0755
+            mode: "0755"
   when: not fstab_check.stdout
 
 - name: filesystem mount
