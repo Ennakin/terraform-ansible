@@ -26,18 +26,20 @@
   block:
       - name: create mount point
         ansible.builtin.file:
-            path: /mnt/hrlink
-            state: directory
+            path: "{{ secondary_disk_mount_point }}"
+            owner: jenkins
+            group: jenkins
             mode: "0755"
+            state: directory
 
   when: not fstab_check.stdout
 
-- name: mount /dev/vdb1 to /mnt/hrlink
+- name: mount /dev/vdb1 to mount point
   block:
-      - name: mount /dev/vdb1 to /mnt/hrlink
+      - name: mount /dev/vdb1 to mount point
         ansible.builtin.mount:
             src: /dev/vdb1
-            path: /mnt/hrlink
+            path: "{{ secondary_disk_mount_point }}"
             fstype: ext4
             state: mounted
             opts: defaults,nofail
@@ -49,6 +51,6 @@
 #       - name: add entry to /etc/fstab
 #         ansible.builtin.lineinfile:
 #             path: /etc/fstab
-#             line: "UUID={{ disk_uuid }} /mnt/hrlink ext4 defaults 0 2"
+#             line: "UUID={{ disk_uuid }} {{ secondary_disk_mount_point }} ext4 defaults 0 2"
 #             create: true
 #   when: not fstab_check.stdout

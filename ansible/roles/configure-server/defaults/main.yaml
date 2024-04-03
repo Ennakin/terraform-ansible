@@ -12,7 +12,9 @@ app_list_all:
 app_list_reverse_nginx:
     - nginx
 
-secondary_disk_mount: "{{ lookup('env', 'SECONDARY_DISK_MOUNT', default='false') }}"
+# secondary_disk_mount: "{{ lookup('env', 'SECONDARY_DISK_MOUNT', default='false') }}"
+
+secondary_disk_mount_point: "{{ lookup('env', 'SECONDARY_DISK_MOUNT', default='') }}"
 
 filesystem_name: "{{ lookup('env', 'FILESYSTEM_NAME', default='') }}"
 
