@@ -20,7 +20,20 @@ if [ $# -gt 0 ]; then
 
     TF_PARAMS=$@
 
-    echo $TF_PARAMS
+    if [ -z $TF_ENV ]; then
+        echo >&2 "$TF_ENV required..."
+        exit 1
+    fi
+
+    if [ -z $TF_STATE ]; then
+        echo >&2 "$TF_STATE required..."
+        exit 1
+    fi
+
+    if [ -z $TF_OPERATION ]; then
+        echo >&2 "$TF_OPERATION required..."
+        exit 1
+    fi
 
     if [ ! -d "./environments/$TF_ENV/$TF_STATE" ]; then
         echo >&2 "Directory $DIR/$TF_ENV/$TF_STATE" does not exist...

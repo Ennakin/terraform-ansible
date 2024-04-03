@@ -14,7 +14,10 @@ if [ $# -gt 0 ]; then
 
     ANSIBLE_PARAMS=$@
 
-    echo $ANSIBLE_PARAMS
+    if [ -z $TF_ENV ]; then
+        echo >&2 "$TF_ENV required..."
+        exit 1
+    fi
 
     if [ ! -d "./inventory/$ANSIBLE_ENV" ]; then
         echo >&2 "Directory $DIR/$ANSIBLE_ENV" does not exist...
