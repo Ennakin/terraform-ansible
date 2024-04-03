@@ -27,8 +27,6 @@
       - name: create mount point
         ansible.builtin.file:
             path: "{{ secondary_disk_mount_point }}"
-            owner: jenkins
-            group: jenkins
             mode: "0755"
             state: directory
 

@@ -34,8 +34,10 @@
 
 - name: jenkins user home directory set permissions
   ansible.builtin.file:
-      path: /var/hrlink/
+      path: "{{ secondary_disk_mount }}"
       mode: "0755"
+      owner: jenkins
+      group: jenkins
       #   recurse: true
 
 - name: jenkins master add to hosts
