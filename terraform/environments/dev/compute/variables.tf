@@ -22,7 +22,7 @@ variable "nat" {
 
 variable "boot_disk_image_id" {}
 variable "boot_disk_size" {
-  default = 50
+  default = 20
 }
 
 variable "secondary_disk_name" {
