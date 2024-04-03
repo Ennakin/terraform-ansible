@@ -14,7 +14,7 @@
 
 - name: filesystem mount
   block:
-      - name: filesystem directory create
+      - name: filesystem mount
         ansible.builtin.mount:
             src: "{{ filesystem_name }}"
             path: "/mnt/{{ filesystem_name }}"
@@ -22,6 +22,17 @@
             opts: defaults,nofail
             state: mounted
             #   fstab: true
+  when: not fstab_check.stdout
+
+- name: filesystem mount point set permissions
+  block:
+      - name: filesystem mount point set permissions
+        ansible.builtin.file:
+        path: "/mnt/{{ filesystem_name }}"
+        mode: "0755"
+        owner: root
+        group: root
+        #   recurse: true
   when: not fstab_check.stdout
 
 # # в таске выше добавление происходит автоматически

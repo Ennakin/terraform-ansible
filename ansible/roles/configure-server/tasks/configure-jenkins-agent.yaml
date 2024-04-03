@@ -43,7 +43,7 @@
 - name: jenkins master add to hosts
   ansible.builtin.lineinfile:
       path: /etc/hosts
-      line: "10.70.1.5 ci.myhrlink.ru"
+      line: "{{ jenkins_master_node_host }}"
       insertafter: "^127.0.0.1 localhost$"
       create: true
       state: present
@@ -51,7 +51,7 @@
 - name: jenkins master add to cloud templates hosts
   ansible.builtin.lineinfile:
       path: /etc/cloud/templates/hosts.debian.tmpl
-      line: "10.70.1.5 ci.myhrlink.ru"
+      line: "{{ jenkins_master_node_host }}"
       insertafter: "^127.0.0.1 localhost$"
       create: true
       state: present
