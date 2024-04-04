@@ -2,10 +2,10 @@
 export TF_VAR_vm_hosts_result_file_path=
 
 # количество VM-ок
-export TF_VAR_vm_count=
+export TF_VAR_vm_count=1
 
 # маска для названия VM-ок
-export TF_VAR_vm_name=
+export TF_VAR_vm_name=dev
 
-# дополнительный диск для VM-ок
-export TF_VAR_secondary_disk_name=
+# маска для названия дополнительных дисков для VM-ок
+export TF_VAR_secondary_disk_name=secondary-disk-dev

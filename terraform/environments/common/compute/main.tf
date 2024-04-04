@@ -23,22 +23,23 @@ provider "yandex" {
 #   name = "${var.subnetwork_name}-public"
 # }
 
+# подсеть из другой директории
 data "yandex_vpc_subnet" "subnetwork" {
   folder_id = var.folder_id_main_folder
   name      = var.subnetwork_name_main_folder
 }
 
 # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
-data "yandex_compute_filesystem" "fs" {
+data "yandex_compute_filesystem" "fs_hrl" {
   count = var.filesystem_name != "" ? 1 : 0
-  name  = var.filesystem_name
+  name  = "hrl-${var.filesystem_name}"
 }
 
 # module "vm-open-vpn" {
 #   source = "../../../modules/vm"
 
-#   name        = "hrl-open-vpn"
-#   hostname    = "hrl-open-vpn"
+#   name        = "open-vpn"
+#   hostname    = "open-vpn"
 #   description = "Open VPN"
 #   preemptible = var.preemptible
 #   nat         = true
@@ -50,15 +51,15 @@ data "yandex_compute_filesystem" "fs" {
 #   cloud_config_path  = file(var.cloud_config_file_path)
 
 #   subnetwork_id          = data.yandex_vpc_subnet.subnetwork.id
-#   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs[0].id : ""
-#   filesystem_device_name = var.filesystem_name != "" ? var.filesystem_device_name : ""
+#   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+#   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
 # }
 
 module "vm-reverse-nginx" {
   source = "../../../modules/vm"
 
-  name        = "hrl-reverse-nginx"
-  hostname    = "hrl-reverse-nginx"
+  name        = "reverse-nginx"
+  hostname    = "reverse-nginx"
   description = "Реверс nginx"
   preemptible = var.preemptible
   nat         = false
@@ -70,8 +71,8 @@ module "vm-reverse-nginx" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id          = data.yandex_vpc_subnet.subnetwork.id
-  filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs[0].id : ""
-  filesystem_device_name = var.filesystem_name != "" ? var.filesystem_device_name : ""
+  filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+  filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
 }
 
 # вывод в файл полученных hostname и ip vm-ок

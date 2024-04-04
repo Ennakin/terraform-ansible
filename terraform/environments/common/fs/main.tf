@@ -18,9 +18,9 @@ provider "yandex" {
   zone      = var.zone
 }
 
-module "fs" {
+module "fs-hrl" {
   source = "../../../modules/filesystem"
 
-  filesystem_name = var.filesystem_name
+  filesystem_name = "hrl-${var.filesystem_name}"
   filesystem_size = var.filesystem_size
 }

@@ -18,10 +18,10 @@ provider "yandex" {
   zone      = var.zone
 }
 
-module "disk" {
+module "disk-hrl" {
   source = "../../../modules/disk"
 
   count = var.vm_count
 
-  secondary_disk_name = "${var.secondary_disk_name}-${count.index}"
+  secondary_disk_name = "hrl-${var.secondary_disk_name}-${count.index}"
 }
