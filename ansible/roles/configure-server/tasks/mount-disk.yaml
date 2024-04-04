@@ -29,7 +29,6 @@
             path: "{{ secondary_disk_mount_point }}"
             mode: "0755"
             state: directory
-
   when: not fstab_check.stdout
 
 - name: mount /dev/vdb1 to mount point
