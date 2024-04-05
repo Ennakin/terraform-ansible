@@ -57,22 +57,15 @@
       user: "{{ item.key }}"
       state: present
       exclusive: true
-      key: "{{ lookup('env', 'PUB_' + item.key | upper, default='') }}"
+      key: "{{ lookup('env', 'PUB_' + item.key | upper, errors='ignore') }}"
   loop: "{{ user_list | default({}) | dict2items }}"
-  when: lookup('env', 'PUB_' + item.key | upper, default='') != ''
+  when: lookup('env', 'PUB_' + item.key | upper) != ''
 
 # добавление публичных ssh ключей из файлов
-- name: check if public key file exists
-  ansible.builtin.stat:
-      path: "{{ item.key }}.pub"
-  register: key_file
-  loop: "{{ user_list | default({}) | dict2items }}"
-
-- name: get authorized keys from file
+- name: get authorized keys from files
   ansible.posix.authorized_key:
-      user: "{{ item.item.key }}"
+      user: "{{ item }}"
       state: present
       exclusive: true
-      key: "{{ lookup('file', item.item.key + '.pub', errors='omit') }}"
-  loop: "{{ key_file.results }}"
-  when: item.stat.exists
+      key: "{{ lookup('file', '../roles/configure-server/files/' + item + '.pub', errors='ignore') }}"
+  loop: "{{ user_list.keys() | default([]) }}"
