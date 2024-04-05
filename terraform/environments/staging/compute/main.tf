@@ -18,6 +18,10 @@ provider "yandex" {
   zone      = var.zone
 }
 
+locals {
+  parsed_servers = jsondecode(var.servers)
+}
+
 # # пока используется подсеть из основной директории
 # data "yandex_vpc_subnet" "subnetwork" {
 #   name = "${var.subnetwork_name}-private"
@@ -36,17 +40,18 @@ data "yandex_compute_filesystem" "fs_hrl" {
 }
 
 data "yandex_compute_disk" "secondary_disk_hrl" {
-  count = var.secondary_disk_name != "" ? var.vm_count : 0
-  name  = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${count.index}" : ""
+  for_each = var.secondary_disk_name != "" ? local.parsed_servers : {}
+  name     = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${each.key}" : ""
 }
 
 module "vm-staging-hrl" {
   source = "../../../modules/vm"
 
-  count       = var.vm_count
-  name        = "hrl-${var.vm_name}-${count.index}"
-  hostname    = "hrl-${var.vm_name}-${count.index}"
-  description = "HRL-VM-staging-${count.index}"
+  for_each = local.parsed_servers
+
+  name        = "hrl-${var.vm_name}-${each.key}"
+  hostname    = "hrl-${var.vm_name}-${each.key}"
+  description = "HRL-VM-dev-${each.value}"
   preemptible = var.preemptible
   nat         = false
 
@@ -57,7 +62,7 @@ module "vm-staging-hrl" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl[count.index].id : ""
+  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
 
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
@@ -69,13 +74,13 @@ resource "local_file" "vm_ips" {
   content = templatefile("${path.module}/inventory.tpl", {
     vm_hostnames = flatten(
       [
-        module.vm-staging-hrl.*.hostname
+        for instance in module.vm-staging-hrl : instance.hostname
       ]
     )
 
     vm_ips = flatten(
       [
-        module.vm-staging-hrl.*.internal_ip
+        for instance in module.vm-staging-hrl : instance.internal_ip
       ]
     )
     }

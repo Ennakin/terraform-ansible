@@ -22,7 +22,7 @@ variable "nat" {
 
 variable "boot_disk_image_id" {}
 variable "boot_disk_size" {
-  default = 20
+  default = 30
 }
 
 variable "secondary_disk_name" {
@@ -45,7 +45,10 @@ variable "vm_hosts_result_file_path" {
 }
 
 variable "vm_name" {}
-variable "vm_count" {}
+variable "servers" {
+  description = "Servers to creating"
+  default     = ""
+}
 
 # переменные основной директории
 variable "folder_id_main_folder" {}

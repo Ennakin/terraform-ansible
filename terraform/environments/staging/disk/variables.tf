@@ -4,4 +4,12 @@ variable "folder_id" {}
 variable "zone" {}
 
 variable "secondary_disk_name" {}
-variable "vm_count" {}
+
+variable "secondary_disk_size" {
+  default = 40
+}
+
+variable "servers" {
+  type    = string
+  default = ""
+}

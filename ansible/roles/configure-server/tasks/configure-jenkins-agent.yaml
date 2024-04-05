@@ -1,3 +1,12 @@
+# добавление пользователя jenkins в sudoers
+- name: copy sudoers configuration file
+  ansible.builtin.copy:
+      content: "jenkins ALL=(ALL) NOPASSWD:ALL"
+      dest: /etc/sudoers.d/jenkins
+      owner: root
+      group: root
+      mode: "0440"
+
 - name: install java 11
   apt:
       name: openjdk-11-jdk-headless

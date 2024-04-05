@@ -2,6 +2,10 @@ variable "filesystem_name" {
   description = "Filesystem name"
 }
 
+variable "filesystem_description" {
+  description = "Filesystem description"
+}
+
 variable "filesystem_type" {
   description = "Filesystm type"
   default     = "network-hdd"

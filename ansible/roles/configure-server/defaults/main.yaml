@@ -5,9 +5,14 @@ app_list_all:
     - screen
     - curl
     - jq
+    - uuid-runtime
     - mc
     - unzip
     - make
+    - netcat
+    - net-tools
+    - iproute2
+    - iputils-ping
 
 app_list_reverse_nginx:
     - nginx

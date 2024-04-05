@@ -2,7 +2,9 @@
   apt:
       name: "{{ item }}"
       state: present
-      update_cache: true
+
+      # # из-за обновления кэша иногда падает, без него пока не такого было
+      #   update_cache: true
   loop:
       - apt-transport-https
       - ca-certificates
@@ -38,7 +40,7 @@
       state: started
       enabled: true
 
-- name: Ensure group "docker" exists
+- name: ensure group "docker" exists
   ansible.builtin.group:
       name: docker
       state: present

@@ -22,7 +22,7 @@ variable "nat" {
 
 variable "boot_disk_image_id" {}
 variable "boot_disk_size" {
-  default = 20
+  default = 30
 }
 
 variable "filesystem_name" {

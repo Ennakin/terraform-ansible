@@ -18,10 +18,16 @@ provider "yandex" {
   zone      = var.zone
 }
 
+locals {
+  parsed_servers = jsondecode(var.servers)
+}
+
 module "disk-hrl" {
   source = "../../../modules/disk"
 
-  count = var.vm_count
+  for_each = local.parsed_servers
 
-  secondary_disk_name = "hrl-${var.secondary_disk_name}-${count.index}"
+  secondary_disk_name        = "hrl-${var.secondary_disk_name}-${each.key}"
+  secondary_disk_description = each.value
+  secondary_disk_size        = var.secondary_disk_size
 }

@@ -19,22 +19,25 @@ provider "yandex" {
 }
 
 module "network" {
-  source       = "../../../modules/vpc-network"
-  network_name = var.network_name
+  source              = "../../../modules/vpc-network"
+  network_name        = var.network_name
+  network_description = "Сеть"
 }
 
 module "subnetwork-private" {
   source = "../../../modules/vpc-subnetwork"
 
-  network_id      = module.network.id
-  subnetwork_name = "${var.subnetwork_name}-private"
-  cidr_v4         = var.subnetwork_cidr_v4_private
+  network_id             = module.network.id
+  subnetwork_name        = "${var.subnetwork_name}-private"
+  subnetwork_description = "Приватная подсеть"
+  cidr_v4                = var.subnetwork_cidr_v4_private
 }
 
 module "subnetwork-public" {
   source = "../../../modules/vpc-subnetwork"
 
-  network_id      = module.network.id
-  subnetwork_name = "${var.subnetwork_name}-public"
-  cidr_v4         = var.subnetwork_cidr_v4_public
+  network_id             = module.network.id
+  subnetwork_name        = "${var.subnetwork_name}-public"
+  subnetwork_description = "Публичная подсеть"
+  cidr_v4                = var.subnetwork_cidr_v4_public
 }

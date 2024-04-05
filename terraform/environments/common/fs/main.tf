@@ -21,6 +21,7 @@ provider "yandex" {
 module "fs-hrl" {
   source = "../../../modules/filesystem"
 
-  filesystem_name = "hrl-${var.filesystem_name}"
-  filesystem_size = var.filesystem_size
+  filesystem_name        = "hrl-${var.filesystem_name}"
+  filesystem_description = "Файловое хранилище HRL"
+  filesystem_size        = var.filesystem_size
 }
