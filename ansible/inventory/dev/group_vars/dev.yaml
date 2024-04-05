@@ -1,6 +1,7 @@
 group_list:
     - jenkins
     - developer
+    - tester
 
 user_list:
     jenkins:
@@ -16,4 +17,11 @@ user_list:
             groups: ["developer"],
             shell: "/bin/bash",
             home: "/home/developer/",
+        }
+    tester:
+        {
+            comment: "tester",
+            groups: ["tester"],
+            shell: "/bin/bash",
+            home: "/home/tester/",
         }
