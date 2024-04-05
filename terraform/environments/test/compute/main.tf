@@ -84,7 +84,7 @@ module "vm-regress-release-hrl" {
   nat         = false
 
   cpu                = var.cpu
-  ram                = var.ram
+  ram                = 20
   boot_disk_image_id = var.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.cloud_config_file_path)
@@ -110,7 +110,7 @@ module "vm-regress-master-hrl" {
   nat         = false
 
   cpu                = var.cpu
-  ram                = var.ram
+  ram                = 20
   boot_disk_image_id = var.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.cloud_config_file_path)

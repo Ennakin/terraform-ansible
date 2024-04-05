@@ -6,10 +6,10 @@ variable "zone" {}
 variable "subnetwork_name" {}
 
 variable "cpu" {
-  default = 2
+  default = 6
 }
 variable "ram" {
-  default = 2
+  default = 18
 }
 
 variable "preemptible" {
