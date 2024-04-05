@@ -1,0 +1,5 @@
+- name: standart server playbook
+  hosts: devops
+  become: true
+  roles:
+    - configure-server
