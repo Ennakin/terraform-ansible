@@ -1,36 +1,37 @@
-- name: check if filesystem is in /etc/fstab
-  ansible.builtin.command: grep -q '{{ filesystem_name }}' /etc/fstab
-  register: fstab_check
-  ignore_errors: true
+# - name: check if filesystem is in /etc/fstab
+#   ansible.builtin.command: grep -q '{{ filesystem_name }}' /etc/fstab
+#   register: fstab_check
+#   ignore_errors: true
 
 - name: filesystem directory create
-  block:
-      - name: filesystem directory create
-        ansible.builtin.file:
-            path: "/mnt/{{ filesystem_name }}"
-            state: directory
-            mode: "0755"
-  when: not fstab_check.stdout
+  #   block:
+  #       - name: filesystem directory create
+  ansible.builtin.file:
+      path: "/mnt/{{ filesystem_name }}"
+      state: directory
+      mode: "0755"
+#   when: not fstab_check.stdout
 
 - name: filesystem mount
-  block:
-      - name: filesystem mount
-        ansible.builtin.mount:
-            src: "{{ filesystem_name }}"
-            path: "/mnt/{{ filesystem_name }}"
-            fstype: virtiofs
-            opts: defaults,nofail
-            state: mounted
-            #   fstab: true
-  when: not fstab_check.stdout
+  #   block:
+  #       - name: filesystem mount
+  ansible.builtin.mount:
+      src: "{{ filesystem_name }}"
+      path: "/mnt/{{ filesystem_name }}"
+      fstype: virtiofs
+      opts: defaults,nofail
+      state: mounted
+      #   fstab: true
+#   when: not fstab_check.stdout
 
 - name: filesystem mount point set permissions
-  block:
-      - name: filesystem mount point set permissions
-        ansible.builtin.file:
-            path: "/mnt/{{ filesystem_name }}"
-            mode: "0755"
-            owner: root
-            group: root
-            #   recurse: true
-  when: not fstab_check.stdout
+  #   block:
+  #       - name: filesystem mount point set permissions
+  ansible.builtin.file:
+      path: "/mnt/{{ filesystem_name }}"
+      mode: "0755"
+      owner: root
+      group: root
+      state: directory
+      #   recurse: true
+#   when: not fstab_check.stdout

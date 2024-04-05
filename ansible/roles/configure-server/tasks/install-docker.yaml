@@ -50,4 +50,5 @@
       name: "{{ item }}"
       groups: docker
       append: true
+      state: present
   loop: "{{ user_list_docker | default([]) }}"
