@@ -43,3 +43,4 @@ variable "vm_hosts_result_file_path" {
 # переменные основной директории
 variable "folder_id_main_folder" {}
 variable "subnetwork_name_main_folder" {}
+variable "filesystem_name_main_folder" {}

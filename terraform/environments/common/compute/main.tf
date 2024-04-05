@@ -29,10 +29,17 @@ data "yandex_vpc_subnet" "subnetwork" {
   name      = var.subnetwork_name_main_folder
 }
 
-# sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
+# # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
+# data "yandex_compute_filesystem" "fs_hrl" {
+#   count = var.filesystem_name != "" ? 1 : 0
+#   name  = "hrl-${var.filesystem_name}"
+# }
+
+# файловое хранилище из другой директории
 data "yandex_compute_filesystem" "fs_hrl" {
-  count = var.filesystem_name != "" ? 1 : 0
-  name  = "hrl-${var.filesystem_name}"
+  count     = var.filesystem_name != "" ? 1 : 0
+  folder_id = var.folder_id_main_folder
+  name      = var.filesystem_name_main_folder
 }
 
 # module "vm-open-vpn" {
