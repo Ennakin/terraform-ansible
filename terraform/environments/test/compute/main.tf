@@ -84,9 +84,9 @@ module "vm-regress-release-hrl" {
     "regress-release" = local.parsed_servers["regress-release"]
   }
 
-  name        = "hrl-regress-release"
-  hostname    = "hrl-regress-release"
-  description = "VM для разворачивания HRL во время регресса на release ветке"
+  name        = "hrl-${var.vm_name}-${each.key}"
+  hostname    = "hrl-${var.vm_name}-${each.key}"
+  description = "HRL-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
 
@@ -110,9 +110,9 @@ module "vm-regress-master-hrl" {
     "regress-master" = local.parsed_servers["regress-master"]
   }
 
-  name        = "hrl-regress-master"
-  hostname    = "hrl-regress-master"
-  description = "VM для разворачивания HRL во время регресса на master ветке"
+  name        = "hrl-${var.vm_name}-${each.key}"
+  hostname    = "hrl-${var.vm_name}-${each.key}"
+  description = "HRL-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
 
