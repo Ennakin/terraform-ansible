@@ -1,4 +1,4 @@
-- name: install reverse packages
+- name: install vsftpd
   apt:
       name: vsftpd
       state: latest
@@ -6,13 +6,12 @@
 
 - name: vsftpd config copy
   ansible.builtin.template:
-      src: "{{ item }}"
-      dest: "/etc/{{ item }}"
+      src: "{{ item.name }}"
+      dest: "/etc/{{ item.item_no_extension }}"
       mode: "0644"
       owner: root
       group: root
   loop:
-      - "vsftpd.ftp.conf.j2"
-      - "vsftpd.ftps.conf.j2"
-      - "vsftpd.sftp.conf.j2"
-  when: (item | default('') != '') and (item is exists)
+      - { name: "vsftpd.ftp.conf.j2", item_no_extension: "vsftpd.ftp.conf" }
+      - { name: "vsftpd.ftps.conf.j2", item_no_extension: "vsftpd.ftps.conf" }
+      - { name: "vsftpd.sftp.conf.j2", item_no_extension: "vsftpd.sftp.conf" }
