@@ -14,6 +14,9 @@ app_list_all:
     - iproute2
     - iputils-ping
 
+app_list_working:
+    - vsftpd
+
 app_list_reverse_nginx:
     - nginx
 

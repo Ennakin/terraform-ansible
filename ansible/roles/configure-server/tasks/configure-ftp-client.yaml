@@ -1,0 +1,12 @@
+- name: vsftpd ftp config copy
+  ansible.builtin.template:
+      src: "{{ item }}"
+      dest: "/etc/{{ item }}"
+      mode: "0644"
+      owner: root
+      group: root
+  loop:
+      - "vsftpd.ftp.conf"
+      - "vsftpd.ftps.conf"
+      - "vsftpd.sftp.conf"
+  when: (item | default('') != '') and (item is exists)

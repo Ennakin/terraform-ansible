@@ -3,3 +3,4 @@
       name: "{{ app_list_all | default([]) }}"
       state: present
       update_cache: true
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|regress|staging'))

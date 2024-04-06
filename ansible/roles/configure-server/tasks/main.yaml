@@ -19,3 +19,6 @@
 
 - import_tasks: configure-jenkins-agent.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|regress|staging'))
+
+- import_tasks: configure-ftp-client.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|regress|staging'))

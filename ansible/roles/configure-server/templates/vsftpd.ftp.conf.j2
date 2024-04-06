@@ -1,0 +1,21 @@
+# FTP
+listen=YES
+listen_ipv6=NO
+listen_port=21
+anonymous_enable=YES
+local_enable=YES
+dirmessage_enable=YES
+use_localtime=YES
+xferlog_enable=YES
+connect_from_port_20=YES
+secure_chroot_dir=/var/run/vsftpd/empty
+pam_service_name=ftp
+allow_anon_ssl=YES
+write_enable=YES
+cmds_allowed=PASV,CWD,PWD,SYST,PORT,STOR,TYPE,PBSZ,MLSD,LIST,MKD,CDUP,DELE
+chmod_enable=YES
+session_support=YES
+utf8_filesystem=YES
+ascii_upload_enable=NO
+ascii_download_enable=NO
+local_root=/home/$USER/
