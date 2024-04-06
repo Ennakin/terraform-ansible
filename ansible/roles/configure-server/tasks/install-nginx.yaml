@@ -11,5 +11,6 @@
       mode: "0644"
       owner: root
       group: root
+  when: (item | default('') != '') and (item is exists)
 #   tags:
 #       - reverse
