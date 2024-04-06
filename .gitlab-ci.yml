@@ -181,7 +181,7 @@ ansible:
         - chmod 700 ~/.ssh
         - cd ./ansible
         - ansible-config view
-        - ansible-galaxy collection install ansible.posix
+        # - ansible-galaxy collection install ansible.posix
         - ls -al ./inventory/$TF_ENV 2>/dev/null
         - cat ./inventory/$TF_ENV/inventory 2>/dev/null
         - sleep 40
