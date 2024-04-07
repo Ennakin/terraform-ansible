@@ -38,6 +38,7 @@
   loop: "{{ user_list | default({}) | dict2items }}"
 
 # # TODO не нашёл как сделать так чтобы ansible НЕ добавлял пользователей в стандартную группу users
+# # но удалить пользователей из неё по итогу вроде как нельзя
 # - name: remove user from group
 #   ansible.builtin.user:
 #       name: "{{ item.key }}"
@@ -46,6 +47,7 @@
 #   loop: "{{ user_list | default({}) | dict2items }}"
 
 # # удаление группы users создаваемой ansible-ом автоматически
+# # сама группа так же не удаляется
 # - name: remove group
 #   ansible.builtin.group:
 #       name: users
@@ -64,8 +66,63 @@
 # добавление публичных ssh ключей из файлов
 - name: get authorized keys from files
   ansible.posix.authorized_key:
-      user: "{{ item }}"
+      user: "{{ item.key }}"
       state: present
       exclusive: true
-      key: "{{ lookup('file', '../roles/configure-server/files/' + item + '.pub', errors='ignore') }}"
-  loop: "{{ user_list.keys() | default([]) }}"
+      key: "{{ lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') }}"
+  loop: "{{ user_list | default({}) | dict2items }}"
+
+- name: find home directories
+  ansible.builtin.find:
+      paths: /home
+      file_type: directory
+  register: home_directories
+
+- name: add .bash_aliases for managed users
+  ansible.builtin.template:
+      src: bash_aliases.j2
+      dest: "{{ item.path }}/.bash_aliases"
+      mode: "0644"
+      owner: "{{ item.path | basename }}"
+      group: "{{ item.path | basename }}"
+  loop: "{{ home_directories.files }}"
+
+- name: add .bash_profile for managed users
+  ansible.builtin.template:
+      src: bash_profile.j2
+      dest: "{{ item.path }}/.bash_profile"
+      mode: "0644"
+      owner: "{{ item.path | basename }}"
+      group: "{{ item.path | basename }}"
+  loop: "{{ home_directories.files }}"
+
+# # TODO ниже варианты в которых не получилось сделать так чтобы строка не добавлялась повторно,
+# # когда она уже добавлялась ранее, пока пусть побудут здесь
+# - name: add paths to .bashrc
+#   ansible.builtin.lineinfile:
+#       path: "{{ item.path }}/.bashrc"
+#       line: |
+
+#           {% for path in app_paths %}
+#           export PATH="$PATH:{{ path }}"
+#           {% endfor %}
+#       create: true
+#       state: present
+#   loop: "{{ home_directories.files }}"
+
+# - name: form app paths content
+#   ansible.builtin.set_fact:
+#       app_paths_content: |
+
+#           {% for path in app_paths %}
+#           export PATH="$PATH:{{ path }}"
+#           {% endfor %}
+
+# - name: add paths to .bashrc
+#   ansible.builtin.lineinfile:
+#       path: "{{ item.path }}/.bashrc"
+#       line: "{{ app_paths_content }}"
+#       insertafter: "^    . /etc/bash_completion\n  fi\nfi$"
+#       create: true
+#       state: present
+#   loop: "{{ home_directories.files }}"

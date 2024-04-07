@@ -4,6 +4,12 @@
       state: latest
       #   update_cache: true
 
+- name: stop vsftpd service
+  service:
+      name: vsftpd
+      state: stopped
+      enabled: no
+
 - name: vsftpd config copy
   ansible.builtin.template:
       src: "{{ item.name }}"

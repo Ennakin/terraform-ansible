@@ -5,7 +5,7 @@
   when: ansible_facts['distribution'] in ubuntu_list
 
 - import_tasks: mount-disk.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != ''
+  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|regress|staging'))
 
 - import_tasks: mount-filesystem.yaml
   when: ansible_facts['distribution'] in ubuntu_list and filesystem_name != ''

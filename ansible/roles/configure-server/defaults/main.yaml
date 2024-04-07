@@ -27,6 +27,17 @@ user_list_docker: "{{ lookup('env', 'USERS_DOCKER', default='').split(',') }}"
 
 jenkins_master_node_host: "10.70.1.5 ci.myhrlink.ru"
 
+bash_aliases:
+    cdd: "cd /var/hrlink/"
+    cdv: "cd /var/hrlink/vms/"
+    cdw: "cd /var/hrlink/working_data/"
+    cdc: "cd /var/hrlink/conf/"
+    cdf: "cd /mnt/"
+
+app_paths:
+    - /var/hrlink/vms/
+    - /var/hrlink/vms/scripts/
+
 reverse_nginx_hostname: "{{ lookup('env', 'REVERSE_NGINX_HOSTNAME', default='') }}"
 vms:
     localhost: 127.0.0.1

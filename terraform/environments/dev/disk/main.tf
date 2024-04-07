@@ -28,6 +28,6 @@ module "disk-hrl" {
   for_each = local.parsed_servers
 
   secondary_disk_name        = "hrl-${var.secondary_disk_name}-${each.key}"
-  secondary_disk_description = each.value
+  secondary_disk_description = "HRL-DISK-dev-${each.value}"
   secondary_disk_size        = var.secondary_disk_size
 }

@@ -1,0 +1,3 @@
+{% for alias, command in bash_aliases.items() %}
+alias {{ alias }}='{{ command }}'
+{% endfor %}
