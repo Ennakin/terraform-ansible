@@ -1,17 +1,9 @@
 group_list:
-    - jenkins
     - developer
     - tester
     - engineer
 
 user_list:
-    jenkins:
-        {
-            comment: "jenkins",
-            groups: ["jenkins"],
-            shell: "/bin/bash",
-            home: "/home/jenkins/",
-        }
     developer:
         {
             comment: "developer",
