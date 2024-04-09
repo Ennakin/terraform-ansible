@@ -9,7 +9,12 @@ variable "secondary_disk_size" {
   default = 40
 }
 
-variable "servers" {
-  type    = string
-  default = ""
+variable "servers_hrl" {
+  description = "HRL servers to creating"
+  default     = "{}"
+}
+
+variable "servers_strl" {
+  description = "STRL servers to creating"
+  default     = "{}"
 }

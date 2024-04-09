@@ -45,9 +45,14 @@ variable "vm_hosts_result_file_path" {
 }
 
 variable "vm_name" {}
-variable "servers" {
-  description = "Servers to creating"
-  default     = ""
+variable "servers_hrl" {
+  description = "HRL servers to creating"
+  default     = "{}"
+}
+
+variable "servers_strl" {
+  description = "STRL servers to creating"
+  default     = "{}"
 }
 
 # переменные основной директории

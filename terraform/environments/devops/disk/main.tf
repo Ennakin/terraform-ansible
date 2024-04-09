@@ -19,15 +19,26 @@ provider "yandex" {
 }
 
 locals {
-  parsed_servers = jsondecode(var.servers)
+  parsed_servers_hrl  = jsondecode(var.servers_hrl)
+  parsed_servers_strl = jsondecode(var.servers_strl)
 }
 
 module "disk-hrl" {
   source = "../../../modules/disk"
 
-  for_each = local.parsed_servers
+  for_each = local.parsed_servers_hrl
 
   secondary_disk_name        = "hrl-${var.secondary_disk_name}-${each.key}"
   secondary_disk_description = "HRL-DISK-devops-${each.value}"
+  secondary_disk_size        = var.secondary_disk_size
+}
+
+module "disk-strl" {
+  source = "../../../modules/disk"
+
+  for_each = local.parsed_servers_strl
+
+  secondary_disk_name        = "strl-${var.secondary_disk_name}-${each.key}"
+  secondary_disk_description = "STRL-DISK-devops-${each.value}"
   secondary_disk_size        = var.secondary_disk_size
 }

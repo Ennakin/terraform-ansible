@@ -19,7 +19,8 @@ provider "yandex" {
 }
 
 locals {
-  parsed_servers = jsondecode(var.servers)
+  parsed_servers_hrl  = jsondecode(var.servers_hrl)
+  parsed_servers_strl = jsondecode(var.servers_strl)
 }
 
 # # пока используется подсеть из основной директории
@@ -34,6 +35,7 @@ data "yandex_vpc_subnet" "subnetwork" {
 }
 
 # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
+# TODO FS один и для HRL, и для STRL
 data "yandex_compute_filesystem" "fs_hrl" {
   count = var.filesystem_name != "" ? 1 : 0
   name  = "hrl-${var.filesystem_name}"
@@ -47,15 +49,20 @@ data "yandex_compute_filesystem" "fs_hrl" {
 # }
 
 data "yandex_compute_disk" "secondary_disk_hrl" {
-  for_each = var.secondary_disk_name != "" ? local.parsed_servers : {}
+  for_each = var.secondary_disk_name != "" ? local.parsed_servers_hrl : {}
   name     = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${each.key}" : ""
+}
+
+data "yandex_compute_disk" "secondary_disk_strl" {
+  for_each = var.secondary_disk_name != "" ? local.parsed_servers_strl : {}
+  name     = var.secondary_disk_name != "" ? "strl-${var.secondary_disk_name}-${each.key}" : ""
 }
 
 module "vm-test-hrl" {
   source = "../../../modules/vm"
 
   for_each = {
-    for key, value in local.parsed_servers : key => value if key != "regress-release" && !contains(["regress-master"], key)
+    for key, value in local.parsed_servers_hrl : key => value if key != "regress-release" && !contains(["regress-master"], key)
   }
 
   name        = "hrl-${var.vm_name}-${each.key}"
@@ -81,7 +88,7 @@ module "vm-regress-release-hrl" {
   source = "../../../modules/vm"
 
   for_each = {
-    "regress-release" = local.parsed_servers["regress-release"]
+    "regress-release" = local.parsed_servers_hrl["regress-release"]
   }
 
   name        = "hrl-${var.vm_name}-${each.key}"
@@ -107,7 +114,7 @@ module "vm-regress-master-hrl" {
   source = "../../../modules/vm"
 
   for_each = {
-    "regress-master" = local.parsed_servers["regress-master"]
+    "regress-master" = local.parsed_servers_hrl["regress-master"]
   }
 
   name        = "hrl-${var.vm_name}-${each.key}"
@@ -129,6 +136,33 @@ module "vm-regress-master-hrl" {
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
 }
 
+module "vm-test-strl" {
+  source = "../../../modules/vm"
+
+  for_each = {
+    for key, value in local.parsed_servers_strl : key => value if key != "regress-release" && !contains(["regress-master"], key)
+  }
+
+  name        = "strl-${var.vm_name}-${each.key}"
+  hostname    = "strl-${var.vm_name}-${each.key}"
+  description = "STRL-VM-test-${each.value}"
+  preemptible = var.preemptible
+  nat         = false
+
+  cpu                = var.cpu
+  ram                = var.ram
+  boot_disk_image_id = var.boot_disk_image_id
+  boot_disk_size     = var.boot_disk_size
+  cloud_config_path  = file(var.cloud_config_file_path)
+
+  subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
+  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_strl[each.key].id : ""
+
+  # TODO FS HRL-овский
+  filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+  filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
+}
+
 # вывод в файл полученных hostname и ip vm-ок
 resource "local_file" "vm_ips" {
 
@@ -136,13 +170,15 @@ resource "local_file" "vm_ips" {
     vm_hostnames = concat(
       [for instance in module.vm-test-hrl : instance.hostname],
       [for instance in module.vm-regress-release-hrl : instance.hostname],
-      [for instance in module.vm-regress-master-hrl : instance.hostname]
+      [for instance in module.vm-regress-master-hrl : instance.hostname],
+      [for instance in module.vm-test-strl : instance.hostname]
     )
 
     vm_ips = concat(
       [for instance in module.vm-test-hrl : instance.internal_ip],
       [for instance in module.vm-regress-release-hrl : instance.internal_ip],
-      [for instance in module.vm-regress-master-hrl : instance.internal_ip]
+      [for instance in module.vm-regress-master-hrl : instance.internal_ip],
+      [for instance in module.vm-test-strl : instance.internal_ip]
     )
     }
   )
