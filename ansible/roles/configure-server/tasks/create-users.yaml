@@ -93,14 +93,14 @@
   debug:
       msg: "authorized keys for tester: {{ lookup('file', '/tmp/authorized_keys_tester') }}"
 
-# добавление публичных ssh ключей из файлов
-- name: get authorized keys from files
-  ansible.posix.authorized_key:
-      user: "{{ item.key }}"
-      state: present
-      exclusive: true
-      key: "{{ lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') }}"
-  loop: "{{ user_list | default({}) | dict2items }}"
+# # добавление публичных ssh ключей из файлов
+# - name: get authorized keys from files
+#   ansible.posix.authorized_key:
+#       user: "{{ item.key }}"
+#       state: present
+#       exclusive: true
+#       key: "{{ lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') }}"
+#   loop: "{{ user_list | default({}) | dict2items }}"
 
 - name: find home directories
   ansible.builtin.find:
@@ -125,6 +125,7 @@
       owner: "{{ item.path | basename }}"
       group: "{{ item.path | basename }}"
   loop: "{{ home_directories.files }}"
+
 # # TODO ниже варианты в которых не получилось сделать так чтобы строка не добавлялась повторно,
 # # когда она уже добавлялась ранее, пока пусть побудут здесь
 # - name: add paths to .bashrc
