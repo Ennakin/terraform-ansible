@@ -83,9 +83,15 @@
       loop_var: item
 #   when: lookup('env', 'PUB_' + item.key | upper, errors='ignore') | default('') != ''
 
-- name: debug authorized keys for tester (after task)
+- name: fetch authorized_keys file for tester
+  ansible.builtin.fetch:
+      src: /home/tester/.ssh/authorized_keys
+      dest: /tmp/authorized_keys_tester
+      flat: yes
+
+- name: debug fetched authorized keys for tester
   debug:
-      msg: "Authorized keys for tester: {{ lookup('file', '/home/tester/.ssh/authorized_keys') }}"
+      msg: "authorized keys for tester: {{ lookup('file', '/tmp/authorized_keys_tester') }}"
 
 # добавление публичных ssh ключей из файлов
 - name: get authorized keys from files
