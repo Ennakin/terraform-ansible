@@ -63,10 +63,10 @@
 #   loop: "{{ user_list | default({}) | dict2items }}"
 # #   when: lookup('env', 'PUB_' + item.key | upper) != ''
 
-# - name: debug authorized keys env name for tester
-#   debug:
-#       msg: "{{ lookup('env', 'PUB_' + item.key | upper, errors='ignore') }}"
-#   loop: "{{ user_list | default({}) | dict2items }}"
+- name: debug authorized keys env name for tester
+  debug:
+      msg: "{{ 'PUB_' + item.key | upper }}"
+  loop: "{{ user_list | default({}) | dict2items }}"
 
 - name: debug authorized keys for tester
   debug:
@@ -82,6 +82,10 @@
   loop_control:
       loop_var: item
 #   when: lookup('env', 'PUB_' + item.key | upper, errors='ignore') | default('') != ''
+
+- name: debug authorized keys for tester (after task)
+  debug:
+      msg: "Authorized keys for tester: {{ lookup('file', '/home/tester/.ssh/authorized_keys') }}"
 
 # добавление публичных ssh ключей из файлов
 - name: get authorized keys from files
