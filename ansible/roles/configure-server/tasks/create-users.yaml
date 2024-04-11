@@ -65,10 +65,10 @@
 
 - name: get authorized keys from environment variable
   ansible.posix.authorized_key:
-      user: "{{ item.key }}"
+      user: "{{ item.value }}"
       state: present
       exclusive: true
-      key: "{{ item.value }}"
+      key: "{{ item.key }}"
   loop: "{{ user_list | default({}) | dict2items }}"
   loop_control:
       loop_var: item
@@ -112,6 +112,7 @@
       owner: "{{ item.path | basename }}"
       group: "{{ item.path | basename }}"
   loop: "{{ home_directories.files }}"
+
 # # TODO ниже варианты в которых не получилось сделать так чтобы строка не добавлялась повторно,
 # # когда она уже добавлялась ранее, пока пусть побудут здесь
 # - name: add paths to .bashrc
