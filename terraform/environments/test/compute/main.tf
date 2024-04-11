@@ -88,7 +88,7 @@ module "vm-regress-release-hrl" {
   source = "../../../modules/vm"
 
   for_each = {
-    "regress-release" = local.parsed_servers_hrl["regress-release"]
+    for key, value in local.parsed_servers_hrl : key => value if key == "regress-release"
   }
 
   name        = "hrl-${var.vm_name}-${each.key}"
@@ -114,7 +114,7 @@ module "vm-regress-master-hrl" {
   source = "../../../modules/vm"
 
   for_each = {
-    "regress-master" = local.parsed_servers_hrl["regress-master"]
+    for key, value in local.parsed_servers_hrl : key => value if key == "regress-master"
   }
 
   name        = "hrl-${var.vm_name}-${each.key}"
