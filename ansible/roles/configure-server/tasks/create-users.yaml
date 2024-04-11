@@ -63,6 +63,15 @@
 #   loop: "{{ user_list | default({}) | dict2items }}"
 # #   when: lookup('env', 'PUB_' + item.key | upper) != ''
 
+# - name: debug authorized keys env name for tester
+#   debug:
+#       msg: "{{ lookup('env', 'PUB_' + item.key | upper, errors='ignore') }}"
+#   loop: "{{ user_list | default({}) | dict2items }}"
+
+- name: debug authorized keys for tester
+  debug:
+      msg: "{{ lookup('env', 'PUB_TESTER') }}"
+
 - name: get authorized keys from environment variable
   ansible.posix.authorized_key:
       user: "{{ item.key }}"
@@ -106,7 +115,6 @@
       owner: "{{ item.path | basename }}"
       group: "{{ item.path | basename }}"
   loop: "{{ home_directories.files }}"
-
 # # TODO ниже варианты в которых не получилось сделать так чтобы строка не добавлялась повторно,
 # # когда она уже добавлялась ранее, пока пусть побудут здесь
 # - name: add paths to .bashrc
