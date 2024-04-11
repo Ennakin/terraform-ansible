@@ -63,10 +63,10 @@
 #   loop: "{{ user_list | default({}) | dict2items }}"
 # #   when: lookup('env', 'PUB_' + item.key | upper) != ''
 
-- name: debug authorized keys env name for tester
-  debug:
-      msg: "{{ 'PUB_' + item.key | upper }}"
-  loop: "{{ user_list | default({}) | dict2items }}"
+# - name: debug authorized keys env name for tester
+#   debug:
+#       msg: "{{ 'PUB_' + item.key | upper }}"
+#   loop: "{{ user_list | default({}) | dict2items }}"
 
 # - name: debug authorized keys for tester
 #   debug:
