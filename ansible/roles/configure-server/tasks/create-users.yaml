@@ -53,15 +53,32 @@
 #       name: users
 #       state: absent
 
-# добавление публичных ssh ключей из переменных окружения
+# # добавление публичных ssh ключей из переменных окружения
+# - name: get authorized keys from environment variable
+#   ansible.posix.authorized_key:
+#       user: "{{ item.key }}"
+#       state: present
+#       exclusive: true
+#       key: "{{ lookup('env', 'PUB_' + item.key | upper, errors='ignore') }}"
+#   loop: "{{ user_list | default({}) | dict2items }}"
+# #   when: lookup('env', 'PUB_' + item.key | upper) != ''
+
 - name: get authorized keys from environment variable
   ansible.posix.authorized_key:
       user: "{{ item.key }}"
       state: present
       exclusive: true
-      key: "{{ lookup('env', 'PUB_' + item.key | upper, errors='ignore') }}"
+      key: "{{ item.value }}"
   loop: "{{ user_list | default({}) | dict2items }}"
-#   when: lookup('env', 'PUB_' + item.key | upper) != ''
+  loop_control:
+      loop_var: item
+  vars:
+      pubkey_env_var: "PUB_{{ item.key | upper }}"
+      pubkeys_raw: "{{ lookup('env', pubkey_env_var, errors='ignore') | default('') }}"
+      pubkeys_list: "{{ pubkeys_raw.split('\n') }}"
+  when: pubkeys_raw | length > 0
+  environment:
+      pubkey_env_var: "{{ pubkey_env_var }}"
 
 # добавление публичных ssh ключей из файлов
 - name: get authorized keys from files
@@ -95,7 +112,6 @@
       owner: "{{ item.path | basename }}"
       group: "{{ item.path | basename }}"
   loop: "{{ home_directories.files }}"
-
 # # TODO ниже варианты в которых не получилось сделать так чтобы строка не добавлялась повторно,
 # # когда она уже добавлялась ранее, пока пусть побудут здесь
 # - name: add paths to .bashrc
