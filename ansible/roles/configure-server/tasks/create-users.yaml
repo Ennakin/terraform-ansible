@@ -68,9 +68,9 @@
       msg: "{{ 'PUB_' + item.key | upper }}"
   loop: "{{ user_list | default({}) | dict2items }}"
 
-- name: debug authorized keys for tester
-  debug:
-      msg: "{{ lookup('env', 'PUB_TESTER') }}"
+# - name: debug authorized keys for tester
+#   debug:
+#       msg: "{{ lookup('env', 'PUB_TESTER') }}"
 
 - name: get authorized keys from environment variable
   ansible.posix.authorized_key:
@@ -79,28 +79,27 @@
       exclusive: true
       key: "{{ lookup('env', 'PUB_' + item.key | upper, errors='ignore') }}"
   loop: "{{ user_list | default({}) | dict2items }}"
-  loop_control:
-      loop_var: item
-#   when: lookup('env', 'PUB_' + item.key | upper, errors='ignore') | default('') != ''
+  when: lookup('env', 'PUB_' + item.key | upper, errors='ignore') | default('') != ''
 
-- name: fetch authorized_keys file for tester
-  ansible.builtin.fetch:
-      src: /home/tester/.ssh/authorized_keys
-      dest: /tmp/authorized_keys_tester
-      flat: yes
+# - name: fetch authorized_keys file for tester
+#   ansible.builtin.fetch:
+#       src: /home/tester/.ssh/authorized_keys
+#       dest: /tmp/authorized_keys_tester
+#       flat: yes
 
-- name: debug fetched authorized keys for tester
-  debug:
-      msg: "authorized keys for tester: {{ lookup('file', '/tmp/authorized_keys_tester') }}"
+# - name: debug fetched authorized keys for tester
+#   debug:
+#       msg: "authorized keys for tester: {{ lookup('file', '/tmp/authorized_keys_tester') }}"
 
-# # добавление публичных ssh ключей из файлов
-# - name: get authorized keys from files
-#   ansible.posix.authorized_key:
-#       user: "{{ item.key }}"
-#       state: present
-#       exclusive: true
-#       key: "{{ lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') }}"
-#   loop: "{{ user_list | default({}) | dict2items }}"
+# добавление публичных ssh ключей из файлов
+- name: get authorized keys from files
+  ansible.posix.authorized_key:
+      user: "{{ item.key }}"
+      state: present
+      exclusive: true
+      key: "{{ lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') }}"
+  loop: "{{ user_list | default({}) | dict2items }}"
+  when: lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') | default(false)
 
 - name: find home directories
   ansible.builtin.find:
