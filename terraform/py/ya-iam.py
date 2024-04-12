@@ -59,7 +59,7 @@ def main():
 
     iam_token = yc.get_iam_token()
 
-    with open(file='iam-token.env', mode='rw') as f:
+    with open(file='iam-token.env', mode='w') as f:
         f.write(f'export TF_VAR_token={iam_token}')
 
     # print(yc.get_iam_token())
