@@ -56,6 +56,7 @@ stages:
     - init
     - validate
     - security-scan
+    - create-iam
     - plan
     - apply
     - configure
@@ -112,6 +113,12 @@ validate:
     script:
         - tfsec . # путь к запускаемому проекту?..
     allow_failure: true
+
+create-iam:
+    stage: create-iam
+    script:
+        - python3 -V
+        - python3 ./terraform/py/ya-iam.py
 
 plan:
     stage: plan
