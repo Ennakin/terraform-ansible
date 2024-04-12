@@ -21,6 +21,7 @@ variables:
 
 #   cloud_config
 #   ssh_private_key
+#   yc_key_secret_file
 
 #   env_tf_all
 #   env_tf_common

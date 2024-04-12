@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# проверка наличия bash в системе
+if ! command -v /bin/bash &>/dev/null; then
+    echo "bash could not be found. Please install bash first"
+    exit 1
+fi
+
+# проверка наличия python в системе
+if ! command -v /bin/python3 &>/dev/null; then
+    echo "python3 could not be found. Please install python3 first"
+    exit 1
+fi
+
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 # переход в директорию где лежит скрипт
@@ -59,6 +71,9 @@ if [ $# -gt 0 ]; then
     else
         ls ./envs/prod/env_tf_all.env >/dev/null && source ./envs/prod/env_tf_all.env
         ls ./envs/prod/env_tf_${TF_ENV}.env >/dev/null && source ./envs/prod/env_tf_${TF_ENV}.env
+
+        python3 ./py/ya-iam.py
+        ls ./py/iam-token.env >/dev/null && source ./py/iam-token.env
 
         terraform -chdir="./environments/$TF_ENV/$TF_STATE" "$TF_OPERATION" \
             $TF_PARAMS
