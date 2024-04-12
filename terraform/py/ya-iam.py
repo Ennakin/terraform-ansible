@@ -51,12 +51,12 @@ def get_env(key):
 
 def main():
     print('Hello World!')
-    # yc = YandexConf(
-    #     get_env("YC_SERVICE_ACCOUNT_ID"),
-    #     get_env("YC_KEY_ID"),
-    #     get_env("YC_KEY_SECRET_FILE_PATH")
-    # )
-    # print(yc.get_iam_token())
+    yc = YandexConf(
+        get_env("YC_SERVICE_ACCOUNT_ID"),
+        get_env("YC_KEY_ID"),
+        get_env("YC_KEY_SECRET_FILE_PATH")
+    )
+    print(yc.get_iam_token())
 
 
 if __name__ == "__main__":
