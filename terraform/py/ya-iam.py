@@ -56,7 +56,13 @@ def main():
         get_env("YC_KEY_ID"),
         get_env("YC_KEY_SECRET_FILE_PATH")
     )
-    print(yc.get_iam_token())
+
+    iam_token = yc.get_iam_token()
+
+    with open(file='iam-token.env', mode='rw') as f:
+        f.write(f'export TF_VAR_token={iam_token}')
+
+    # print(yc.get_iam_token())
 
 
 if __name__ == "__main__":
