@@ -115,7 +115,7 @@ validate:
         - tfsec . # путь к запускаемому проекту?..
     allow_failure: true
 
-create-iam:
+.create-iam:
     stage: create-iam
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -128,6 +128,7 @@ create-iam:
         name: "${CI_JOB_NAME}-${CI_JOB_ID}-iam-token"
         paths:
             - ./terraform/py/iam-token.env
+        expire_in: 1 day
 
 plan:
     stage: plan
