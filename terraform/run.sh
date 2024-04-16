@@ -73,7 +73,7 @@ if [ $# -gt 0 ]; then
         ls ./envs/prod/env_tf_${TF_ENV}.env >/dev/null && source ./envs/prod/env_tf_${TF_ENV}.env
 
         # python3 ./py/ya-iam.py
-        # ls ./py/iam-token.env >/dev/null && source ./py/iam-token.env
+        # ls ./envs/prod/iam-token.env >/dev/null && source ./envs/prod/iam-token.env
 
         terraform -chdir="./environments/$TF_ENV/$TF_STATE" "$TF_OPERATION" \
             $TF_PARAMS

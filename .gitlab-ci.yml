@@ -127,7 +127,7 @@ validate:
     artifacts:
         name: "${CI_JOB_NAME}-${CI_JOB_ID}-iam-token"
         paths:
-            - ./terraform/py/iam-token.env
+            - ./terraform/envs/prod/iam-token.env
         expire_in: 1 day
 
 plan:
@@ -142,7 +142,7 @@ plan:
         - ls $env_tf_all 2>/dev/null && source $env_tf_all
         - ls $env_file 2>/dev/null && source $env_file
         - ls -al ./terraform/py/
-        # - source ./terraform/py/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
+        # - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
 
     # TODO сделать артефактом файл с результатом plan, в apply использовать этот артефакт
@@ -164,7 +164,7 @@ apply_configuration:
         - ls $env_tf_all 2>/dev/null && source $env_tf_all
         - ls $env_file 2>/dev/null && source $env_file
         - ls -al ./terraform/py/
-        # - source ./terraform/py/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
+        # - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
 
     allow_failure: true
@@ -229,5 +229,5 @@ destroy_infra:
         - ls $env_tf_all 2>/dev/null && source $env_tf_all
         - ls $env_file 2>/dev/null && source $env_file
         - ls -al ./terraform/py/
-        # - source ./terraform/py/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
+        # - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
         - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
