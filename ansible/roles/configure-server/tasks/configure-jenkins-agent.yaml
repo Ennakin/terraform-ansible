@@ -44,6 +44,7 @@
       mode: "0644"
       owner: jenkins
       group: jenkins
+      force: false
 
 - name: jenkins master add to hosts
   ansible.builtin.lineinfile:
