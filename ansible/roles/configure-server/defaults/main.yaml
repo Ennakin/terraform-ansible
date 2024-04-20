@@ -25,6 +25,9 @@ filesystem_name: "{{ lookup('env', 'FILESYSTEM_NAME', default='') }}"
 
 user_list_docker: "{{ lookup('env', 'USERS_DOCKER', default='').split(',') }}"
 
+passwords_salt: "{{ lookup('env', 'PASSWORDS_SALT') | default('default_salt') }}"
+user_passwords: "{{ lookup('env', 'USER_PASSWORDS', default='{}') }}"
+
 jenkins_master_node_host: "10.70.1.5 ci.myhrlink.ru"
 
 bash_aliases:
