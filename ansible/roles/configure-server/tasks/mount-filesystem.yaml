@@ -1,23 +1,23 @@
 - name: filesystem directory create
   ansible.builtin.file:
-      path: "/mnt/{{ filesystem_name }}"
-      state: directory
-      mode: "0755"
+    path: "/mnt/{{ filesystem_name }}"
+    state: directory
+    mode: "0755"
 
 - name: filesystem mount
   ansible.builtin.mount:
-      src: "{{ filesystem_name }}"
-      path: "/mnt/{{ filesystem_name }}"
-      fstype: virtiofs
-      opts: defaults,nofail
-      state: mounted
-      #   fstab: true
+    src: "{{ filesystem_name }}"
+    path: "/mnt/{{ filesystem_name }}"
+    fstype: virtiofs
+    opts: defaults,nofail
+    state: mounted
+    #   fstab: true
 
 - name: filesystem mount point set permissions
   ansible.builtin.file:
-      path: "/mnt/{{ filesystem_name }}"
-      mode: "0755"
-      owner: root
-      group: root
-      state: directory
-      #   recurse: true
+    path: "/mnt/{{ filesystem_name }}"
+    mode: "0755"
+    owner: root
+    group: root
+    state: directory
+    #   recurse: true

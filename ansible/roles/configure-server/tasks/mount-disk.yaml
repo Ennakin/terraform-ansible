@@ -1,35 +1,35 @@
 - name: perform disk setup if /dev/vdb1 is not in /etc/fstab
   ansible.builtin.parted:
-      device: /dev/vdb
-      number: 1
-      state: present
-      align: optimal
-      part_end: 100%
+    device: /dev/vdb
+    number: 1
+    state: present
+    align: optimal
+    part_end: 100%
 
 - name: create ext4 filesystem on /dev/vdb1
   ansible.builtin.filesystem:
-      fstype: ext4
-      dev: /dev/vdb1
-      state: present
+    fstype: ext4
+    dev: /dev/vdb1
+    state: present
 
 - name: create mount point
   ansible.builtin.file:
-      path: "{{ secondary_disk_mount_point }}"
-      mode: "0755"
-      state: directory
+    path: "{{ secondary_disk_mount_point }}"
+    mode: "0755"
+    state: directory
 
 - name: mount /dev/vdb1 to mount point
   ansible.builtin.mount:
-      src: /dev/vdb1
-      path: "{{ secondary_disk_mount_point }}"
-      fstype: ext4
-      state: mounted
-      opts: defaults,nofail
+    src: /dev/vdb1
+    path: "{{ secondary_disk_mount_point }}"
+    fstype: ext4
+    state: mounted
+    opts: defaults,nofail
 
 - name: mount point set permissions
   ansible.builtin.file:
-      path: "{{ secondary_disk_mount_point }}"
-      mode: "0755"
-      owner: jenkins
-      group: jenkins
-      state: directory
+    path: "{{ secondary_disk_mount_point }}"
+    mode: "0755"
+    owner: jenkins
+    group: jenkins
+    state: directory

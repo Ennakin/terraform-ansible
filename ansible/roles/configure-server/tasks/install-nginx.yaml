@@ -1,15 +1,15 @@
 - name: install reverse packages
   apt:
-      name: "{{ app_list_reverse_nginx | default([]) }}"
-      state: present
-      update_cache: true
+    name: "{{ app_list_reverse_nginx | default([]) }}"
+    state: present
+    update_cache: true
 
 - name: nginx config copy
   ansible.builtin.template:
-      src: nginx.conf.j2
-      dest: /etc/nginx/conf.d/ansible.conf
-      mode: "0644"
-      owner: root
-      group: root
-#   tags:
-#       - reverse
+    src: nginx.conf.j2
+    dest: /etc/nginx/conf.d/ansible.conf
+    mode: "0644"
+    owner: root
+    group: root
+  # tags:
+  #   - reverse

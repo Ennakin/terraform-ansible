@@ -1,54 +1,54 @@
 - name: install dependencies
   apt:
-      name: "{{ item }}"
-      state: present
+    name: "{{ item }}"
+    state: present
 
-      # # из-за обновления кэша иногда падает, без него пока не такого было
-      #   update_cache: true
+    # # из-за обновления кэша иногда падает, без него пока не такого было
+    #   update_cache: true
   loop:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - gnupg-agent
-      - software-properties-common
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
 
 - name: add GPG key
   apt_key:
-      url: https://download.docker.com/linux/ubuntu/gpg
-      state: present
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
 
 - name: add docker repository to apt
   apt_repository:
-      repo: deb https://download.docker.com/linux/ubuntu bionic stable
-      state: present
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
 
 - name: install docker
   apt:
-      name: "{{ item }}"
-      state: latest
-      update_cache: true
+    name: "{{ item }}"
+    state: latest
+    update_cache: true
   loop:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-      - docker-buildx-plugin
-      - docker-compose-plugin
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
 
 - name: check docker is active
   service:
-      name: docker
-      state: started
-      enabled: true
+    name: docker
+    state: started
+    enabled: true
 
 - name: ensure group "docker" exists
   ansible.builtin.group:
-      name: docker
-      state: present
+    name: docker
+    state: present
 
 - name: adding users to docker group
   user:
-      name: "{{ item }}"
-      groups: docker
-      append: true
-      state: present
+    name: "{{ item }}"
+    groups: docker
+    append: true
+    state: present
   loop: "{{ user_list_docker | default([]) }}"
