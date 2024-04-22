@@ -142,11 +142,13 @@ resource "local_file" "vm_ips" {
   content = templatefile("${path.module}/inventory.tpl", {
     vm_hostnames = concat(
       [for instance in module.vm-staging-hrl : instance.hostname],
+      [for instance in module.vm-staging-hrl-engineers : instance.hostname],
       [for instance in module.vm-staging-strl : instance.hostname]
     )
 
     vm_ips = concat(
       [for instance in module.vm-staging-hrl : instance.internal_ip],
+      [for instance in module.vm-staging-hrl-engineers : instance.internal_ip],
       [for instance in module.vm-staging-strl : instance.internal_ip]
     )
     }
