@@ -61,7 +61,10 @@ data "yandex_compute_disk" "secondary_disk_strl" {
 module "vm-staging-hrl" {
   source = "../../../modules/vm"
 
-  for_each = local.parsed_servers_hrl
+  # staging-2 создан инженерам непрерываемым
+  for_each = {
+    for key, value in local.parsed_servers_hrl : key => value if value != "engineers"
+  }
 
   name        = "hrl-${var.vm_name}-${each.key}"
   hostname    = "hrl-${var.vm_name}-${each.key}"
@@ -77,6 +80,32 @@ module "vm-staging-hrl" {
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
+  filesystem_id           = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+  filesystem_device_name  = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
+}
+
+module "vm-staging-hrl-engineers" {
+  source = "../../../modules/vm"
+
+  # staging-2 создан инженерам непрерываемым
+  for_each = {
+    for key, value in local.parsed_servers_hrl : key => value if value == "engineers"
+  }
+
+  name        = "hrl-${var.vm_name}-${each.key}"
+  hostname    = "hrl-${var.vm_name}-${each.key}"
+  description = "HRL-VM-staging-${each.value}"
+  preemptible = false
+  nat         = false
+
+  cpu                = var.cpu
+  ram                = var.ram
+  boot_disk_image_id = var.boot_disk_image_id
+  boot_disk_size     = var.boot_disk_size
+  cloud_config_path  = file(var.cloud_config_file_path)
+
+  subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
+  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl["2"].id : ""
 
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
