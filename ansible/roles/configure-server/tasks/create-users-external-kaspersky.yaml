@@ -1,0 +1,74 @@
+# создание групп
+- name: create group
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ group_list_external_kaspersky | default([]) }}"
+
+# создание пользователей
+- name: create user
+  ansible.builtin.user:
+    name: "{{ item.key }}"
+    comment: "{{ item.value.comment }}"
+    groups: "{{ item.value.groups }}"
+    shell: "{{ item.value.shell }}"
+    home: "{{ item.value.home }}"
+    create_home: true
+    #   move_home: true
+    password: "{{ user_passwords_external_kaspersky[item.key] | default(omit) | password_hash('sha512', passwords_salt) }}"
+
+    # # TODO password_hash отмечен как deprecated, в дальнейшем нужно будет делать установку pip install passlib и использовать его
+    # password: "{{ user_passwords_external_kaspersky[item.key] | default(omit) | passlib.hash.sha512_crypt.encrypt('password', rounds=5000, salt=passwords_salt) }}"
+    append: false
+  loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
+
+- name: change owner and group of a directory
+  ansible.builtin.file:
+    path: "{{ item.value.home }}"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    recurse: true
+  loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
+
+- name: get authorized keys from environment variable
+  ansible.posix.authorized_key:
+    user: "{{ item.key }}"
+    state: present
+    exclusive: true
+    key: "{{ lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') }}"
+  loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
+  when: lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') | default('') != ''
+
+# добавление публичных ssh ключей из файлов
+- name: get authorized keys from files
+  ansible.posix.authorized_key:
+    user: "{{ item.key }}"
+    state: present
+    exclusive: true
+    key: "{{ lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') }}"
+  loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
+  when: lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') | default(false)
+
+- name: find home directories
+  ansible.builtin.find:
+    paths: /home
+    file_type: directory
+  register: home_directories
+
+- name: add .bash_aliases for managed users
+  ansible.builtin.template:
+    src: bash_aliases.j2
+    dest: "{{ item.path }}/.bash_aliases"
+    mode: "0644"
+    owner: "{{ item.path | basename }}"
+    group: "{{ item.path | basename }}"
+  loop: "{{ home_directories.files }}"
+
+- name: add .bash_profile for managed users
+  ansible.builtin.template:
+    src: bash_profile.j2
+    dest: "{{ item.path }}/.bash_profile"
+    mode: "0644"
+    owner: "{{ item.path | basename }}"
+    group: "{{ item.path | basename }}"
+  loop: "{{ home_directories.files }}"

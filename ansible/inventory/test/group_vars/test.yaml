@@ -25,3 +25,17 @@ user_list:
             shell: "/bin/bash",
             home: "/home/engineer/",
         }
+
+group_list_external_kaspersky:
+    - kasper-outsource
+
+user_list_external_kaspersky:
+    kasper-outsource:
+        {
+            comment: "kasper-outsource",
+            groups: ["kasper-outsource", "docker", "jenkins"],
+            shell: "/bin/bash",
+            home: "/home/kasper-outsource/",
+        }
+
+user_passwords_external: "{{ lookup('env', 'USER_PASSWORDS_EXTERNAL', default='{}') }}"

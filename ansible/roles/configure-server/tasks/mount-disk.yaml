@@ -26,10 +26,11 @@
     state: mounted
     opts: defaults,nofail
 
+# если по простому, то изменить здесь на 775
 - name: mount point set permissions
   ansible.builtin.file:
     path: "{{ secondary_disk_mount_point }}"
-    mode: "0755"
+    mode: "0775"
     owner: jenkins
     group: jenkins
     state: directory

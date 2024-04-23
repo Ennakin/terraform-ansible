@@ -140,7 +140,7 @@ module "vm-test-strl" {
   source = "../../../modules/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_strl : key => value if key != "regress-release" && !contains(["regress-master"], key)
+    for key, value in local.parsed_servers_strl : key => value if key != "regress-release" && !contains(["regress-master", "kaspersky-admin"], key)
   }
 
   name        = "strl-${var.vm_name}-${each.key}"
@@ -163,6 +163,33 @@ module "vm-test-strl" {
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
 }
 
+module "vm-test-strl-kaspersky-admin" {
+  source = "../../../modules/vm"
+
+  for_each = {
+    for key, value in local.parsed_servers_strl : key => value if key == "kaspersky-admin"
+  }
+
+  name        = "strl-${var.vm_name}-${each.key}"
+  hostname    = "strl-${var.vm_name}-${each.key}"
+  description = "STRL-VM-test-${each.value}"
+  preemptible = var.preemptible
+  nat         = false
+
+  cpu                = 4
+  ram                = 8
+  boot_disk_image_id = var.boot_disk_image_id
+  boot_disk_size     = var.boot_disk_size
+  cloud_config_path  = file(var.cloud_config_file_path)
+
+  subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
+  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_strl["kaspersky-admin"].id : ""
+
+  # TODO FS HRL-овский
+  filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+  filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
+}
+
 # вывод в файл полученных hostname и ip vm-ок
 resource "local_file" "vm_ips" {
 
@@ -171,14 +198,18 @@ resource "local_file" "vm_ips" {
       [for instance in module.vm-test-hrl : instance.hostname],
       [for instance in module.vm-regress-release-hrl : instance.hostname],
       [for instance in module.vm-regress-master-hrl : instance.hostname],
-      [for instance in module.vm-test-strl : instance.hostname]
+      [for instance in module.vm-test-strl : instance.hostname],
+      [for instance in module.vm-test-strl-kaspersky-admin : instance.hostname]
+      #   [module.vm-test-strl-kaspersky-admin.hostname]
     )
 
     vm_ips = concat(
       [for instance in module.vm-test-hrl : instance.internal_ip],
       [for instance in module.vm-regress-release-hrl : instance.internal_ip],
       [for instance in module.vm-regress-master-hrl : instance.internal_ip],
-      [for instance in module.vm-test-strl : instance.internal_ip]
+      [for instance in module.vm-test-strl : instance.internal_ip],
+      [for instance in module.vm-test-strl-kaspersky-admin : instance.internal_ip]
+      #   [module.vm-test-strl-kaspersky-admin.internal_ip]
     )
     }
   )
