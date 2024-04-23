@@ -62,15 +62,15 @@ class YandexConf:
         jot = self.signed_token()
 
         response = requests.post(
-            "https://iam.api.cloud.yandex.net/iam/v1/tokens",
-            headers={"Content-Type": "application/json"},
-            data=json.dumps({"jwt": jot})
+            'https://iam.api.cloud.yandex.net/iam/v1/tokens',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps({'jwt': jot})
         )
 
         if response.status_code != 200:
-            raise Exception(f"Failed to get IAM token: {response.text}")
+            raise Exception(f'Failed to get IAM token: {response.text}')
 
-        return response.json()["iamToken"]
+        return response.json()['iamToken']
 
 
 def get_env(key: str) -> str:
@@ -91,7 +91,7 @@ def get_env(key: str) -> str:
     if value is not None:
         return value
     else:
-        raise Exception(f"{key} переменная не задана")
+        raise Exception(f'{key} переменная не задана')
 
 
 def main():
@@ -99,9 +99,9 @@ def main():
     """
 
     yc = YandexConf(
-        get_env("YC_SERVICE_ACCOUNT_ID"),
-        get_env("YC_KEY_ID"),
-        get_env("YC_KEY_SECRET_FILE_PATH")
+        get_env('YC_SERVICE_ACCOUNT_ID'),
+        get_env('YC_KEY_ID'),
+        get_env('YC_KEY_SECRET_FILE_PATH')
     )
 
     iam_token = yc.get_iam_token()
@@ -114,5 +114,5 @@ def main():
         f.write(f'export TF_VAR_token={iam_token}')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
