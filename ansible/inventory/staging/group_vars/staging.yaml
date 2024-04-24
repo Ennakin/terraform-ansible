@@ -17,3 +17,10 @@ user_list:
             shell: "/bin/bash",
             home: "/home/engineer/",
         }
+    systems-analyst:
+        {
+            comment: "systems-analyst",
+            groups: ["systems-analyst"],
+            shell: "/bin/bash",
+            home: "/home/systems-analyst/",
+        }
