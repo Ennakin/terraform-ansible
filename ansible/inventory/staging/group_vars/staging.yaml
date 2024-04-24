@@ -1,6 +1,7 @@
 group_list:
     - tester
     - engineer
+    - systems-analyst
 
 user_list:
     tester:
