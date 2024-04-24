@@ -81,9 +81,9 @@
     user: "{{ item.key }}"
     state: present
     exclusive: true
-    key: "{{ lookup('env', 'PUB_' + item.key | upper, errors='ignore') }}"
+    key: "{{ lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') }}"
   loop: "{{ user_list | default({}) | dict2items }}"
-  when: lookup('env', 'PUB_' + item.key | upper, errors='ignore') | default('') != ''
+  when: lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') | default('') != ''
 
 # - name: fetch authorized_keys file for tester
 #   ansible.builtin.fetch:
