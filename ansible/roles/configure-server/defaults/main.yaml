@@ -37,7 +37,7 @@ jenkins_master_node_host: "10.70.1.5 ci.myhrlink.ru"
 bash_aliases:
     cdd: "cd /var/hrlink/"
     cdv: "cd /var/hrlink/vms/"
-    cdw: "cd /var/hrlink/working_data/"
+    cdw: "cd /var/hrlink/working-data/"
     cdc: "cd /var/hrlink/conf/"
     cdf: "cd /mnt/"
 
