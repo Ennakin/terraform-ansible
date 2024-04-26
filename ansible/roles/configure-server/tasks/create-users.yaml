@@ -105,6 +105,14 @@
   loop: "{{ user_list | default({}) | dict2items }}"
   when: lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') | default(false)
 
+- name: adding users to jenkins group
+  user:
+    name: "{{ item }}"
+    groups: jenkins
+    append: true
+    state: present
+  loop: "{{ user_list_jenkins | default([]) }}"
+
 - name: find home directories
   ansible.builtin.find:
     paths: /home

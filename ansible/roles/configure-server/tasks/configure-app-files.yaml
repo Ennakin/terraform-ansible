@@ -1,0 +1,42 @@
+- name: check if the HRL app archive exists
+  ansible.builtin.stat:
+    path: "/mnt/{{ filesystem_name }}/hrl-{{ app_archive_name_mask }}"
+  register: hrl_archive_stat
+
+- name: check if the STRL app archive exists
+  ansible.builtin.stat:
+    path: "/mnt/{{ filesystem_name }}/strl-{{ app_archive_name_mask }}"
+  register: strl_archive_stat
+
+- name: debug archive HRL exists
+  ansible.builtin.debug:
+    msg: "{{ hrl_archive_stat.stat.exists }}"
+
+- name: debug archive STRL exists
+  ansible.builtin.debug:
+    msg: "{{ strl_archive_stat.stat.exists }}"
+
+- name: unarchive HRL app archive to mount point
+  ansible.builtin.unarchive:
+    src: "/mnt/{{ filesystem_name }}/hrl-{{ app_archive_name_mask }}"
+    dest: "{{ secondary_disk_mount_point }}"
+    remote_src: yes
+    exclude: "conf/"
+    # creates: "{{ secondary_disk_mount_point }}"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('hrl'))
+
+- name: unarchive STRL app archive to mount point
+  ansible.builtin.unarchive:
+    src: "/mnt/{{ filesystem_name }}/strl-{{ app_archive_name_mask }}"
+    dest: "{{ secondary_disk_mount_point }}"
+    remote_src: yes
+    exclude: "conf/"
+    # creates: "{{ secondary_disk_mount_point }}"
+  when: strl_archive_stat.stat.exists and (ansible_hostname | regex_search('strl'))
+
+- name: replace INSTANCE_HOST value in .env file
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^INSTANCE_HOST="
+    replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[1:] | join("") }}'
+  when: hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists

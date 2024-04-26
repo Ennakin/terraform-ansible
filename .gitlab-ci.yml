@@ -51,6 +51,7 @@ variables:
 #   PUB_DEVELOPER
 #   PUB_TESTER
 #   PUB_ENGINEER
+#   PUB_SYSTEMS_ANALYST
 
 stages:
     - format
