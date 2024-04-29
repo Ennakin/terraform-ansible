@@ -76,7 +76,7 @@
   when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(regress).*$'))
 
 # директория conf/ распаковывается полностью если её нет на диске
-# файлы из conf/ распаковываются только если в архиве эти файлы есть, а ни диске их нет
+# файлы из conf/ распаковываются только если в архиве эти файлы есть, а на диске их нет
 - name: get list of files in conf/ directory from HRL app archive
   ansible.builtin.shell:
     cmd: "tar tf /mnt/{{ filesystem_name }}/hrl-{{ app_archive_name_mask }} conf/"
