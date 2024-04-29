@@ -34,6 +34,10 @@ user_passwords: "{{ lookup('env', 'USER_PASSWORDS', default='{}') }}"
 
 jenkins_master_node_host: "10.70.1.5 ci.myhrlink.ru"
 
+docker_hub_address: docker.hr-link.ru
+docker_hub_user: "{{ lookup('env', 'DOCKER_HUB_USER', default='') }}"
+docker_hub_password: "{{ lookup('env', 'DOCKER_HUB_PASSWORD', default='') }}"
+
 bash_aliases:
     cdd: "cd /var/hrlink/"
     cdv: "cd /var/hrlink/vms/"
@@ -42,7 +46,7 @@ bash_aliases:
     cdf: "cd /mnt/"
 
 app_paths:
-    - /var/hrlink/vms/
+    # - /var/hrlink/vms/
     - /var/hrlink/vms/scripts/
 
 reverse_nginx_hostname: "{{ lookup('env', 'REVERSE_NGINX_HOSTNAME', default='') }}"

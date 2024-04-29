@@ -8,21 +8,21 @@
     path: "/mnt/{{ filesystem_name }}/strl-{{ app_archive_name_mask }}"
   register: strl_archive_stat
 
-- name: debug archive HRL exists
-  ansible.builtin.debug:
-    msg: "{{ hrl_archive_stat.stat.exists }}"
+# - name: debug archive HRL exists
+#   ansible.builtin.debug:
+#     msg: "{{ hrl_archive_stat.stat.exists }}"
 
-- name: debug archive STRL exists
-  ansible.builtin.debug:
-    msg: "{{ strl_archive_stat.stat.exists }}"
+# - name: debug archive STRL exists
+#   ansible.builtin.debug:
+#     msg: "{{ strl_archive_stat.stat.exists }}"
 
+# всё содержимое архива кроме conf/ распаковывается в любом случае
 - name: unarchive HRL app archive to mount point
   ansible.builtin.unarchive:
     src: "/mnt/{{ filesystem_name }}/hrl-{{ app_archive_name_mask }}"
     dest: "{{ secondary_disk_mount_point }}"
     remote_src: yes
     exclude: "conf/"
-    # creates: "{{ secondary_disk_mount_point }}"
   when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('hrl'))
 
 - name: unarchive STRL app archive to mount point
@@ -31,12 +31,82 @@
     dest: "{{ secondary_disk_mount_point }}"
     remote_src: yes
     exclude: "conf/"
-    # creates: "{{ secondary_disk_mount_point }}"
   when: strl_archive_stat.stat.exists and (ansible_hostname | regex_search('strl'))
 
-- name: replace INSTANCE_HOST value in .env file
+- name: replace standard INSTANCE_HOST value in .env file
   ansible.builtin.replace:
     path: "{{ secondary_disk_mount_point }}/working-data/.env"
     regexp: "^INSTANCE_HOST=.*$"
     replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[1:] | join("") }}'
-  when: hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(dev|test|devops|staging).*$')) and not (ansible_hostname | regex_search('\\b(regress|kaspersky).*$'))
+
+- name: replace regress-release INSTANCE_HOST value in .env file
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^INSTANCE_HOST=.*$"
+    replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2] }}'
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(regress-release).*$'))
+
+- name: replace regress-master INSTANCE_HOST value in .env file
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^INSTANCE_HOST=.*$"
+    replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[3] }}'
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(regress-master).*$'))
+
+- name: replace kaspersky-app INSTANCE_HOST value in .env file
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^INSTANCE_HOST=.*$"
+    replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2] }}'
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(kaspersky-app).*$'))
+
+# директория conf/ распаковывается полностью если её нет на диске
+# файлы из conf/ распаковываются только если в архиве эти файлы есть, а ни диске их нет
+- name: get list of files in conf/ directory from HRL app archive
+  ansible.builtin.shell:
+    cmd: "tar tf /mnt/{{ filesystem_name }}/hrl-{{ app_archive_name_mask }} conf/"
+  register: hrl_conf_files
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('hrl'))
+
+# - name: debug HRL archive
+#   ansible.builtin.debug:
+#     msg: "{{ item }}"
+#   loop: "{{ hrl_conf_files.stdout_lines }}"
+#   when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('hrl'))
+
+- name: extract HRL files from conf/ directory if they do not exist on the server
+  ansible.builtin.unarchive:
+    src: "/mnt/{{ filesystem_name }}/hrl-{{ app_archive_name_mask }}"
+    dest: "{{ secondary_disk_mount_point }}"
+    remote_src: yes
+    include: "{{ item }}"
+    creates: "{{ secondary_disk_mount_point }}/{{ item }}"
+  loop: "{{ hrl_conf_files.stdout_lines }}"
+  when:
+    - hrl_archive_stat.stat.exists
+    - ansible_hostname | regex_search('hrl')
+
+- name: get list of files in conf/ directory from STRL app archive
+  ansible.builtin.shell:
+    cmd: "tar tf /mnt/{{ filesystem_name }}/strl-{{ app_archive_name_mask }} conf/"
+  register: strl_conf_files
+  when: strl_archive_stat.stat.exists and (ansible_hostname | regex_search('strl'))
+
+# - name: debug STRL archive
+#   ansible.builtin.debug:
+#     msg: "{{ item }}"
+#   loop: "{{ strl_conf_files.stdout_lines }}"
+#   when: strl_archive_stat.stat.exists and (ansible_hostname | regex_search('strl'))
+
+- name: extract STRL files from conf/ directory if they do not exist on the server
+  ansible.builtin.unarchive:
+    src: "/mnt/{{ filesystem_name }}/strl-{{ app_archive_name_mask }}"
+    dest: "{{ secondary_disk_mount_point }}"
+    remote_src: yes
+    include: "{{ item }}"
+    creates: "{{ secondary_disk_mount_point }}/{{ item }}"
+  loop: "{{ strl_conf_files.stdout_lines }}"
+  when:
+    - strl_archive_stat.stat.exists
+    - ansible_hostname | regex_search('strl')
