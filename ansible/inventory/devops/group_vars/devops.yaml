@@ -1,0 +1,11 @@
+group_list:
+    - tester
+
+user_list:
+    tester:
+        {
+            comment: "tester",
+            groups: ["tester"],
+            shell: "/bin/bash",
+            home: "/home/tester/",
+        }
