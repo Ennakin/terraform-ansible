@@ -55,6 +55,11 @@ variable "servers_strl" {
   default     = "{}"
 }
 
+variable "servers_space" {
+  description = "Space servers to creating"
+  default     = "{}"
+}
+
 # переменные основной директории
 variable "folder_id_main_folder" {}
 variable "subnetwork_name_main_folder" {}

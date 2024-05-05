@@ -18,3 +18,8 @@ variable "servers_strl" {
   type    = string
   default = "{}"
 }
+
+variable "servers_space" {
+  type    = string
+  default = "{}"
+}

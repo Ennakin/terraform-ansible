@@ -19,8 +19,9 @@ provider "yandex" {
 }
 
 locals {
-  parsed_servers_hrl  = jsondecode(var.servers_hrl)
-  parsed_servers_strl = jsondecode(var.servers_strl)
+  parsed_servers_hrl   = jsondecode(var.servers_hrl)
+  parsed_servers_strl  = jsondecode(var.servers_strl)
+  parsed_servers_space = jsondecode(var.servers_space)
 }
 
 # # пока используется подсеть из основной директории
@@ -56,6 +57,11 @@ data "yandex_compute_disk" "secondary_disk_hrl" {
 data "yandex_compute_disk" "secondary_disk_strl" {
   for_each = var.secondary_disk_name != "" ? local.parsed_servers_strl : {}
   name     = var.secondary_disk_name != "" ? "strl-${var.secondary_disk_name}-${each.key}" : ""
+}
+
+data "yandex_compute_disk" "secondary_disk_space" {
+  for_each = var.secondary_disk_name != "" ? local.parsed_servers_space : {}
+  name     = var.secondary_disk_name != "" ? "space-${var.secondary_disk_name}-${each.key}" : ""
 }
 
 module "vm-test-hrl" {
@@ -140,7 +146,7 @@ module "vm-test-strl" {
   source = "../../../modules/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_strl : key => value if key != "regress-release" && !contains(["regress-master", "kaspersky-admin"], key)
+    for key, value in local.parsed_servers_strl : key => value if key != "regress-release" && !contains(["regress-master"], key)
   }
 
   name        = "strl-${var.vm_name}-${each.key}"
@@ -163,16 +169,16 @@ module "vm-test-strl" {
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
 }
 
-module "vm-test-strl-kaspersky-admin" {
+module "vm-test-space-kaspersky-admin" {
   source = "../../../modules/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_strl : key => value if key == "kaspersky-admin"
+    for key, value in local.parsed_servers_space : key => value if key == "kaspersky-admin"
   }
 
-  name        = "strl-${var.vm_name}-${each.key}"
-  hostname    = "strl-${var.vm_name}-${each.key}"
-  description = "STRL-VM-test-${each.value}"
+  name        = "space-${var.vm_name}-${each.key}"
+  hostname    = "space-${var.vm_name}-${each.key}"
+  description = "SPACE-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
 
@@ -183,7 +189,7 @@ module "vm-test-strl-kaspersky-admin" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_strl["kaspersky-admin"].id : ""
+  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_space["kaspersky-admin"].id : ""
 
   # TODO FS HRL-овский
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
@@ -199,7 +205,7 @@ resource "local_file" "vm_ips" {
       [for instance in module.vm-regress-release-hrl : instance.hostname],
       [for instance in module.vm-regress-master-hrl : instance.hostname],
       [for instance in module.vm-test-strl : instance.hostname],
-      [for instance in module.vm-test-strl-kaspersky-admin : instance.hostname]
+      [for instance in module.vm-test-space-kaspersky-admin : instance.hostname]
       #   [module.vm-test-strl-kaspersky-admin.hostname]
     )
 
@@ -208,7 +214,7 @@ resource "local_file" "vm_ips" {
       [for instance in module.vm-regress-release-hrl : instance.internal_ip],
       [for instance in module.vm-regress-master-hrl : instance.internal_ip],
       [for instance in module.vm-test-strl : instance.internal_ip],
-      [for instance in module.vm-test-strl-kaspersky-admin : instance.internal_ip]
+      [for instance in module.vm-test-space-kaspersky-admin : instance.internal_ip]
       #   [module.vm-test-strl-kaspersky-admin.internal_ip]
     )
     }

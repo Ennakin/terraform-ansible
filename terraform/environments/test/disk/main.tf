@@ -19,8 +19,9 @@ provider "yandex" {
 }
 
 locals {
-  parsed_servers_hrl  = jsondecode(var.servers_hrl)
-  parsed_servers_strl = jsondecode(var.servers_strl)
+  parsed_servers_hrl   = jsondecode(var.servers_hrl)
+  parsed_servers_strl  = jsondecode(var.servers_strl)
+  parsed_servers_space = jsondecode(var.servers_space)
 }
 
 module "disk-hrl" {
@@ -36,25 +37,27 @@ module "disk-hrl" {
 module "disk-strl" {
   source = "../../../modules/disk"
 
-  #   for_each = local.parsed_servers_strl
+  for_each = local.parsed_servers_strl
 
-  for_each = {
-    for key, value in local.parsed_servers_strl : key => value if key != "kaspersky-admin"
-  }
+  #   for_each = {
+  #     for key, value in local.parsed_servers_strl : key => value if key != "kaspersky-admin"
+  #   }
 
   secondary_disk_name        = "strl-${var.secondary_disk_name}-${each.key}"
   secondary_disk_description = "STRL-DISK-test-${each.value}"
   secondary_disk_size        = var.secondary_disk_size
 }
 
-module "disk-strl-kaspersky-admin" {
+module "disk-space-kaspersky-admin" {
   source = "../../../modules/disk"
 
+  #   for_each = local.parsed_servers_space
+
   for_each = {
-    for key, value in local.parsed_servers_strl : key => value if key == "kaspersky-admin"
+    for key, value in local.parsed_servers_space : key => value if key == "kaspersky-admin"
   }
 
-  secondary_disk_name        = "strl-${var.secondary_disk_name}-${each.key}"
-  secondary_disk_description = "STRL-DISK-test-${each.value}"
+  secondary_disk_name        = "space-${var.secondary_disk_name}-${each.key}"
+  secondary_disk_description = "SPACE-DISK-test-${each.value}"
   secondary_disk_size        = 20
 }
