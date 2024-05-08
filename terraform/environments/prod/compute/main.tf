@@ -74,7 +74,7 @@ module "vm-prod-hrl-external-grafana" {
   name        = "hrl-${var.vm_name}-${each.key}"
   hostname    = "hrl-${var.vm_name}-${each.key}"
   description = "HRL-VM-prod-${each.value}"
-  preemptible = var.preemptible
+  preemptible = false
   nat         = false
 
   cpu                = 2
