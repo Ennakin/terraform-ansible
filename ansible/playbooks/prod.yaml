@@ -1,0 +1,5 @@
+- name: standart server playbook
+  hosts: prod
+  become: true
+  roles:
+    - configure-server

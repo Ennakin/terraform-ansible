@@ -5,7 +5,7 @@
   when: ansible_facts['distribution'] in ubuntu_list
 
 - import_tasks: mount-disk.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging'))
+  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging|prod'))
 
 - import_tasks: mount-filesystem.yaml
   when: ansible_facts['distribution'] in ubuntu_list and filesystem_name != ''
@@ -15,7 +15,7 @@
   when: ansible_facts['distribution'] in ubuntu_list and inventory_hostname == reverse_nginx_hostname
 
 - import_tasks: install-docker.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|prod'))
 
 - import_tasks: install-ftp-client.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))

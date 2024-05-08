@@ -3,7 +3,7 @@
     name: "{{ item }}"
     state: present
 
-    # # из-за обновления кэша иногда падает, без него пока не такого было
+    # # кэш обновляется выше, в install-packages-ubuntu.yaml, если обновлять его и здесь, то таска падает...
     #   update_cache: true
   loop:
     - apt-transport-https
