@@ -61,7 +61,8 @@ data "yandex_compute_disk" "secondary_disk_strl" {
 module "vm-staging-hrl" {
   source = "../../../modules/vm"
 
-  # staging-2 создан инженерам непрерываемым
+  # staging-2 изначально создавался инженерам непрерываемым
+  # пусть так же пока останется отдельным tf-инстансом на случай если будут нужны другие индивидуальные особенности
   for_each = {
     for key, value in local.parsed_servers_hrl : key => value if value != "engineers"
   }
@@ -87,7 +88,8 @@ module "vm-staging-hrl" {
 module "vm-staging-hrl-engineers" {
   source = "../../../modules/vm"
 
-  # staging-2 создан инженерам непрерываемым
+  # staging-2 изначально создавался инженерам непрерываемым
+  # пусть так же пока останется отдельным tf-инстансом на случай если будут нужны другие индивидуальные особенности
   for_each = {
     for key, value in local.parsed_servers_hrl : key => value if value == "engineers"
   }
@@ -95,7 +97,7 @@ module "vm-staging-hrl-engineers" {
   name        = "hrl-${var.vm_name}-${each.key}"
   hostname    = "hrl-${var.vm_name}-${each.key}"
   description = "HRL-VM-staging-${each.value}"
-  preemptible = false
+  preemptible = var.preemptible
   nat         = false
 
   cpu                = var.cpu
