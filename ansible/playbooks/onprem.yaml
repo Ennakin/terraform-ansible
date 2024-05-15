@@ -1,0 +1,5 @@
+- name: standart server playbook
+  hosts: onprem
+  become: true
+  roles:
+    - configure-server

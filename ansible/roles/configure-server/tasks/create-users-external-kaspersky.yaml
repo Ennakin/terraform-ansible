@@ -15,10 +15,10 @@
     home: "{{ item.value.home }}"
     create_home: true
     #   move_home: true
-    password: "{{ user_passwords_external_kaspersky[item.key] | default(omit) | password_hash('sha512', passwords_salt) }}"
+    password: "{{ user_passwords_external[item.key] | default(omit) | password_hash('sha512', passwords_salt) }}"
 
     # # TODO password_hash отмечен как deprecated, в дальнейшем нужно будет делать установку pip install passlib и использовать его
-    # password: "{{ user_passwords_external_kaspersky[item.key] | default(omit) | passlib.hash.sha512_crypt.encrypt('password', rounds=5000, salt=passwords_salt) }}"
+    # password: "{{ user_passwords_external[item.key] | default(omit) | passlib.hash.sha512_crypt.encrypt('password', rounds=5000, salt=passwords_salt) }}"
     append: false
   loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
 

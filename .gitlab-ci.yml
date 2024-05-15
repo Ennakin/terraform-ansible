@@ -29,6 +29,7 @@ variables:
 #   env_tf_test
 #   env_tf_devops
 #   env_tf_staging
+#   env_tf_onprem
 #   env_tf_prod
 
 #   env_ansible_all
@@ -37,6 +38,7 @@ variables:
 #   env_ansible_test
 #   env_ansible_devops
 #   env_ansible_staging
+#   env_ansible_onprem
 #   env_ansible_prod
 
 #   # как ПЕРЕМЕННАЯ
@@ -54,6 +56,7 @@ variables:
 #   PUB_TESTER
 #   PUB_ENGINEER
 #   PUB_SYSTEMS_ANALYST
+#   PUB_KASPER_OUTSOURCE
 
 stages:
     - format

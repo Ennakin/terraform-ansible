@@ -1,0 +1,9 @@
+- name: check file exists
+  ansible.builtin.stat:
+    path: "/some/file/on/server.txt"
+  register: file_exists
+
+- name: delete file
+  ansible.builtin.shell:
+    cmd: "sudo rm /some/file/on/server.txt"
+  when: file_exists.stat.exists and ansible_hostname | regex_search('hrl')
