@@ -11,6 +11,7 @@ app_list_all:
     - make
     - netcat
     - net-tools
+    - traceroute
     - iproute2
     - iputils-ping
     - python3.10-venv
