@@ -157,7 +157,7 @@ init-network:
       - .init
     rules: *network-rules
 
-validate:
+.validate:
     stage: validate
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -165,6 +165,26 @@ validate:
     script:
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" validate
     allow_failure: true
+
+validate-compute:
+    extends:
+      - .validate
+    rules: *compute-rules
+
+validate-fs:
+    extends:
+      - .validate
+    rules: *fs-rules
+
+validate-disk:
+    extends:
+      - .validate
+    rules: *disk-rules
+
+validate-network:
+    extends:
+      - .validate
+    rules: *network-rules
 
 .scan:
     stage: security-scan
@@ -181,7 +201,7 @@ validate:
 create-iam:
     stage: create-iam
     rules:
-        - if: $TF_ENV && $TF_STATE
+        - if: $TF_ENV # && $TF_STATE
           when: always
     script:
         - apk add --update --no-cache python3 py3-requests py3-jwt py3-cryptography && ln -sf python3 /usr/bin/python
@@ -193,7 +213,7 @@ create-iam:
             - ./terraform/envs/prod/iam-token.env
         expire_in: 1 day
 
-plan:
+.plan:
     stage: plan
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -215,7 +235,27 @@ plan:
             - ./terraform/environments/$TF_ENV/$TF_STATE/output.tfplan
         # expire_in: 1 day
 
-apply_configuration:
+plan-compute:
+    extends:
+      - .plan
+    rules: *compute-rules
+
+plan-fs:
+    extends:
+      - .plan
+    rules: *fs-rules
+
+plan-disk:
+    extends:
+      - .plan
+    rules: *disk-rules
+
+plan-network:
+    extends:
+      - .plan
+    rules: *network-rules
+
+.apply_configuration:
     stage: apply
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -238,6 +278,26 @@ apply_configuration:
         paths:
             - ./ansible/inventory/$TF_ENV/inventory
         # expire_in: 1 day
+
+apply-compute:
+    extends:
+      - .apply_configuration
+    rules: *compute-rules
+
+apply-fs:
+    extends:
+      - .apply_configuration
+    rules: *fs-rules
+
+apply-disk:
+    extends:
+      - .apply_configuration
+    rules: *disk-rules
+
+apply-network:
+    extends:
+      - .apply_configuration
+    rules: *network-rules
 
 ansible:
     image:
