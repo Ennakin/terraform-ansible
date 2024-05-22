@@ -202,8 +202,8 @@ plan:
         - terraform -version
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_tf_all 2>/dev/null && source $env_tf_all
-        - ls $env_file 2>/dev/null && source $env_file
+        - source $env_tf_all
+        - source $env_file
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
