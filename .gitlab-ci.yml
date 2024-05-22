@@ -74,9 +74,6 @@ stages:
         - if: $TF_ENV # && $TF_STATE
           when: always
     stage: format
-    # rules:
-    #     - if: $TF_ENV && $TF_STATE
-    #       when: always
     script:
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
     cache: []
@@ -116,7 +113,7 @@ format-network:
             TF_STATE: network
 
 
-download_provider:
+.init:
     stage: init
     rules:
         - if: $TF_ENV && $TF_STATE
