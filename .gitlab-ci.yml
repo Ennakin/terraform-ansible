@@ -70,14 +70,39 @@ stages:
     - destroy
 
 format:
-    stage: format
     rules:
-        - if: $TF_ENV && $TF_STATE
-          when: always
+        - if: $TF_ENV # && $TF_STATE
+          when: manual
+        - exists: 
+          - ./terraform/environments/${TF_ENV}/compute
+          variables: 
+            $TF_STATE: compute
+            $CI_JOB_STAGE: $CI_JOB_STAGE+compute
+        - exists: 
+          - ./terraform/environments/${TF_ENV}/fs
+          variables: 
+            $TF_STATE: fs
+            $CI_JOB_STAGE: $CI_JOB_STAGE+fs
+        - exists: 
+          - ./terraform/environments/${TF_ENV}/disk
+          variables: 
+            $TF_STATE: disk
+            $CI_JOB_STAGE: $CI_JOB_STAGE+disk
+        - exists: 
+          - ./terraform/environments/${TF_ENV}/compute
+          variables: 
+            $TF_STATE: compute
+            $CI_JOB_STAGE: $CI_JOB_STAGE+compute
+    stage: format
+    # rules:
+    #     - if: $TF_ENV && $TF_STATE
+    #       when: always
     script:
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" fmt
     cache: []
     allow_failure: true
+
+
 
 download_provider:
     stage: init
