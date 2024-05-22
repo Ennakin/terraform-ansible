@@ -87,7 +87,7 @@ format-compute:
     - .format
     rules: &compute-rules        
         - exists: 
-          - ./terraform/environments/${TF_ENV}/compute
+          - ./terraform/environments/${TF_ENV}/compute/main.tf
           variables: 
             $TF_STATE: compute
 format-fs:
@@ -95,7 +95,7 @@ format-fs:
     - .format
     rules: &fs-rules        
         - exists: 
-          - ./terraform/environments/${TF_ENV}/fs
+          - ./terraform/environments/${TF_ENV}/fs/main.tf
           variables: 
             $TF_STATE: fs
 format-disk:
@@ -103,7 +103,7 @@ format-disk:
     - .format
     rules: &disk-rules        
         - exists: 
-          - ./terraform/environments/${TF_ENV}/disk
+          - ./terraform/environments/${TF_ENV}/disk/main.tf
           variables: 
             $TF_STATE: disk
 format-network:
@@ -111,7 +111,7 @@ format-network:
     - .format
     rules: &network-rules        
         - exists: 
-          - ./terraform/environments/${TF_ENV}/network
+          - ./terraform/environments/${TF_ENV}/network/main.tf
           variables: 
             $TF_STATE: network
 
