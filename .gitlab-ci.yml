@@ -124,10 +124,10 @@ format-network:
     script:
         - env_name="env_tf_${TF_ENV}"
         - env_file=$( echo ${env_name} )
-        - echo $env_tf_all
-        - source $env_tf_all
-        - echo $env_file
-        - source $env_file
+        - ls ${env_tf_all}
+        - source ${env_tf_all}
+        - echo ${env_file}
+        - source ${env_file}
         - cp ./terraform/.terraformrc ~/.terraformrc
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
           -backend-config=address=${TF_ADDRESS}
