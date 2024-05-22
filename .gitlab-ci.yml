@@ -69,30 +69,10 @@ stages:
     - configure
     - destroy
 
-format:
+.format:
     rules:
-        - if: $TF_ENV # && $TF_STATE
-          when: manual
-        - exists: 
-          - ./terraform/environments/${TF_ENV}/compute
-          variables: 
-            $TF_STATE: compute
-            $CI_JOB_STAGE: $CI_JOB_STAGE+compute
-        - exists: 
-          - ./terraform/environments/${TF_ENV}/fs
-          variables: 
-            $TF_STATE: fs
-            $CI_JOB_STAGE: $CI_JOB_STAGE+fs
-        - exists: 
-          - ./terraform/environments/${TF_ENV}/disk
-          variables: 
-            $TF_STATE: disk
-            $CI_JOB_STAGE: $CI_JOB_STAGE+disk
-        - exists: 
-          - ./terraform/environments/${TF_ENV}/compute
-          variables: 
-            $TF_STATE: compute
-            $CI_JOB_STAGE: $CI_JOB_STAGE+compute
+        - if: $TF_ENV && $TF_STATE
+          when: always
     stage: format
     # rules:
     #     - if: $TF_ENV && $TF_STATE
@@ -102,6 +82,38 @@ format:
     cache: []
     allow_failure: true
 
+format-compute:
+    extends:
+    - .format
+    rules: &compute-rules        
+        - exists: 
+          - ./terraform/environments/${TF_ENV}/compute
+          variables: 
+            $TF_STATE: compute
+format-fs:
+    extends:
+    - .format
+    rules: &fs-rules        
+        - exists: 
+          - ./terraform/environments/${TF_ENV}/fs
+          variables: 
+            $TF_STATE: fs
+format-disk:
+    extends:
+    - .format
+    rules: &disk-rules        
+        - exists: 
+          - ./terraform/environments/${TF_ENV}/disk
+          variables: 
+            $TF_STATE: disk
+format-network:
+    extends:
+    - .format
+    rules: &network-rules        
+        - exists: 
+          - ./terraform/environments/${TF_ENV}/network
+          variables: 
+            $TF_STATE: network
 
 
 download_provider:
