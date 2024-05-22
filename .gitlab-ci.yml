@@ -87,7 +87,7 @@ format-compute:
     - .format
     rules: &compute-rules        
         - exists: 
-          - ./terraform/environments/${TF_ENV}/compute/main.tf
+          - terraform/environments/${TF_ENV}/compute/main.tf
           variables: 
             $TF_STATE: compute
 format-fs:
