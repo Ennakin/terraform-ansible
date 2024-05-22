@@ -71,7 +71,7 @@ stages:
 
 .format:
     rules:
-        - if: $TF_ENV && $TF_STATE
+        - if: $TF_ENV # && $TF_STATE
           when: always
     stage: format
     # rules:
