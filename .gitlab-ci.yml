@@ -89,7 +89,7 @@ format-compute:
         - exists: 
           - terraform/environments/${TF_ENV}/compute/*.tf
           variables: 
-            $TF_STATE: compute
+            TF_STATE: compute
 format-fs:
     extends:
     - .format
@@ -97,7 +97,7 @@ format-fs:
         - exists: 
           - terraform/environments/${TF_ENV}/fs/*.tf
           variables: 
-            $TF_STATE: fs
+            TF_STATE: fs
 format-disk:
     extends:
     - .format
@@ -105,7 +105,7 @@ format-disk:
         - exists: 
           - terraform/environments/${TF_ENV}/disk/*.tf
           variables: 
-            $TF_STATE: disk
+            TF_STATE: disk
 format-network:
     extends:
     - .format
@@ -113,7 +113,7 @@ format-network:
         - exists: 
           - terraform/environments/${TF_ENV}/network/*.tf
           variables: 
-            $TF_STATE: network
+            TF_STATE: network
 
 
 download_provider:
