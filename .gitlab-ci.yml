@@ -200,8 +200,6 @@ validate-network:
 
 create-iam:
     stage: create-iam
-    dependencies:
-        - validate
     rules:
         - if: $TF_ENV # && $TF_STATE
           when: always
