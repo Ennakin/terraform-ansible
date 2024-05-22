@@ -118,6 +118,9 @@ format-network:
     rules:
         - if: $TF_ENV # && $TF_STATE
           when: always
+        - exists: 
+          - $env_file
+          - $env_file
     script:
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
@@ -138,6 +141,21 @@ init-compute:
     extends:
       - .init
     rules: *compute-rules
+
+init-fs:
+    extends:
+      - .init
+    rules: *fs-rules
+
+init-disk:
+    extends:
+      - .init
+    rules: *disk-rules
+
+init-network:
+    extends:
+      - .init
+    rules: *network-rules
 
 validate:
     stage: validate
