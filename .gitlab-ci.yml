@@ -116,7 +116,7 @@ format-network:
 .init:
     stage: init
     rules:
-        - if: $TF_ENV && $TF_STATE
+        - if: $TF_ENV # && $TF_STATE
           when: always
     script:
         - env_name="env_tf_${TF_ENV}"
@@ -133,6 +133,11 @@ format-network:
           -backend-config=lock_method=POST
           -backend-config=unlock_method=DELETE
           -backend-config=retry_wait_min=5
+
+init-compute:
+    extends:
+      - .init
+    rules: *compute-rules
 
 validate:
     stage: validate
