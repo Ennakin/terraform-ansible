@@ -87,6 +87,10 @@ format-compute:
           - terraform/environments/${TF_ENV}/compute/*.tf
           variables: 
             TF_STATE: compute
+        - changes:
+          - terraform/environments/${TF_ENV}/compute/*.tf
+          when: always
+
 format-fs:
     extends:
     - .format
@@ -95,6 +99,10 @@ format-fs:
           - terraform/environments/${TF_ENV}/fs/*.tf
           variables: 
             TF_STATE: fs
+        - changes:
+          - terraform/environments/${TF_ENV}/fs/*.tf
+          when: always
+        
 format-disk:
     extends:
     - .format
@@ -103,6 +111,10 @@ format-disk:
           - terraform/environments/${TF_ENV}/disk/*.tf
           variables: 
             TF_STATE: disk
+        - changes:
+          - terraform/environments/${TF_ENV}/disk/*.tf
+          when: always
+        
 format-network:
     extends:
     - .format
@@ -111,7 +123,9 @@ format-network:
           - terraform/environments/${TF_ENV}/network/*.tf
           variables: 
             TF_STATE: network
-
+        - changes:
+          - terraform/environments/${TF_ENV}/network/*.tf
+          when: always
 
 .init:
     stage: init
@@ -219,7 +233,7 @@ create-iam:
     stage: plan
     rules:
         - if: $TF_ENV && $TF_STATE
-          when: always
+          when: manual
     script:
         - terraform -version
         - env_name="env_tf_${TF_ENV}"
