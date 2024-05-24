@@ -1,0 +1,2 @@
+- import_tasks: configure-app-files.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('kaspersky-admin'))

@@ -1,6 +1,3 @@
-- import_tasks: create-users.yaml
-  when: ansible_facts['distribution'] in ubuntu_list
-
 - import_tasks: install-packages-ubuntu.yaml
   when: ansible_facts['distribution'] in ubuntu_list
 
@@ -17,7 +14,7 @@
 - import_tasks: install-docker.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|prod'))
 
-- import_tasks: install-ftp-client.yaml
+- import_tasks: install-ftp-server.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))
 
 - import_tasks: install-postgresql.yaml
@@ -25,12 +22,3 @@
 
 - import_tasks: configure-jenkins-agent.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))
-
-- import_tasks: configure-app-files.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('kaspersky-admin'))
-
-- import_tasks: create-users-external-kaspersky.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('kaspersky'))
-
-# - import_tasks: delete-file.yaml
-#   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))

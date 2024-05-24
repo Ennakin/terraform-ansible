@@ -1,0 +1,15 @@
+passwords_salt: "{{ lookup('env', 'PASSWORDS_SALT') | default('default_salt') }}"
+user_passwords: "{{ lookup('env', 'USER_PASSWORDS', default='{}') }}"
+
+user_list_jenkins: "{{ lookup('env', 'USERS_JENKINS', default='').split(',') }}"
+
+bash_aliases:
+    cdd: "cd /var/hrlink/"
+    cdv: "cd /var/hrlink/vms/"
+    cdw: "cd /var/hrlink/working-data/"
+    cdc: "cd /var/hrlink/conf/"
+    cdf: "cd /mnt/"
+
+app_paths:
+    # - /var/hrlink/vms/
+    - /var/hrlink/vms/scripts/

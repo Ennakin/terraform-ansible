@@ -1,5 +1,6 @@
-- name: standart server playbook
+- name: standard server playbook
   hosts: prod
   become: true
   roles:
+    - configure-users
     - configure-server

@@ -1,0 +1,2 @@
+- import_tasks: delete-file.yaml
+  when: ansible_facts['distribution'] in ubuntu_list

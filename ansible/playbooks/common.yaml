@@ -1,4 +1,4 @@
-- name: standart server playbook
+- name: standard server playbook
   hosts: common
 
   # # TODO возможно получится разобраться с кастомизацией gather_facts
@@ -14,4 +14,5 @@
   become: true
   roles:
     # - system
+    - configure-users
     - configure-server
