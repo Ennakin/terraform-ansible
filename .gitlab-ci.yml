@@ -121,10 +121,10 @@ format-network:
     rules: &network-rules        
         - exists: 
           - terraform/environments/${TF_ENV}/network/*.tf
+          changes:
+          - terraform/environments/${TF_ENV}/network/*.tf
           variables: 
             TF_STATE: network
-        - changes:
-          - terraform/environments/${TF_ENV}/network/*.tf
           when: always
 
 .init:
