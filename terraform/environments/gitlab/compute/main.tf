@@ -52,14 +52,14 @@ data "yandex_compute_disk" "secondary_disk_gitlab_agent" {
   name     = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${each.key}" : ""
 }
 
-module "vm-onprem-gitlab" {
+module "vm-gitlab" {
   source = "../../../modules/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_gitlab_agent : key => value if key != "regress-release" && !contains(["regress-master"], key)
+    for key, value in local.parsed_servers_gitlab_agent : key => value
   }
 
-  name        = "gitlanb-${var.vm_name}-${each.key}"
+  name        = "gitlab-${var.vm_name}-${each.key}"
   hostname    = "gitlab-${var.vm_name}-${each.key}"
   description = "GitLab-agent-${each.value}"
   preemptible = var.preemptible
@@ -83,26 +83,24 @@ resource "local_file" "vm_ips" {
 
   content = templatefile("${path.module}/inventory.tpl", {
     vm_hostnames = concat(
-      [for instance in module.vm-onprem-hrl : instance.hostname],
-      [for instance in module.vm-onprem-strl : instance.hostname]
+      [for instance in module.vm-gitlab : instance.hostname]
     )
 
     vm_ips = concat(
-      [for instance in module.vm-onprem-hrl : instance.internal_ip],
-      [for instance in module.vm-onprem-strl : instance.internal_ip]
+      [for instance in module.vm-gitlab : instance.internal_ip]
     )
     }
   )
 
   filename = var.vm_hosts_result_file_path
 
-  provisioner "local-exec" {
-    command = <<EOH
-apt install docker.io
-mkdir -p /usr/local/lib/docker/cli-plugins
-curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
-chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-apt-get install gitlab-runner
-EOH
-  }
+#   provisioner "local-exec" {
+#     command = <<EOH
+# apt install docker.io
+# mkdir -p /usr/local/lib/docker/cli-plugins
+# curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+# chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+# apt-get install gitlab-runner
+# EOH
+#   }
 }

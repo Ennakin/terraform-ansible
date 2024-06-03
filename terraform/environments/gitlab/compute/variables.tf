@@ -47,7 +47,7 @@ variable "vm_hosts_result_file_path" {
 variable "vm_name" {}
 variable "servers_gitlab" {
   description = "Gitlab agent servers to creating"
-  default     = "{}"
+  default     = "{1: 'test'}"
 }
 
 # переменные основной директории
