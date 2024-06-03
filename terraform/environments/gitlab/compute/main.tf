@@ -19,7 +19,7 @@ provider "yandex" {
 }
 
 locals {
-  parsed_servers_gitlab_agent   = jsondecode(var.servers_gitlab)
+  parsed_servers_gitlab_agent = jsondecode(var.servers_gitlab)
 }
 
 # # пока используется подсеть из основной директории
@@ -72,7 +72,7 @@ module "vm-gitlab" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
+  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_gitlab_agent[each.key].id : ""
 
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
@@ -94,13 +94,13 @@ resource "local_file" "vm_ips" {
 
   filename = var.vm_hosts_result_file_path
 
-#   provisioner "local-exec" {
-#     command = <<EOH
-# apt install docker.io
-# mkdir -p /usr/local/lib/docker/cli-plugins
-# curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
-# chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-# apt-get install gitlab-runner
-# EOH
-#   }
+  #   provisioner "local-exec" {
+  #     command = <<EOH
+  # apt install docker.io
+  # mkdir -p /usr/local/lib/docker/cli-plugins
+  # curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+  # chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+  # apt-get install gitlab-runner
+  # EOH
+  #   }
 }

@@ -293,21 +293,25 @@ plan-network:
 apply-compute:
     extends:
       - .apply_configuration
+    when: manual
     rules: *compute-rules
 
 apply-fs:
     extends:
       - .apply_configuration
+    when: manual
     rules: *fs-rules
 
 apply-disk:
     extends:
       - .apply_configuration
+    when: manual
     rules: *disk-rules
 
 apply-network:
     extends:
       - .apply_configuration
+    when: manual
     rules: *network-rules
 
 .ansible:
@@ -376,19 +380,23 @@ ansible-compute:
 destroy-compute:
     extends:
       - .destroy_infra
+    when: manual
     rules: *compute-rules
 
 destroy-fs:
     extends:
       - .destroy_infra
+    when: manual
     rules: *fs-rules
 
 destroy-disk:
     extends:
       - .destroy_infra
+    when: manual
     rules: *disk-rules
 
 destroy-network:
     extends:
       - .destroy_infra
+    when: manual
     rules: *network-rules
