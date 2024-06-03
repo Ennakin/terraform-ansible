@@ -11,5 +11,5 @@ variable "secondary_disk_size" {
 
 variable "servers_gitlab" {
   type    = string
-  default = "{1: 'test'}"
+  default = "{'1': 'test'}"
 }
