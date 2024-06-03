@@ -6,14 +6,14 @@ user_list:
     developer:
         {
             comment: "developer",
-            groups: ["developer"],
+            groups: ["developer", "docker"],
             shell: "/bin/bash",
             home: "/home/developer/",
         }
     tester:
         {
             comment: "tester",
-            groups: ["tester"],
+            groups: ["tester", "docker"],
             shell: "/bin/bash",
             home: "/home/tester/",
         }

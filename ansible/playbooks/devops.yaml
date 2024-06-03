@@ -2,6 +2,9 @@
   hosts: devops
   become: true
   roles:
-    - configure-users
-    - configure-server
-    - configure-app
+    - role: configure-server
+      tags: [ server ]
+    - role: configure-users
+      tags: [ users ]
+    - role: configure-app
+      tags: [ app ]

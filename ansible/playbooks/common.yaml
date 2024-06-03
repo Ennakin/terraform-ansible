@@ -13,6 +13,9 @@
 
   become: true
   roles:
-    # - system
-    - configure-users
-    - configure-server
+    # - role: system
+    #   tags: [ system ]
+    - role: configure-server
+      tags: [ server ]
+    - role: configure-users
+      tags: [ users ]

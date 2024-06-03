@@ -7,21 +7,21 @@ user_list:
     tester:
         {
             comment: "tester",
-            groups: ["tester"],
+            groups: ["tester", "docker"],
             shell: "/bin/bash",
             home: "/home/tester/",
         }
     engineer:
         {
             comment: "engineer",
-            groups: ["engineer"],
+            groups: ["engineer", "docker"],
             shell: "/bin/bash",
             home: "/home/engineer/",
         }
     systems-analyst:
         {
             comment: "systems-analyst",
-            groups: ["systems-analyst"],
+            groups: ["systems-analyst", "docker"],
             shell: "/bin/bash",
             home: "/home/systems-analyst/",
         }

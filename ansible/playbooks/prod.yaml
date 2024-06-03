@@ -2,5 +2,7 @@
   hosts: prod
   become: true
   roles:
-    - configure-users
-    - configure-server
+    - role: configure-server
+      tags: [ server ]
+    - role: configure-users
+      tags: [ users ]

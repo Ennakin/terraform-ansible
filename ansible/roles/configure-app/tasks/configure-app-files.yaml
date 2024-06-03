@@ -131,3 +131,34 @@
   when:
     - strl_archive_stat.stat.exists
     - ansible_hostname | regex_search('strl')
+
+- name: set permissions for conf/ directory to 777
+  ansible.builtin.file:
+    path: "{{ secondary_disk_mount_point }}/conf/"
+    mode: "0777"
+
+- name: find all directories in conf/
+  ansible.builtin.find:
+    paths: "{{ secondary_disk_mount_point }}/conf/"
+    recurse: yes
+    file_type: directory
+  register: conf_directories
+
+- name: set permissions for directories in conf/ to 777
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0777"
+  loop: "{{ conf_directories.files }}"
+
+- name: find all files in conf/
+  ansible.builtin.find:
+    paths: "{{ secondary_disk_mount_point }}/conf/"
+    recurse: yes
+    file_type: file
+  register: conf_files
+
+- name: set permissions for files in conf/ to 666
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0666"
+  loop: "{{ conf_files.files }}"
