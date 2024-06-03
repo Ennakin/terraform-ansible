@@ -89,7 +89,6 @@ format-compute:
             - terraform/environments/${TF_ENV}/compute/*.tf
           variables: 
             TF_STATE: compute
-          when: always
 
 format-fs:
     extends:
@@ -101,7 +100,6 @@ format-fs:
             - terraform/environments/${TF_ENV}/fs/*.tf
           variables: 
             TF_STATE: fs
-          when: always
         
 format-disk:
     extends:
@@ -113,7 +111,6 @@ format-disk:
             - terraform/environments/${TF_ENV}/disk/*.tf
           variables: 
             TF_STATE: disk
-          when: always
         
 format-network:
     extends:
@@ -125,7 +122,6 @@ format-network:
             - terraform/environments/${TF_ENV}/network/*.tf
           variables: 
             TF_STATE: network
-          when: always
 
 .init:
     stage: init
@@ -152,28 +148,28 @@ init-compute:
     extends:
       - .init
     rules: *compute-rules
+    when: manual
 
 init-fs:
     extends:
       - .init
     rules: *fs-rules
+    when: manual
 
-# init-disk:
-#     extends:
-#       - .init
-#     rules: *disk-rules
-#     when: manual
+init-disk:
+    extends:
+      - .init
+    rules: *disk-rules
+    when: manual
 
 init-network:
     extends:
       - .init
     rules: *network-rules
+    when: manual
 
 .validate:
     stage: validate
-    rules:
-        - if: $TF_ENV && $TF_STATE
-          when: always
     script:
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" validate
     allow_failure: true
@@ -182,21 +178,33 @@ validate-compute:
     extends:
       - .validate
     rules: *compute-rules
+    needs:
+        - init-compute
+    when: on_success
 
 validate-fs:
     extends:
       - .validate
     rules: *fs-rules
+    needs:
+        - init-fs
+    when: on_success
 
 validate-disk:
     extends:
       - .validate
     rules: *disk-rules
+    needs:
+        - init-disk
+    when: on_success
 
 validate-network:
     extends:
       - .validate
     rules: *network-rules
+    needs:
+        - init-network
+    when: on_success
 
 .scan:
     stage: security-scan
@@ -227,9 +235,6 @@ create-iam:
 
 .plan:
     stage: plan
-    rules:
-        - if: $TF_ENV && $TF_STATE
-          when: manual
     script:
         - terraform -version
         - env_name="env_tf_${TF_ENV}"
@@ -251,21 +256,33 @@ plan-compute:
     extends:
       - .plan
     rules: *compute-rules
+    needs:
+        - validate-compute
+    when: manual
 
 plan-fs:
     extends:
       - .plan
     rules: *fs-rules
+    needs:
+        - validate-fs
+    when: manual
 
 plan-disk:
     extends:
       - .plan
     rules: *disk-rules
+    needs:
+        - validate-disk
+    when: manual
 
 plan-network:
     extends:
       - .plan
     rules: *network-rules
+    needs:
+        - validate-network
+    when: manual
 
 .apply_configuration:
     stage: apply
@@ -294,26 +311,34 @@ plan-network:
 apply-compute:
     extends:
       - .apply_configuration
-    when: manual
     rules: *compute-rules
+    needs:
+        - plan-compute
+    when: manual
 
 apply-fs:
     extends:
       - .apply_configuration
-    when: manual
     rules: *fs-rules
+    needs:
+        - plan-fs
+    when: manual
 
 apply-disk:
     extends:
       - .apply_configuration
-    when: manual
     rules: *disk-rules
+    needs:
+        - plan-disk
+    when: manual
 
 apply-network:
     extends:
       - .apply_configuration
-    when: manual
     rules: *network-rules
+    needs:
+        - plan-network
+    when: manual
 
 .ansible:
     image:
@@ -361,7 +386,8 @@ ansible-compute:
     extends:
       - .ansible
     rules: *compute-rules
-    dependencies:
+    when: manual
+    needs:
         - apply-compute
 
 .destroy_infra:
@@ -381,23 +407,23 @@ ansible-compute:
 destroy-compute:
     extends:
       - .destroy_infra
-    when: manual
     rules: *compute-rules
+    when: manual
 
 destroy-fs:
     extends:
       - .destroy_infra
-    when: manual
     rules: *fs-rules
+    when: manual
 
 destroy-disk:
     extends:
       - .destroy_infra
-    when: manual
     rules: *disk-rules
+    when: manual
 
 destroy-network:
     extends:
       - .destroy_infra
-    when: manual
     rules: *network-rules
+    when: manual
