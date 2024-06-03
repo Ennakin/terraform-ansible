@@ -84,9 +84,9 @@ format-compute:
     - .format
     rules: &compute-rules        
         - exists: 
-          - terraform/environments/${TF_ENV}/network/*.tf
+          - terraform/environments/${TF_ENV}/compute/*.tf
           changes:
-            - terraform/environments/${TF_ENV}/network/*.tf
+            - terraform/environments/${TF_ENV}/compute/*.tf
           variables: 
             TF_STATE: compute
           when: always
@@ -95,10 +95,10 @@ format-fs:
     extends:
     - .format
     rules: &fs-rules        
-        # - exists: 
-        #   - terraform/environments/${TF_ENV}/fs/*.tf
-        - changes:
+        - exists: 
           - terraform/environments/${TF_ENV}/fs/*.tf
+          changes:
+            - terraform/environments/${TF_ENV}/fs/*.tf
           variables: 
             TF_STATE: fs
           when: always
@@ -108,9 +108,9 @@ format-disk:
     - .format
     rules: &disk-rules        
         - exists: 
-          - terraform/environments/${TF_ENV}/network/*.tf
+          - terraform/environments/${TF_ENV}/disk/*.tf
           changes:
-            - terraform/environments/${TF_ENV}/network/*.tf
+            - terraform/environments/${TF_ENV}/disk/*.tf
           variables: 
             TF_STATE: disk
           when: always
