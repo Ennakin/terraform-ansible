@@ -162,6 +162,7 @@ init-disk:
     extends:
       - .init
     rules: *disk-rules
+    when: manual
 
 init-network:
     extends:
