@@ -35,10 +35,10 @@ data "yandex_vpc_subnet" "subnetwork" {
 
 # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
 # TODO FS один и для HRL, и для STRL
-data "yandex_compute_filesystem" "fs_hrl" {
-  count = var.filesystem_name != "" ? 1 : 0
-  name  = "hrl-${var.filesystem_name}"
-}
+# data "yandex_compute_filesystem" "fs_hrl" {
+#   count = var.filesystem_name != "" ? 1 : 0
+#   name  = "hrl-${var.filesystem_name}"
+# }
 
 # # файловое хранилище из другой директории
 # data "yandex_compute_filesystem" "fs_hrl" {
@@ -47,10 +47,10 @@ data "yandex_compute_filesystem" "fs_hrl" {
 #   name      = var.filesystem_name_main_folder
 # }
 
-data "yandex_compute_disk" "secondary_disk_gitlab_agent" {
-  for_each = var.secondary_disk_name != "" ? local.parsed_servers_gitlab_agent : {}
-  name     = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${each.key}" : ""
-}
+# data "yandex_compute_disk" "secondary_disk_gitlab_agent" {
+#   for_each = var.secondary_disk_name != "" ? local.parsed_servers_gitlab_agent : {}
+#   name     = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${each.key}" : ""
+# }
 
 module "vm-gitlab" {
   source = "../../../modules/vm"
@@ -72,10 +72,10 @@ module "vm-gitlab" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_gitlab_agent[each.key].id : ""
+#   secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_gitlab_agent[each.key].id : ""
 
-  filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
-  filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
+#   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+#   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
 }
 
 # вывод в файл полученных hostname и ip vm-ок
