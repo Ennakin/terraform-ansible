@@ -132,16 +132,11 @@ format-network:
     rules:
         - if: $TF_ENV # && $TF_STATE
           when: always
-        - exists:
-          - $env_file
-          - $env_file
     script:
         - env_name="env_tf_${TF_ENV}"
-        - env_file=$( echo ${env_name} )
-        - ls ${env_tf_all}
-        - source ${env_tf_all}
-        - echo ${env_file}
-        - source ${env_file}
+        - env_file=$(eval "echo \$$env_name")
+        - ls $env_tf_all 2>/dev/null && source $env_tf_all
+        - ls $env_file 2>/dev/null && source $env_file
         - cp ./terraform/.terraformrc ~/.terraformrc
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
           -backend-config=address=${TF_ADDRESS}
