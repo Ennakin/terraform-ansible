@@ -45,9 +45,9 @@
     user: "{{ item.key }}"
     state: present
     exclusive: true
-    key: "{{ lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') }}"
+    key: "{{ lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') }}"
   loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
-  when: lookup('file', '../roles/configure-server/files/' + item.key + '.pub', errors='ignore') | default(false)
+  when: lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') | default(false)
 
 - name: find home directories
   ansible.builtin.find:
