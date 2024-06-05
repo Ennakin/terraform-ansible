@@ -2,9 +2,10 @@
   hosts: staging
   become: true
   roles:
-    - role: configure-server
-      tags: [ server ]
-    - role: configure-users
-      tags: [ users ]
-    - role: configure-app
-      tags: [ app ]
+    # - role: configure-server
+    #   tags: [ server ]
+    # - role: configure-users
+    #   tags: [ users ]
+    # - role: configure-app
+    #   tags: [ app ]
+    - role: one-time-actions
