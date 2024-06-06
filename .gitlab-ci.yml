@@ -201,6 +201,8 @@ ansible:
         #- echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
         #- apk update --allow-untrusted && apk update --no-cache && apk add ansible
         - bash --version
+        - apk update && apk upgrade && apk add bash
+        - bash --version
         - ansible --version
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
