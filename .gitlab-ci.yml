@@ -145,8 +145,8 @@ plan:
         - terraform -version
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_tf_all 2>/dev/null && source $env_tf_all
-        - ls $env_file 2>/dev/null && source $env_file
+        - ls $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
+        - ls $env_file 2>/dev/null && source $env_file 2>/dev/null
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
@@ -167,8 +167,8 @@ apply_configuration:
         - terraform -version
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_tf_all 2>/dev/null && source $env_tf_all
-        - ls $env_file 2>/dev/null && source $env_file
+        - ls $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
+        - ls $env_file 2>/dev/null && source $env_file 2>/dev/null
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
@@ -214,8 +214,8 @@ ansible:
         - sleep 40
         - env_name="env_ansible_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_ansible_all 2>/dev/null && source $env_ansible_all
-        - ls $env_file 2>/dev/null && source $env_file
+        - ls $env_ansible_all 2>/dev/null && source $env_ansible_all && source $env_file 2>/dev/null
+        - ls $env_file 2>/dev/null && source $env_file 2>/dev/null
         - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
         - cd -
 
@@ -232,8 +232,8 @@ destroy_infra:
     script:
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_tf_all 2>/dev/null && source $env_tf_all
-        - ls $env_file 2>/dev/null && source $env_file
+        - ls $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
+        - ls $env_file 2>/dev/null && source $env_file 2>/dev/null
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
