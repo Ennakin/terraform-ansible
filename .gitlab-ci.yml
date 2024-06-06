@@ -216,7 +216,7 @@ ansible:
         - env_file=$(eval "echo \$$env_name")
         - ls $env_ansible_all 2>/dev/null && source $env_ansible_all
         - ls $env_file 2>/dev/null && source $env_file
-        - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
+        - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml
         - cd -
 
         # # TODO если получится понять как узнать $HOST, то можно использовать, заменив sleep 40
