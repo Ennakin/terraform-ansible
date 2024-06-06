@@ -38,7 +38,7 @@
     path: "{{ secondary_disk_mount_point }}/working-data/.env"
     regexp: "^INSTANCE_HOST=.*$"
     replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[1:] | join("") }}'
-  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(dev|test|devops|staging).*$')) and not (ansible_hostname | regex_search('\\b(auto|regress|kaspersky).*$'))
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(dev|test|devops|staging).*$')) and not (ansible_hostname | regex_search('\\b(auto|stress|regress|kaspersky).*$'))
 
 - name: replace test-auto INSTANCE_HOST value in .env file
   ansible.builtin.replace:
@@ -46,6 +46,13 @@
     regexp: "^INSTANCE_HOST=.*$"
     replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2:] | join("") }}'
   when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(test-auto).*$'))
+
+- name: replace test-stress INSTANCE_HOST value in .env file
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^INSTANCE_HOST=.*$"
+    replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2:] | join("") }}'
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(test-stress).*$'))
 
 - name: replace regress-release INSTANCE_HOST value in .env file
   ansible.builtin.replace:
