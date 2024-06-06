@@ -69,7 +69,7 @@ stages:
     - configure
     - destroy
 
-.format:
+format:
     stage: format
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -79,7 +79,7 @@ stages:
     cache: []
     allow_failure: true
 
-.download_provider:
+download_provider:
     stage: init
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -100,7 +100,7 @@ stages:
           -backend-config=unlock_method=DELETE
           -backend-config=retry_wait_min=5
 
-.validate:
+validate:
     stage: validate
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -121,7 +121,7 @@ stages:
         - tfsec . # путь к запускаемому проекту?..
     allow_failure: true
 
-.create-iam:
+create-iam:
     stage: create-iam
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -136,7 +136,7 @@ stages:
             - ./terraform/envs/prod/iam-token.env
         expire_in: 1 day
 
-.plan:
+plan:
     stage: plan
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -145,8 +145,8 @@ stages:
         - terraform -version
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
-        - ls $env_file 2>/dev/null && source $env_file 2>/dev/null
+        - pwd $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
+        - pwd $env_file 2>/dev/null && source $env_file 2>/dev/null || true
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
@@ -158,7 +158,7 @@ stages:
             - ./terraform/environments/$TF_ENV/$TF_STATE/output.tfplan
         # expire_in: 1 day
 
-.apply_configuration:
+apply_configuration:
     stage: apply
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -167,8 +167,8 @@ stages:
         - terraform -version
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
-        - ls $env_file 2>/dev/null && source $env_file 2>/dev/null
+        - pwd $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
+        - pwd $env_file 2>/dev/null && source $env_file 2>/dev/null || true
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
@@ -191,8 +191,8 @@ ansible:
         - if: $TF_ENV && $TF_STATE
           when: manual
     stage: configure
-    # dependencies:
-    #     - apply_configuration
+    dependencies:
+        - apply_configuration
     script:
         #- ansible --version
         #- wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
@@ -201,8 +201,6 @@ ansible:
         #- echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
         #- apk update --allow-untrusted && apk update --no-cache && apk add ansible
         - bash --version
-        # - apt update && apt install --only-upgrade bash
-        # - bash --version
         - ansible --version
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
@@ -210,18 +208,16 @@ ansible:
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh
         - cd ./ansible
-        # - ansible-config view
-        # # - ansible-galaxy collection install ansible.posix
-        # - ls -al ./inventory/$TF_ENV 2>/dev/null
-        # - cat ./inventory/$TF_ENV/inventory 2>/dev/null
-        # - sleep 40
-        # - env_name="env_ansible_${TF_ENV}"
-        # - env_file=$(eval "echo \$$env_name")
-        # - ls $env_ansible_all 2>/dev/null
-        # - source $env_ansible_all 2>/dev/null
-        # - ls $env_file 2>/dev/null
-        - source $env_file 2>/dev/null || true
-        # - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
+        - ansible-config view
+        # - ansible-galaxy collection install ansible.posix
+        - ls -al ./inventory/$TF_ENV 2>/dev/null
+        - cat ./inventory/$TF_ENV/inventory 2>/dev/null
+        - sleep 40
+        - env_name="env_ansible_${TF_ENV}"
+        - env_file=$(eval "echo \$$env_name")
+        - pwd $env_ansible_all 2>/dev/null && source $env_ansible_all 2>/dev/null
+        - pwd $env_file 2>/dev/null && source $env_file 2>/dev/null || true
+        - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
         - cd -
 
         # # TODO если получится понять как узнать $HOST, то можно использовать, заменив sleep 40
@@ -229,7 +225,7 @@ ansible:
     allow_failure: true
     cache: []
 
-.destroy_infra:
+destroy_infra:
     stage: destroy
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -237,8 +233,8 @@ ansible:
     script:
         - env_name="env_tf_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
-        - ls $env_file 2>/dev/null && source $env_file 2>/dev/null
+        - pwd $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
+        - pwd $env_file 2>/dev/null && source $env_file 2>/dev/null || true
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
