@@ -69,7 +69,7 @@ stages:
     - configure
     - destroy
 
-format:
+.format:
     stage: format
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -79,7 +79,7 @@ format:
     cache: []
     allow_failure: true
 
-download_provider:
+.download_provider:
     stage: init
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -100,7 +100,7 @@ download_provider:
           -backend-config=unlock_method=DELETE
           -backend-config=retry_wait_min=5
 
-validate:
+.validate:
     stage: validate
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -121,7 +121,7 @@ validate:
         - tfsec . # путь к запускаемому проекту?..
     allow_failure: true
 
-create-iam:
+.create-iam:
     stage: create-iam
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -136,7 +136,7 @@ create-iam:
             - ./terraform/envs/prod/iam-token.env
         expire_in: 1 day
 
-plan:
+.plan:
     stage: plan
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -158,7 +158,7 @@ plan:
             - ./terraform/environments/$TF_ENV/$TF_STATE/output.tfplan
         # expire_in: 1 day
 
-apply_configuration:
+.apply_configuration:
     stage: apply
     rules:
         - if: $TF_ENV && $TF_STATE
@@ -200,6 +200,7 @@ ansible:
         #- echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
         #- echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
         #- apk update --allow-untrusted && apk update --no-cache && apk add ansible
+        - bash --version
         - ansible --version
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
@@ -207,18 +208,18 @@ ansible:
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh
         - cd ./ansible
-        - ansible-config view
-        # - ansible-galaxy collection install ansible.posix
-        - ls -al ./inventory/$TF_ENV 2>/dev/null
-        - cat ./inventory/$TF_ENV/inventory 2>/dev/null
-        - sleep 40
-        - env_name="env_ansible_${TF_ENV}"
-        - env_file=$(eval "echo \$$env_name")
-        - ls $env_ansible_all 2>/dev/null
-        - source $env_ansible_all 2>/dev/null
-        - ls $env_file 2>/dev/null
-        - source $env_file
-        - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
+        # - ansible-config view
+        # # - ansible-galaxy collection install ansible.posix
+        # - ls -al ./inventory/$TF_ENV 2>/dev/null
+        # - cat ./inventory/$TF_ENV/inventory 2>/dev/null
+        # - sleep 40
+        # - env_name="env_ansible_${TF_ENV}"
+        # - env_file=$(eval "echo \$$env_name")
+        # - ls $env_ansible_all 2>/dev/null
+        # - source $env_ansible_all 2>/dev/null
+        # - ls $env_file 2>/dev/null
+        - source $env_file 2>/dev/null
+        # - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
         - cd -
 
         # # TODO если получится понять как узнать $HOST, то можно использовать, заменив sleep 40
