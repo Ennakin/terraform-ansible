@@ -214,7 +214,7 @@ ansible:
         - sleep 40
         - env_name="env_ansible_${TF_ENV}"
         - env_file=$(eval "echo \$$env_name")
-        - ls $env_ansible_all 2>/dev/null && source $env_ansible_all && source $env_file 2>/dev/null
+        - ls $env_ansible_all 2>/dev/null && source $env_ansible_all
         - ls $env_file 2>/dev/null && source $env_file 2>/dev/null
         - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
         - cd -
