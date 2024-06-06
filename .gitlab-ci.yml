@@ -201,8 +201,8 @@ ansible:
         #- echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
         #- apk update --allow-untrusted && apk update --no-cache && apk add ansible
         - bash --version
-        - apt update && apt install --only-upgrade bash
-        - bash --version
+        # - apt update && apt install --only-upgrade bash
+        # - bash --version
         - ansible --version
         - eval $(ssh-agent -s)
         - chmod 400 "$ssh_private_key"
@@ -220,7 +220,7 @@ ansible:
         # - ls $env_ansible_all 2>/dev/null
         # - source $env_ansible_all 2>/dev/null
         # - ls $env_file 2>/dev/null
-        - source $env_file 2>/dev/null
+        - source $env_file &>/dev/null
         # - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
         - cd -
 
