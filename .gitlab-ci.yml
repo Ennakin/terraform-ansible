@@ -220,7 +220,7 @@ ansible:
         # - ls $env_ansible_all 2>/dev/null
         # - source $env_ansible_all 2>/dev/null
         # - ls $env_file 2>/dev/null
-        - source $env_file &>/dev/null
+        - source $env_file 2>/dev/null || true
         # - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
         - cd -
 
