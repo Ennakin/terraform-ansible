@@ -27,11 +27,29 @@ locals {
 module "disk-hrl" {
   source = "../../../modules/disk"
 
-  for_each = local.parsed_servers_hrl
+  #   for_each = local.parsed_servers_hrl
+
+  for_each = {
+    for key, value in local.parsed_servers_hrl : key => value if key != "stress-1"
+  }
 
   secondary_disk_name        = "hrl-${var.secondary_disk_name}-${each.key}"
   secondary_disk_description = "HRL-DISK-test-${each.value}"
   secondary_disk_size        = var.secondary_disk_size
+}
+
+module "disk-hrl-large" {
+  source = "../../../modules/disk"
+
+  #   for_each = local.parsed_servers_hrl
+
+  for_each = {
+    for key, value in local.parsed_servers_hrl : key => value if key == "stress-1"
+  }
+
+  secondary_disk_name        = "hrl-${var.secondary_disk_name}-${each.key}"
+  secondary_disk_description = "HRL-DISK-test-${each.value}"
+  secondary_disk_size        = 200
 }
 
 module "disk-strl" {
