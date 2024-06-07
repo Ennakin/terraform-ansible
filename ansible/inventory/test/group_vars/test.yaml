@@ -38,4 +38,16 @@ user_list_external_kaspersky:
             home: "/home/kasper-outsource/",
         }
 
+group_list_external_pflb:
+    - pflb-outsource
+
+user_list_external_pflb:
+    pflb-outsource:
+        {
+            comment: "pflb-outsource",
+            groups: ["pflb-outsource", "docker", "jenkins"],
+            shell: "/bin/bash",
+            home: "/home/pflb-outsource/",
+        }
+
 user_passwords_external: "{{ lookup('env', 'USER_PASSWORDS_EXTERNAL', default='{}') }}"
