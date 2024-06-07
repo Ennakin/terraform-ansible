@@ -19,7 +19,7 @@ provider "yandex" {
 }
 
 module "fs-hrl" {
-  source = "../../../modules/filesystem"
+  source = "../../../modules/yandex/filesystem"
 
   filesystem_name        = "hrl-${var.filesystem_name}"
   filesystem_description = "Файловое хранилище HRL"

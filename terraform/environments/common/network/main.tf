@@ -19,13 +19,13 @@ provider "yandex" {
 }
 
 module "network" {
-  source              = "../../../modules/vpc-network"
+  source              = "../../../modules/yandex/vpc-network"
   network_name        = var.network_name
   network_description = "Сеть"
 }
 
 module "subnetwork-private" {
-  source = "../../../modules/vpc-subnetwork"
+  source = "../../../modules/yandex/vpc-subnetwork"
 
   network_id             = module.network.id
   subnetwork_name        = "${var.subnetwork_name}-private"
@@ -34,7 +34,7 @@ module "subnetwork-private" {
 }
 
 module "subnetwork-public" {
-  source = "../../../modules/vpc-subnetwork"
+  source = "../../../modules/yandex/vpc-subnetwork"
 
   network_id             = module.network.id
   subnetwork_name        = "${var.subnetwork_name}-public"

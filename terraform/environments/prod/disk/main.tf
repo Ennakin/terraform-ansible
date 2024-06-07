@@ -25,7 +25,7 @@ locals {
 }
 
 module "disk-hrl-external-grafana" {
-  source = "../../../modules/disk"
+  source = "../../../modules/yandex/disk"
 
   for_each = {
     for key, value in local.parsed_servers_hrl : key => value if key == "external-grafana"

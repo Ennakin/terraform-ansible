@@ -25,7 +25,7 @@ locals {
 }
 
 module "disk-hrl" {
-  source = "../../../modules/disk"
+  source = "../../../modules/yandex/disk"
 
   for_each = local.parsed_servers_hrl
 
@@ -35,7 +35,7 @@ module "disk-hrl" {
 }
 
 module "disk-strl" {
-  source = "../../../modules/disk"
+  source = "../../../modules/yandex/disk"
 
   for_each = local.parsed_servers_strl
 

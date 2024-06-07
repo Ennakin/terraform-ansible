@@ -65,7 +65,7 @@ data "yandex_compute_disk" "secondary_disk_hrl" {
 # }
 
 module "vm-prod-hrl-external-grafana" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
     for key, value in local.parsed_servers_hrl : key => value if key == "external-grafana"

@@ -65,7 +65,7 @@ data "yandex_compute_disk" "secondary_disk_space" {
 }
 
 module "vm-test-hrl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
     for key, value in local.parsed_servers_hrl : key => value if key != "regress-release" && !contains(["regress-master"], key)
@@ -91,7 +91,7 @@ module "vm-test-hrl" {
 }
 
 module "vm-regress-release-hrl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
     for key, value in local.parsed_servers_hrl : key => value if key == "regress-release"
@@ -117,7 +117,7 @@ module "vm-regress-release-hrl" {
 }
 
 module "vm-regress-master-hrl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
     for key, value in local.parsed_servers_hrl : key => value if key == "regress-master"
@@ -143,7 +143,7 @@ module "vm-regress-master-hrl" {
 }
 
 module "vm-test-strl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
     for key, value in local.parsed_servers_strl : key => value if key != "regress-release" && !contains(["regress-master"], key)
@@ -170,7 +170,7 @@ module "vm-test-strl" {
 }
 
 module "vm-test-space-kaspersky-admin" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
     for key, value in local.parsed_servers_space : key => value if key == "kaspersky-admin"

@@ -59,7 +59,7 @@ data "yandex_compute_disk" "secondary_disk_strl" {
 }
 
 module "vm-dev-hrl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = local.parsed_servers_hrl
 
@@ -83,7 +83,7 @@ module "vm-dev-hrl" {
 }
 
 module "vm-dev-strl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = local.parsed_servers_strl
 

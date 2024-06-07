@@ -43,7 +43,7 @@ data "yandex_compute_filesystem" "fs_hrl" {
 # }
 
 # module "vm-open-vpn" {
-#   source = "../../../modules/vm"
+#   source = "../../../modules/yandex/vm"
 
 #   name        = "open-vpn"
 #   hostname    = "open-vpn"
@@ -63,7 +63,7 @@ data "yandex_compute_filesystem" "fs_hrl" {
 # }
 
 module "vm-reverse-nginx" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   name        = "reverse-nginx"
   hostname    = "reverse-nginx"

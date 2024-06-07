@@ -65,7 +65,7 @@ data "yandex_compute_disk" "secondary_disk_space" {
 }
 
 module "vm-onprem-hrl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
     for key, value in local.parsed_servers_hrl : key => value if key != "regress-release" && !contains(["regress-master"], key)
@@ -92,7 +92,7 @@ module "vm-onprem-hrl" {
 
 
 module "vm-onprem-strl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
     for key, value in local.parsed_servers_strl : key => value

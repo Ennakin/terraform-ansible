@@ -59,7 +59,7 @@ data "yandex_compute_disk" "secondary_disk_strl" {
 }
 
 module "vm-staging-hrl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   # staging-2 изначально создавался инженерам непрерываемым
   # пусть так же пока останется отдельным tf-инстансом на случай если будут нужны другие индивидуальные особенности
@@ -86,7 +86,7 @@ module "vm-staging-hrl" {
 }
 
 module "vm-staging-hrl-engineers" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   # staging-2 изначально создавался инженерам непрерываемым
   # пусть так же пока останется отдельным tf-инстансом на случай если будут нужны другие индивидуальные особенности
@@ -114,7 +114,7 @@ module "vm-staging-hrl-engineers" {
 }
 
 module "vm-staging-strl" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = local.parsed_servers_strl
 
