@@ -38,7 +38,7 @@ module "disk-hrl" {
   secondary_disk_size        = var.secondary_disk_size
 }
 
-module "disk-hrl-large" {
+module "disk-hrl-large-ssd" {
   source = "../../../modules/yandex/disk"
 
   #   for_each = local.parsed_servers_hrl
@@ -50,6 +50,7 @@ module "disk-hrl-large" {
   secondary_disk_name        = "hrl-${var.secondary_disk_name}-${each.key}"
   secondary_disk_description = "HRL-DISK-test-${each.value}"
   secondary_disk_size        = 200
+  secondary_disk_type        = "network-ssd"
 }
 
 module "disk-strl" {
