@@ -68,7 +68,7 @@ module "vm-test-hrl" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_hrl : key => value if key != "regress-release" && !contains(["regress-master"], key)
+    for key, value in local.parsed_servers_hrl : key => value if key != "regress-release" && !contains(["regress-master", "stress-1"], key)
   }
 
   name        = "hrl-${var.vm_name}-${each.key}"
@@ -79,6 +79,32 @@ module "vm-test-hrl" {
 
   cpu                = var.cpu
   ram                = var.ram
+  boot_disk_image_id = var.boot_disk_image_id
+  boot_disk_size     = var.boot_disk_size
+  cloud_config_path  = file(var.cloud_config_file_path)
+
+  subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
+  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
+
+  filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+  filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
+}
+
+module "vm-test-hrl-stress" {
+  source = "../../../modules/yandex/vm"
+
+  for_each = {
+    for key, value in local.parsed_servers_hrl : key => value if key == "stress-1"
+  }
+
+  name        = "hrl-${var.vm_name}-${each.key}"
+  hostname    = "hrl-${var.vm_name}-${each.key}"
+  description = "HRL-VM-test-${each.value}"
+  preemptible = var.preemptible
+  nat         = false
+
+  cpu                = var.cpu
+  ram                = 24
   boot_disk_image_id = var.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.cloud_config_file_path)
@@ -202,6 +228,7 @@ resource "local_file" "vm_ips" {
   content = templatefile("${path.module}/inventory.tpl", {
     vm_hostnames = concat(
       [for instance in module.vm-test-hrl : instance.hostname],
+      [for instance in module.vm-test-hrl-stress : instance.hostname],
       [for instance in module.vm-regress-release-hrl : instance.hostname],
       [for instance in module.vm-regress-master-hrl : instance.hostname],
       [for instance in module.vm-test-strl : instance.hostname],
@@ -211,6 +238,7 @@ resource "local_file" "vm_ips" {
 
     vm_ips = concat(
       [for instance in module.vm-test-hrl : instance.internal_ip],
+      [for instance in module.vm-test-hrl-stress : instance.internal_ip],
       [for instance in module.vm-regress-release-hrl : instance.internal_ip],
       [for instance in module.vm-regress-master-hrl : instance.internal_ip],
       [for instance in module.vm-test-strl : instance.internal_ip],
