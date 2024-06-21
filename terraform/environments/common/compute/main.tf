@@ -71,8 +71,8 @@ module "vm-reverse-nginx" {
   preemptible = var.preemptible
   nat         = false
 
-  cpu                = var.cpu
-  ram                = var.ram
+  cpu                = 4
+  ram                = 2
   boot_disk_image_id = var.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.cloud_config_file_path)
