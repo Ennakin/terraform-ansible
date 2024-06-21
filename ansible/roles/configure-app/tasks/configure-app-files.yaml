@@ -89,6 +89,71 @@
 #     replace: "EKD_MONOLITH_MEM_ALLOC=7000"
 #   when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(regress).*$'))
 
+# начало test-stress
+- name: replace HOST_IP value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^HOST_IP=.*$"
+    replace: "HOST_IP=10.70.1.104"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace MAX_MEM value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^MAX_MEM=.*$"
+    replace: "MAX_MEM=12000"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace MAX_CPU value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^MAX_CPU=.*$"
+    replace: "MAX_CPU=8.00"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace MIDDLE_MEM value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^MIDDLE_MEM=.*$"
+    replace: "MIDDLE_MEM=4000"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace MIDDLE_CPU value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^MIDDLE_CPU=.*$"
+    replace: "MIDDLE_CPU=4.00"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace LOW_MEM value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^LOW_MEM=.*$"
+    replace: "LOW_MEM=2000"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace LOW_CPU value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^LOW_CPU=.*$"
+    replace: "LOW_CPU=2.00"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace MIN_MEM value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^MIN_MEM=.*$"
+    replace: "MIN_MEM=800"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace MIN_CPU value in .env file by test-stress
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^MIN_CPU=.*$"
+    replace: "MIN_CPU=0.50"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+# конец test-stress
+
 # директория conf/ распаковывается полностью если её нет на диске
 # файлы из conf/ распаковываются только если в архиве эти файлы есть, а на диске их нет
 - name: get list of files in conf/ directory from HRL app archive
