@@ -36,11 +36,16 @@ variable "cloud_config_file_path" {
   description = "PATH to cloud-config file"
 }
 
-variable "vm_hosts_result_file_path" {
-  description = "PATH to inventory result file"
+variable "environments_config" {
+  description = "PATH to environments config file"
+  default     = "../../../json/infra_environments_config.json"
+}
+
+variable "servers_and_disks" {
+  description = "PATH to servers and disks description file"
+  default     = "../../../json/infra_servers_and_disks.json"
 }
 
 # переменные основной директории
 variable "folder_id_main_folder" {}
 variable "subnetwork_name_main_folder" {}
-variable "filesystem_name_main_folder" {}

@@ -18,9 +18,23 @@ provider "yandex" {
   zone      = var.zone
 }
 
+data "local_file" "servers_and_disks" {
+  filename = var.servers_and_disks
+}
+
+data "local_file" "environments_config" {
+  filename = var.environments_config
+}
+
 locals {
-  parsed_servers_hrl  = jsondecode(var.servers_hrl)
-  parsed_servers_strl = jsondecode(var.servers_strl)
+  parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
+  servers_hrl              = local.parsed_servers_and_disks["hrl"]["dev"]
+  servers_strl             = local.parsed_servers_and_disks["strl"]["dev"]
+
+  parsed_environments_config = jsondecode(data.local_file.environments_config.content)
+  vm_name_mask               = local.parsed_environments_config["dev"]["vm-name-mask"]
+  disk_name_mask             = local.parsed_environments_config["dev"]["disk-name-mask"]
+  inventory_result_path      = local.parsed_environments_config["dev"]["vms-hosts-inventory-result-path"]
 }
 
 # # пока используется подсеть из основной директории
@@ -41,30 +55,23 @@ data "yandex_compute_filesystem" "fs_hrl" {
   name  = "hrl-${var.filesystem_name}"
 }
 
-# # файловое хранилище из другой директории
-# data "yandex_compute_filesystem" "fs_hrl" {
-#   count     = var.filesystem_name != "" ? 1 : 0
-#   folder_id = var.folder_id_main_folder
-#   name      = var.filesystem_name_main_folder
-# }
-
 data "yandex_compute_disk" "secondary_disk_hrl" {
-  for_each = var.secondary_disk_name != "" ? local.parsed_servers_hrl : {}
-  name     = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${each.key}" : ""
+  for_each = local.disk_name_mask != "" ? local.servers_hrl : {}
+  name     = local.disk_name_mask != "" ? "hrl-${local.disk_name_mask}-${each.key}" : ""
 }
 
 data "yandex_compute_disk" "secondary_disk_strl" {
-  for_each = var.secondary_disk_name != "" ? local.parsed_servers_strl : {}
-  name     = var.secondary_disk_name != "" ? "strl-${var.secondary_disk_name}-${each.key}" : ""
+  for_each = local.disk_name_mask != "" ? local.servers_strl : {}
+  name     = local.disk_name_mask != "" ? "strl-${local.disk_name_mask}-${each.key}" : ""
 }
 
 module "vm-dev-hrl" {
   source = "../../../modules/yandex/vm"
 
-  for_each = local.parsed_servers_hrl
+  for_each = local.servers_hrl
 
-  name        = "hrl-${var.vm_name}-${each.key}"
-  hostname    = "hrl-${var.vm_name}-${each.key}"
+  name        = "hrl-${local.vm_name_mask}-${each.key}"
+  hostname    = "hrl-${local.vm_name_mask}-${each.key}"
   description = "HRL-VM-dev-${each.value}"
   preemptible = var.preemptible
   nat         = false
@@ -76,7 +83,7 @@ module "vm-dev-hrl" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
 
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
@@ -85,10 +92,10 @@ module "vm-dev-hrl" {
 module "vm-dev-strl" {
   source = "../../../modules/yandex/vm"
 
-  for_each = local.parsed_servers_strl
+  for_each = local.servers_strl
 
-  name        = "strl-${var.vm_name}-${each.key}"
-  hostname    = "strl-${var.vm_name}-${each.key}"
+  name        = "strl-${local.vm_name_mask}-${each.key}"
+  hostname    = "strl-${local.vm_name_mask}-${each.key}"
   description = "STRL-VM-dev-${each.value}"
   preemptible = var.preemptible
   nat         = false
@@ -100,7 +107,7 @@ module "vm-dev-strl" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_strl[each.key].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_strl[each.key].id : ""
 
   # TODO FS HRL-овский
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
@@ -123,7 +130,7 @@ resource "local_file" "vm_ips" {
     }
   )
 
-  filename = var.vm_hosts_result_file_path
+  filename = local.inventory_result_path
 }
 
 # # простейший вариант

@@ -18,20 +18,30 @@ provider "yandex" {
   zone      = var.zone
 }
 
+data "local_file" "servers_and_disks" {
+  filename = var.servers_and_disks
+}
+
+data "local_file" "environments_config" {
+  filename = var.environments_config
+}
+
 locals {
-  parsed_servers_hrl = jsondecode(var.servers_hrl)
-  #   parsed_servers_strl  = jsondecode(var.servers_strl)
-  #   parsed_servers_space = jsondecode(var.servers_space)
+  parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
+  servers_hrl              = local.parsed_servers_and_disks["hrl"]["prod"]
+
+  parsed_environment_config = jsondecode(data.local_file.environments_config.content)
+  disk_name_mask            = local.parsed_environment_config["prod"]["disk-name-mask"]
 }
 
 module "disk-hrl-external-grafana" {
   source = "../../../modules/yandex/disk"
 
   for_each = {
-    for key, value in local.parsed_servers_hrl : key => value if key == "external-grafana"
+    for key, value in local.servers_hrl : key => value if key == "external-grafana"
   }
 
-  secondary_disk_name        = "hrl-${var.secondary_disk_name}-${each.key}"
+  secondary_disk_name        = "hrl-${local.disk_name_mask}-${each.key}"
   secondary_disk_description = "HRL-DISK-prod-${each.value}"
   secondary_disk_size        = 20
 }

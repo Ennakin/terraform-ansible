@@ -18,10 +18,24 @@ provider "yandex" {
   zone      = var.zone
 }
 
+data "local_file" "servers_and_disks" {
+  filename = var.servers_and_disks
+}
+
+data "local_file" "environments_config" {
+  filename = var.environments_config
+}
+
 locals {
-  parsed_servers_hrl   = jsondecode(var.servers_hrl)
-  parsed_servers_strl  = jsondecode(var.servers_strl)
-  parsed_servers_space = jsondecode(var.servers_space)
+  parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
+  servers_hrl              = local.parsed_servers_and_disks["hrl"]["test"]
+  servers_strl             = local.parsed_servers_and_disks["strl"]["test"]
+  servers_space            = local.parsed_servers_and_disks["space"]["test"]
+
+  parsed_environments_config = jsondecode(data.local_file.environments_config.content)
+  vm_name_mask               = local.parsed_environments_config["test"]["vm-name-mask"]
+  disk_name_mask             = local.parsed_environments_config["test"]["disk-name-mask"]
+  inventory_result_path      = local.parsed_environments_config["test"]["vms-hosts-inventory-result-path"]
 }
 
 # # пока используется подсеть из основной директории
@@ -50,29 +64,29 @@ data "yandex_compute_filesystem" "fs_hrl" {
 # }
 
 data "yandex_compute_disk" "secondary_disk_hrl" {
-  for_each = var.secondary_disk_name != "" ? local.parsed_servers_hrl : {}
-  name     = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${each.key}" : ""
+  for_each = local.disk_name_mask != "" ? local.servers_hrl : {}
+  name     = local.disk_name_mask != "" ? "hrl-${local.disk_name_mask}-${each.key}" : ""
 }
 
 data "yandex_compute_disk" "secondary_disk_strl" {
-  for_each = var.secondary_disk_name != "" ? local.parsed_servers_strl : {}
-  name     = var.secondary_disk_name != "" ? "strl-${var.secondary_disk_name}-${each.key}" : ""
+  for_each = local.disk_name_mask != "" ? local.servers_strl : {}
+  name     = local.disk_name_mask != "" ? "strl-${local.disk_name_mask}-${each.key}" : ""
 }
 
 data "yandex_compute_disk" "secondary_disk_space" {
-  for_each = var.secondary_disk_name != "" ? local.parsed_servers_space : {}
-  name     = var.secondary_disk_name != "" ? "space-${var.secondary_disk_name}-${each.key}" : ""
+  for_each = local.disk_name_mask != "" ? local.servers_space : {}
+  name     = local.disk_name_mask != "" ? "space-${local.disk_name_mask}-${each.key}" : ""
 }
 
 module "vm-test-hrl" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_hrl : key => value if key != "regress-release" && !contains(["regress-master", "stress-1"], key)
+    for key, value in local.servers_hrl : key => value if key != "regress-release" && !contains(["regress-master", "stress-1"], key)
   }
 
-  name        = "hrl-${var.vm_name}-${each.key}"
-  hostname    = "hrl-${var.vm_name}-${each.key}"
+  name        = "hrl-${local.vm_name_mask}-${each.key}"
+  hostname    = "hrl-${local.vm_name_mask}-${each.key}"
   description = "HRL-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
@@ -84,7 +98,7 @@ module "vm-test-hrl" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
 
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
@@ -94,11 +108,11 @@ module "vm-test-hrl-stress" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_hrl : key => value if key == "stress-1"
+    for key, value in local.servers_hrl : key => value if key == "stress-1"
   }
 
-  name        = "hrl-${var.vm_name}-${each.key}"
-  hostname    = "hrl-${var.vm_name}-${each.key}"
+  name        = "hrl-${local.vm_name_mask}-${each.key}"
+  hostname    = "hrl-${local.vm_name_mask}-${each.key}"
   description = "HRL-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
@@ -110,7 +124,7 @@ module "vm-test-hrl-stress" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
 
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
@@ -120,11 +134,11 @@ module "vm-regress-release-hrl" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_hrl : key => value if key == "regress-release"
+    for key, value in local.servers_hrl : key => value if key == "regress-release"
   }
 
-  name        = "hrl-${var.vm_name}-${each.key}"
-  hostname    = "hrl-${var.vm_name}-${each.key}"
+  name        = "hrl-${local.vm_name_mask}-${each.key}"
+  hostname    = "hrl-${local.vm_name_mask}-${each.key}"
   description = "HRL-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
@@ -136,7 +150,7 @@ module "vm-regress-release-hrl" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl["regress-release"].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl["regress-release"].id : ""
 
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
@@ -146,11 +160,11 @@ module "vm-regress-master-hrl" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_hrl : key => value if key == "regress-master"
+    for key, value in local.servers_hrl : key => value if key == "regress-master"
   }
 
-  name        = "hrl-${var.vm_name}-${each.key}"
-  hostname    = "hrl-${var.vm_name}-${each.key}"
+  name        = "hrl-${local.vm_name_mask}-${each.key}"
+  hostname    = "hrl-${local.vm_name_mask}-${each.key}"
   description = "HRL-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
@@ -162,7 +176,7 @@ module "vm-regress-master-hrl" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl["regress-master"].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl["regress-master"].id : ""
 
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
   filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
@@ -172,11 +186,11 @@ module "vm-test-strl" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_strl : key => value if key != "regress-release" && !contains(["regress-master"], key)
+    for key, value in local.servers_strl : key => value if key != "regress-release" && !contains(["regress-master"], key)
   }
 
-  name        = "strl-${var.vm_name}-${each.key}"
-  hostname    = "strl-${var.vm_name}-${each.key}"
+  name        = "strl-${local.vm_name_mask}-${each.key}"
+  hostname    = "strl-${local.vm_name_mask}-${each.key}"
   description = "STRL-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
@@ -188,7 +202,7 @@ module "vm-test-strl" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_strl[each.key].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_strl[each.key].id : ""
 
   # TODO FS HRL-овский
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
@@ -199,11 +213,11 @@ module "vm-test-space-kaspersky-admin" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_space : key => value if key == "kaspersky-admin"
+    for key, value in local.servers_space : key => value if key == "kaspersky-admin"
   }
 
-  name        = "space-${var.vm_name}-${each.key}"
-  hostname    = "space-${var.vm_name}-${each.key}"
+  name        = "space-${local.vm_name_mask}-${each.key}"
+  hostname    = "space-${local.vm_name_mask}-${each.key}"
   description = "SPACE-VM-test-${each.value}"
   preemptible = var.preemptible
   nat         = false
@@ -215,7 +229,7 @@ module "vm-test-space-kaspersky-admin" {
   cloud_config_path  = file(var.cloud_config_file_path)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_space["kaspersky-admin"].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_space["kaspersky-admin"].id : ""
 
   # TODO FS HRL-овский
   filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
@@ -248,7 +262,7 @@ resource "local_file" "vm_ips" {
     }
   )
 
-  filename = var.vm_hosts_result_file_path
+  filename = local.inventory_result_path
 }
 
 # # использовалось до for_each, пока пусть побудет
