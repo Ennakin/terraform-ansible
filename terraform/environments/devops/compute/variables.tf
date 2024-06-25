@@ -25,10 +25,6 @@ variable "boot_disk_size" {
   default = 30
 }
 
-variable "secondary_disk_name" {
-  default = ""
-}
-
 variable "filesystem_name" {
   default = ""
 }
