@@ -1,9 +1,25 @@
-variable "token" {}
-variable "cloud_id" {}
-variable "folder_id" {}
-variable "zone" {}
+variable "main_config" {
+  description = "PATH to main config file"
+  default     = "../../../conf/infra_main_conf.json"
+}
 
-variable "subnetwork_name" {}
+variable "environments_config" {
+  description = "PATH to environments config file"
+  default     = "../../../conf/infra_environments_conf.json"
+}
+
+variable "servers_and_disks" {
+  description = "PATH to servers and disks description file"
+  default     = "../../../conf/infra_servers_and_disks.json"
+}
+
+variable "token" {
+  description = "Access token for cloud"
+}
+
+variable "cloud_config_file_path" {
+  description = "PATH to cloud-config file"
+}
 
 variable "cpu" {
   default = 2
@@ -17,35 +33,9 @@ variable "preemptible" {
 }
 
 variable "nat" {
-  default = true
+  default = false
 }
 
-variable "boot_disk_image_id" {}
 variable "boot_disk_size" {
   default = 30
 }
-
-variable "filesystem_name" {
-  default = ""
-}
-variable "filesystem_device_name" {
-  default = ""
-}
-
-variable "cloud_config_file_path" {
-  description = "PATH to cloud-config file"
-}
-
-variable "environments_config" {
-  description = "PATH to environments config file"
-  default     = "../../../json/infra_environments_config.json"
-}
-
-variable "servers_and_disks" {
-  description = "PATH to servers and disks description file"
-  default     = "../../../json/infra_servers_and_disks.json"
-}
-
-# переменные основной директории
-variable "folder_id_main_folder" {}
-variable "subnetwork_name_main_folder" {}

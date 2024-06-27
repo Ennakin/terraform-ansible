@@ -1,12 +1,17 @@
-variable "token" {}
-variable "cloud_id" {}
-variable "folder_id" {}
-variable "zone" {}
+variable "main_config" {
+  description = "PATH to main config file"
+  default     = "../../../conf/infra_main_conf.json"
+}
 
-variable "filesystem_name" {}
+variable "token" {
+  description = "Access token for cloud"
+}
+
 variable "filesystem_type" {
-  default = "network-hdd"
+  description = "Filesystm type"
+  default     = "network-hdd"
 }
 variable "filesystem_size" {
-  default = 30
+  description = "Filesystem size"
+  default     = 30
 }

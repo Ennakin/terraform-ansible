@@ -1,0 +1,18 @@
+{
+    "cloud-id": "b1ghr28f3agp2fvpa0lk",
+    "zone": "ru-central1-a",
+    "folders": {
+        "folder-hr-link": {
+            "id": "b1gah9ok34br5g2k9j18",
+            "network-name": "hr-network-private"
+        },
+        "folder-hr-link-tf": {
+            "id": "b1g71vcrlga12jdh9se8"
+        }
+    },
+    "boot-disk-image-id": "fd8hnnsnfn3v88bk0k1o",
+    "network-name-mask": "network-main",
+    "subnetwork-name-mask": "subnetwork",
+    "filesystem-name-mask": "filesystem",
+    "filesystem-device-name-mask": "filesystem"
+}

@@ -13,34 +13,40 @@ terraform {
 
 provider "yandex" {
   token     = var.token
-  cloud_id  = var.cloud_id
-  folder_id = var.folder_id
-  zone      = var.zone
+  folder_id = local.folder_hr_link_tf_id
+  zone      = local.zone
+  #   cloud_id  = var.cloud_id
 }
 
-data "local_file" "servers_and_disks" {
-  filename = var.servers_and_disks
+data "local_file" "main_config" {
+  filename = var.main_config
 }
 
 data "local_file" "environments_config" {
   filename = var.environments_config
 }
 
-locals {
-  parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
-  servers_hrl              = local.parsed_servers_and_disks["hrl"]["staging"]
-  servers_strl             = local.parsed_servers_and_disks["strl"]["staging"]
+data "local_file" "servers_and_disks" {
+  filename = var.servers_and_disks
+}
 
-  parsed_environments_config = jsondecode(data.local_file.environments_config.content)
-  vm_name_mask               = local.parsed_environments_config["staging"]["vm-name-mask"]
-  disk_name_mask             = local.parsed_environments_config["staging"]["disk-name-mask"]
-  inventory_result_path      = local.parsed_environments_config["staging"]["vms-hosts-inventory-result-path"]
+locals {
+  parsed_main_config   = jsondecode(data.local_file.main_config.content)
+  zone                 = local.parsed_main_config["zone"]
+  folder_hr_link_tf_id = local.parsed_main_config["folders"]["folder-hr-link-tf"]["id"]
+
+  parsed_environment_config = jsondecode(data.local_file.environments_config.content)
+  disk_name_mask            = local.parsed_environment_config["staging"]["disk-name-mask"]
+
+  parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
+  servers_and_disks_hrl    = local.parsed_servers_and_disks["hrl"]["staging"]
+  servers_and_disks_strl   = local.parsed_servers_and_disks["strl"]["staging"]
 }
 
 module "disk-hrl" {
   source = "../../../modules/yandex/disk"
 
-  for_each = local.servers_hrl
+  for_each = local.servers_and_disks_hrl
 
   secondary_disk_name        = "hrl-${local.disk_name_mask}-${each.key}"
   secondary_disk_description = "HRL-DISK-staging-${each.value}"
@@ -50,7 +56,7 @@ module "disk-hrl" {
 module "disk-strl" {
   source = "../../../modules/yandex/disk"
 
-  for_each = local.servers_strl
+  for_each = local.servers_and_disks_strl
 
   secondary_disk_name        = "strl-${local.disk_name_mask}-${each.key}"
   secondary_disk_description = "STRL-DISK-staging-${each.value}"

@@ -13,15 +13,28 @@ terraform {
 
 provider "yandex" {
   token     = var.token
-  cloud_id  = var.cloud_id
-  folder_id = var.folder_id
-  zone      = var.zone
+  folder_id = local.folder_hr_link_tf_id
+  zone      = local.zone
+  #   cloud_id  = var.cloud_id
 }
 
+data "local_file" "main_config" {
+  filename = var.main_config
+}
+
+locals {
+  parsed_main_config          = jsondecode(data.local_file.main_config.content)
+  zone                        = local.parsed_main_config["zone"]
+  filesystem_name_mask        = local.parsed_main_config["filesystem-name-mask"]
+  filesystem_device_name_mask = local.parsed_main_config["filesystem-device-name-mask"]
+  folder_hr_link_tf_id        = local.parsed_main_config["folders"]["folder-hr-link-tf"]["id"]
+}
+
+# TODO нужно переделать на space
 module "fs-hrl" {
   source = "../../../modules/yandex/filesystem"
 
-  filesystem_name        = "hrl-${var.filesystem_name}"
+  filesystem_name        = "hrl-${local.filesystem_name_mask}"
   filesystem_description = "Файловое хранилище HRL"
   filesystem_size        = var.filesystem_size
 }

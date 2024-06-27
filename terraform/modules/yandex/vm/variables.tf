@@ -1,17 +1,27 @@
+variable "folder_id" {
+  description = "VM folder.id"
+  default     = ""
+}
+
+variable "zone" {
+  description = "VM zone"
+  default     = ""
+}
+
 variable "name" {
-  description = "Name VM"
+  description = "VM name"
 }
 
 variable "hostname" {
-  description = "Hostname VM"
+  description = "VM hostname"
 }
 
 variable "description" {
-  description = "Description VM"
+  description = "VM description"
 }
 
 variable "platform" {
-  description = "Platform YCloud"
+  description = "VM platform YCloud"
   default     = "standard-v3"
 }
 
@@ -21,50 +31,50 @@ variable "preemptible" {
 }
 
 variable "cpu" {
-  description = "Count cores"
+  description = "VM Count cores"
   default     = 2
 }
 
 variable "core_fraction" {
-  description = "Core fraction"
+  description = "VM core fraction"
   default     = 100
 }
 
 variable "ram" {
-  description = "Count ram in GB"
+  description = "VM count ram in GB"
   default     = 2
 }
 
 variable "boot_disk_image_id" {
-  description = "ID default image for VM"
+  description = "VM default image ID"
 }
 
 variable "boot_disk_size" {
-  description = "Boot disk size"
+  description = "VM boot disk size"
   default     = 15
 }
 
 variable "secondary_disk_image_id" {
-  description = "ID secondary disk image for VM"
+  description = "VM secondary disk image ID"
   default     = ""
 }
 
 variable "subnetwork_id" {
-  description = "ID subnetwork for VM"
+  description = "VM subnetwork ID"
 }
 
 variable "nat" {
-  description = "nat network interface?"
+  description = "VM nat network interface?"
   default     = true
 }
 
 variable "filesystem_id" {
-  description = "ID filesystem"
+  description = "VM filesystem ID"
   default     = ""
 }
 
 variable "filesystem_device_name" {
-  description = "Filesystem device name"
+  description = "VM filesystem device name"
   default     = ""
 }
 

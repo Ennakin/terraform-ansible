@@ -1,3 +1,12 @@
+variable "folder_id" {
+  description = "Secondary disk folder.id"
+  default     = ""
+}
+variable "zone" {
+  description = "Secondary disk zone"
+  default     = ""
+}
+
 variable "secondary_disk_name" {
   description = "Secondary disk name"
 }

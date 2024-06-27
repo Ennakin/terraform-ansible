@@ -1,4 +1,6 @@
 resource "yandex_compute_instance" "vm" {
+  folder_id   = var.folder_id
+  zone        = var.zone
   name        = var.name
   hostname    = var.hostname
   description = var.description
