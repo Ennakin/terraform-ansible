@@ -2,7 +2,8 @@
   ansible.builtin.group:
       name: "{{ item.key }}"
       state: present
-  loop: "{{ group_list_external_kaspersky | default({}) | dict2items }}"
+      gid: "{{ item.value.gid }}"
+  loop: "{{ group_list_system | default({}) | dict2items }}"
 
 - name: create user
   ansible.builtin.user:
@@ -18,7 +19,8 @@
       # # TODO password_hash отмечен как deprecated, в дальнейшем нужно будет делать установку pip install passlib и использовать его
       # password: "{{ user_passwords[item.key] | default(omit) | passlib.hash.sha512_crypt.encrypt('password', rounds=5000, salt=passwords_salt) }}"
       append: false
-  loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
+      uid: "{{ item.value.uid }}"
+  loop: "{{ user_list_system | default({}) | dict2items }}"
 
 - name: change owner and group of a directory
   ansible.builtin.file:
@@ -26,7 +28,7 @@
       owner: "{{ item.key }}"
       group: "{{ item.key }}"
       recurse: true
-  loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
+  loop: "{{ user_list_system | default({}) | dict2items }}"
 
 # добавление публичных ssh ключей из переменных
 - name: get authorized keys from environment variable
@@ -35,7 +37,7 @@
       state: present
       exclusive: true
       key: "{{ lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') }}"
-  loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
+  loop: "{{ user_list_system | default({}) | dict2items }}"
   when: lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') | default('') != ''
 
 # добавление публичных ssh ключей из файлов
@@ -45,5 +47,5 @@
       state: present
       exclusive: true
       key: "{{ lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') }}"
-  loop: "{{ user_list_external_kaspersky | default({}) | dict2items }}"
+  loop: "{{ user_list_system | default({}) | dict2items }}"
   when: lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') | default(false)

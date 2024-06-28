@@ -1,0 +1,24 @@
+group_list_system:
+    gitlab-runner: { gid: 1186 }
+
+user_list_system:
+    gitlab-runner:
+        {
+            comment: "gitlab-runner",
+            groups: ["gitlab-runner", "docker"],
+            shell: "/bin/bash",
+            home: "/home/gitlab-runner/",
+            uid: 1186,
+        }
+
+group_list_qa_runners:
+    tester: {}
+
+user_list_qa_runners:
+    tester:
+        {
+            comment: "tester",
+            groups: ["tester", "docker", "gitlab-runner"],
+            shell: "/bin/bash",
+            home: "/home/tester/",
+        }

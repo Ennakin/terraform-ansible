@@ -1,5 +1,5 @@
 group_list:
-    - tester
+    tester: {}
 
 user_list:
     tester:

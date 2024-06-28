@@ -1,0 +1,11 @@
+- name: standard server playbook
+  hosts: runner
+  become: true
+  roles:
+    - role: configure-server
+      tags: [ server ]
+    - role: configure-users
+      tags: [ users ]
+    - role: configure-runner
+      tags: [ runner ]
+    # - role: one-time-actions

@@ -1,6 +1,6 @@
 group_list:
-    - tester
-    - engineer
+    tester: {}
+    engineer: {}
 
 user_list:
     tester:
@@ -13,7 +13,7 @@ user_list:
     engineer:
         {
             comment: "engineer",
-            groups: ["engineer", "docker"],
+            groups: ["engineer", "docker", "jenkins"],
             shell: "/bin/bash",
             home: "/home/engineer/",
         }

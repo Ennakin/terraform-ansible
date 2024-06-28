@@ -1,9 +1,8 @@
-# создание групп
 - name: create group
   ansible.builtin.group:
-    name: "{{ item }}"
-    state: present
-  loop: "{{ group_list | default([]) }}"
+      name: "{{ item.key }}"
+      state: present
+  loop: "{{ group_list | default({}) | dict2items }}"
 
 # # создание домашних директорий пользователей
 # # нужно т.к. не получается сделать так чтобы ansible НЕ создавал группу users, и не отдавал этой группу домашние директории пользователей
@@ -16,29 +15,28 @@
 #       mode: 0750
 #   loop: "{{ user_list | default({}) | dict2items }}"
 
-# создание пользователей
 - name: create user
   ansible.builtin.user:
-    name: "{{ item.key }}"
-    comment: "{{ item.value.comment }}"
-    groups: "{{ item.value.groups }}"
-    shell: "{{ item.value.shell }}"
-    home: "{{ item.value.home }}"
-    create_home: true
-    #   move_home: true
-    password: "{{ user_passwords[item.key] | default(omit) | password_hash('sha512', passwords_salt) }}"
+      name: "{{ item.key }}"
+      comment: "{{ item.value.comment }}"
+      groups: "{{ item.value.groups }}"
+      shell: "{{ item.value.shell }}"
+      home: "{{ item.value.home }}"
+      create_home: true
+      #   move_home: true
+      password: "{{ user_passwords[item.key] | default(omit) | password_hash('sha512', passwords_salt) }}"
 
-    # # TODO password_hash отмечен как deprecated, в дальнейшем нужно будет делать установку pip install passlib и использовать его
-    # password: "{{ user_passwords[item.key] | default(omit) | passlib.hash.sha512_crypt.encrypt('password', rounds=5000, salt=passwords_salt) }}"
-    append: false
+      # # TODO password_hash отмечен как deprecated, в дальнейшем нужно будет делать установку pip install passlib и использовать его
+      # password: "{{ user_passwords[item.key] | default(omit) | passlib.hash.sha512_crypt.encrypt('password', rounds=5000, salt=passwords_salt) }}"
+      append: false
   loop: "{{ user_list | default({}) | dict2items }}"
 
 - name: change owner and group of a directory
   ansible.builtin.file:
-    path: "{{ item.value.home }}"
-    owner: "{{ item.key }}"
-    group: "{{ item.key }}"
-    recurse: true
+      path: "{{ item.value.home }}"
+      owner: "{{ item.key }}"
+      group: "{{ item.key }}"
+      recurse: true
   loop: "{{ user_list | default({}) | dict2items }}"
 
 # # TODO не нашёл как сделать так чтобы ansible НЕ добавлял пользователей в стандартную группу users
@@ -76,12 +74,13 @@
 #   debug:
 #       msg: "{{ lookup('env', 'PUB_TESTER') }}"
 
+# добавление публичных ssh ключей из переменных
 - name: get authorized keys from environment variable
   ansible.posix.authorized_key:
-    user: "{{ item.key }}"
-    state: present
-    exclusive: true
-    key: "{{ lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') }}"
+      user: "{{ item.key }}"
+      state: present
+      exclusive: true
+      key: "{{ lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') }}"
   loop: "{{ user_list | default({}) | dict2items }}"
   when: lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') | default('') != ''
 
@@ -98,72 +97,9 @@
 # добавление публичных ssh ключей из файлов
 - name: get authorized keys from files
   ansible.posix.authorized_key:
-    user: "{{ item.key }}"
-    state: present
-    exclusive: true
-    key: "{{ lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') }}"
+      user: "{{ item.key }}"
+      state: present
+      exclusive: true
+      key: "{{ lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') }}"
   loop: "{{ user_list | default({}) | dict2items }}"
   when: lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') | default(false)
-
-- name: adding users to jenkins group
-  user:
-    name: "{{ item }}"
-    groups: jenkins
-    append: true
-    state: present
-  loop: "{{ user_list_jenkins | default([]) }}"
-
-- name: find home directories
-  ansible.builtin.find:
-    paths: /home
-    file_type: directory
-  register: home_directories_bash
-
-- name: add .bash_aliases for managed users
-  ansible.builtin.template:
-    src: bash_aliases.j2
-    dest: "{{ item.path }}/.bash_aliases"
-    mode: "0644"
-    owner: "{{ item.path | basename }}"
-    group: "{{ item.path | basename }}"
-  loop: "{{ home_directories_bash.files }}"
-
-- name: add .bash_profile for managed users
-  ansible.builtin.template:
-    src: bash_profile.j2
-    dest: "{{ item.path }}/.bash_profile"
-    mode: "0644"
-    owner: "{{ item.path | basename }}"
-    group: "{{ item.path | basename }}"
-  loop: "{{ home_directories_bash.files }}"
-
-# # TODO ниже варианты в которых не получилось сделать так чтобы строка не добавлялась повторно,
-# # когда она уже добавлялась ранее, пока пусть побудут здесь
-# - name: add paths to .bashrc
-#   ansible.builtin.lineinfile:
-#       path: "{{ item.path }}/.bashrc"
-#       line: |
-
-#           {% for path in app_paths %}
-#           export PATH="$PATH:{{ path }}"
-#           {% endfor %}
-#       create: true
-#       state: present
-#   loop: "{{ home_directories_bash.files }}"
-
-# - name: form app paths content
-#   ansible.builtin.set_fact:
-#       app_paths_content: |
-
-#           {% for path in app_paths %}
-#           export PATH="$PATH:{{ path }}"
-#           {% endfor %}
-
-# - name: add paths to .bashrc
-#   ansible.builtin.lineinfile:
-#       path: "{{ item.path }}/.bashrc"
-#       line: "{{ app_paths_content }}"
-#       insertafter: "^    . /etc/bash_completion\n  fi\nfi$"
-#       create: true
-#       state: present
-#   loop: "{{ home_directories_bash.files }}"

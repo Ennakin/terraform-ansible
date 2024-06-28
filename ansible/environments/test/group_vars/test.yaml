@@ -1,7 +1,7 @@
 group_list:
-    - developer
-    - tester
-    - engineer
+    developer: {}
+    tester: {}
+    engineer: {}
 
 user_list:
     developer:
@@ -27,7 +27,7 @@ user_list:
         }
 
 group_list_external_kaspersky:
-    - kasper-outsource
+    kasper-outsource: {}
 
 user_list_external_kaspersky:
     kasper-outsource:
@@ -39,7 +39,7 @@ user_list_external_kaspersky:
         }
 
 group_list_external_pflb:
-    - pflb-outsource
+    pflb-outsource: {}
 
 user_list_external_pflb:
     pflb-outsource:
@@ -49,5 +49,3 @@ user_list_external_pflb:
             shell: "/bin/bash",
             home: "/home/pflb-outsource/",
         }
-
-user_passwords_external: "{{ lookup('env', 'USER_PASSWORDS_EXTERNAL', default='{}') }}"

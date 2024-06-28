@@ -1,0 +1,2 @@
+gitlab_runner_username: gitlab-runner
+gitlab_runner_home_directory_path: /home/gitlab-runner/

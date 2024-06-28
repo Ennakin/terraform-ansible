@@ -1,5 +1,8 @@
 {
     "hrl": {
+        "runner": {
+            "gitlab-runner-qa-1": "gitlab-runner-qa-1"
+        },
         "devops": {
             "1": "ehodkevich",
             "2": "yueremin"

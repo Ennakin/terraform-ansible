@@ -1,6 +1,6 @@
 group_list:
-    - developer
-    - tester
+    developer: {}
+    tester: {}
 
 user_list:
     developer:

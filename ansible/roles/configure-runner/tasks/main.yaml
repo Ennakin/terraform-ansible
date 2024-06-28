@@ -1,0 +1,2 @@
+- import_tasks: configure-gitlab-runner.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('gitlab-runner'))

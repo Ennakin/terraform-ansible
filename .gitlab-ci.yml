@@ -179,7 +179,7 @@ apply_configuration:
     artifacts:
         name: "${CI_JOB_NAME}-${CI_JOB_ID}-inventory"
         paths:
-            - ./ansible/inventory/$TF_ENV/inventory
+            - ./ansible/environments/$TF_ENV/inventory
         # expire_in: 1 day
 
 ansible:

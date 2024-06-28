@@ -19,7 +19,7 @@ if [ $# -gt 0 ]; then
         exit 1
     fi
 
-    if [ ! -d "./inventory/$ANSIBLE_ENV" ]; then
+    if [ ! -d "./environments/$ANSIBLE_ENV" ]; then
         echo >&2 "Directory $DIR/$ANSIBLE_ENV" does not exist...
         exit 1
     fi
