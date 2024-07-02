@@ -32,6 +32,6 @@ filesystem_name: "{{ lookup('env', 'FILESYSTEM_NAME', default='') }}"
 
 jenkins_master_node_host: "10.70.1.5 ci.myhrlink.ru"
 
-reverse_nginx_hostname: "{{ lookup('env', 'REVERSE_NGINX_HOSTNAME', default='') }}"
+reverse_nginx_hostname: space-reverse-nginx
 vms:
     localhost: 127.0.0.1
