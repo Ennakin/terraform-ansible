@@ -11,10 +11,10 @@ user_list_system:
             uid: 1186,
         }
 
-group_list_qa_runners:
+group_list_test_runners:
     tester: {}
 
-user_list_qa_runners:
+user_list_test_runners:
     tester:
         {
             comment: "tester",

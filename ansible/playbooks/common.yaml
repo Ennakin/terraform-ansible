@@ -19,3 +19,5 @@
       tags: [ server ]
     - role: configure-users
       tags: [ users ]
+    - role: one-time-actions
+      tags: [ one-time ]

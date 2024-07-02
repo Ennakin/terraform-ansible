@@ -8,4 +8,5 @@
       tags: [ users ]
     - role: configure-app
       tags: [ app ]
-    # - role: one-time-actions
+    - role: one-time-actions
+      tags: [ one-time ]
