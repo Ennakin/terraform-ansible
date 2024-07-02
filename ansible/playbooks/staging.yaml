@@ -1,6 +1,7 @@
 - name: standard server playbook
   hosts: staging
   become: true
+  force_handlers: true
   roles:
     - role: configure-server
       tags: [ server ]

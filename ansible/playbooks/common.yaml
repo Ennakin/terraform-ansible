@@ -12,6 +12,7 @@
   #       until: facts_result is not failed or facts_result is defined
 
   become: true
+  force_handlers: true
   roles:
     # - role: system
     #   tags: [ system ]
