@@ -27,7 +27,7 @@ if [ $# -gt 0 ]; then
     ls ./envs/prod/env_ansible_all.env >/dev/null && source ./envs/prod/env_ansible_all.env
     ls ./envs/prod/env_ansible_${ANSIBLE_ENV}.env >/dev/null && source ./envs/prod/env_ansible_${ANSIBLE_ENV}.env
 
-    ansible-playbook -u $SSH_USER ./playbooks/$ANSIBLE_ENV.yaml $ANSIBLE_PARAMS
+    ansible-playbook -u $SSH_USER ./playbooks/$ANSIBLE_ENV.yaml $ANSIBLE_PARAMS 2>&1 | tee -i playbook.log
 
 fi
 
