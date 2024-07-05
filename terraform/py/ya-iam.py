@@ -126,7 +126,7 @@ def main():
         file_path = os.path.join(envs_dir, 'envs', 'prod', 'iam-token.env')
 
         with open(file=file_path, mode='w') as f:
-            f.write(f'export TF_VAR_token={iam_token}')
+            f.write(f'export TF_VAR_YC_IAM_TOKEN={iam_token}')
 
     else:
         print(

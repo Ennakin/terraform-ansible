@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "yandex" {
-  token     = var.token
+  token     = var.YC_IAM_TOKEN
   folder_id = local.folder_hr_link_tf_id
   zone      = local.zone
   #   cloud_id  = var.cloud_id
@@ -48,8 +48,8 @@ locals {
   inventory_result_path      = local.parsed_environments_config["staging"]["vms-hosts-inventory-result-path"]
 
   parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
-  servers_and_disks_hrl              = local.parsed_servers_and_disks["hrl"]["staging"]
-  servers_and_disks_strl             = local.parsed_servers_and_disks["strl"]["staging"]
+  servers_and_disks_hrl    = local.parsed_servers_and_disks["hrl"]["staging"]
+  servers_and_disks_strl   = local.parsed_servers_and_disks["strl"]["staging"]
 }
 
 # подсеть из другой директории
@@ -94,7 +94,7 @@ module "vm-staging-hrl" {
   ram                = 24
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
@@ -121,7 +121,7 @@ module "vm-staging-hrl-engineers" {
   ram                = 24
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl["2"].id : ""
@@ -145,7 +145,7 @@ module "vm-staging-strl" {
   ram                = 12
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_strl[each.key].id : ""

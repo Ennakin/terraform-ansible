@@ -13,11 +13,11 @@ variable "servers_and_disks" {
   default     = "../../../conf/infra_servers_and_disks.json"
 }
 
-variable "token" {
+variable "YC_IAM_TOKEN" {
   description = "Access token for cloud"
 }
 
-variable "cloud_config_file_path" {
+variable "CLOUD_CONFIG" {
   description = "PATH to cloud-config file"
 }
 

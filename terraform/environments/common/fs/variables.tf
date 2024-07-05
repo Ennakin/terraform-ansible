@@ -3,7 +3,7 @@ variable "main_config" {
   default     = "../../../conf/infra_main_conf.json"
 }
 
-variable "token" {
+variable "YC_IAM_TOKEN" {
   description = "Access token for cloud"
 }
 

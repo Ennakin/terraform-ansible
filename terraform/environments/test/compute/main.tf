@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "yandex" {
-  token     = var.token
+  token     = var.YC_IAM_TOKEN
   folder_id = local.folder_hr_link_tf_id
   zone      = local.zone
   #   cloud_id  = var.cloud_id
@@ -98,7 +98,7 @@ module "vm-test-hrl" {
   ram                = 24
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
@@ -124,7 +124,7 @@ module "vm-test-hrl-stress" {
   ram                = 32
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
@@ -150,7 +150,7 @@ module "vm-regress-release-hrl" {
   ram                = 24
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl["regress-release"].id : ""
@@ -176,7 +176,7 @@ module "vm-regress-master-hrl" {
   ram                = 24
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl["regress-master"].id : ""
@@ -202,7 +202,7 @@ module "vm-test-strl" {
   ram                = 12
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_strl[each.key].id : ""
@@ -229,7 +229,7 @@ module "vm-test-space-kaspersky-admin" {
   ram                = 8
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
   secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_space["kaspersky-admin"].id : ""

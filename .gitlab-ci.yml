@@ -20,14 +20,13 @@ variables:
 
 # # как ФАЙЛ
 
-# CLOUD_CONFIG (внутри cloud-config)
 # YC_KEY_SECRET_FILE (внутри приватный ключ)
+# TF_VAR_CLOUD_CONFIG (внутри cloud-config)
 
 # # как ПЕРЕМЕННАЯ
 
 # TF_USERNAME
 # TF_PASSWORD
-# TF_VAR_cloud_config_file_path=${CLOUD_CONFIG}
 
 # ########## для ansible ##########
 

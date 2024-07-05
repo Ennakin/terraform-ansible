@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "yandex" {
-  token     = var.token
+  token     = var.YC_IAM_TOKEN
   folder_id = local.folder_hr_link_tf_id
   zone      = local.zone
   #   cloud_id  = var.cloud_id
