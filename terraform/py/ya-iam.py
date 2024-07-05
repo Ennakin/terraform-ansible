@@ -98,20 +98,39 @@ def main():
     """Точка входа
     """
 
-    yc = YandexConf(
-        get_env('YC_SERVICE_ACCOUNT_ID'),
-        get_env('YC_KEY_ID'),
-        get_env('YC_KEY_SECRET_FILE_PATH')
-    )
+    conf_path = os.path.dirname(os.path.dirname(__file__))
+    conf_path = os.path.join(conf_path, 'conf', 'infra_main_conf.json')
 
-    iam_token = yc.get_iam_token()
+    with open(file=conf_path, mode='r') as file:
+        conf = json.load(fp=file)
 
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    envs_dir = os.path.dirname(current_dir)
-    file_path = os.path.join(envs_dir, 'envs', 'prod', 'iam-token.env')
+        service_account_id = conf.get('service-account', {}).get('id',
+                                                                 None) if isinstance(conf, dict) else None
+        key_id = conf.get('service-account', {}).get('key-id',
+                                                     None) if isinstance(conf, dict) else None
 
-    with open(file=file_path, mode='w') as f:
-        f.write(f'export TF_VAR_token={iam_token}')
+    if service_account_id and key_id:
+        yc = YandexConf(
+            # # если переменные в .env, а не в .json
+            # service_account_id=get_env('YC_SERVICE_ACCOUNT_ID'),
+            # key_id=get_env('YC_KEY_ID'),
+            service_account_id=service_account_id,
+            key_id=key_id,
+            key_secret_file_path=get_env('YC_KEY_SECRET_FILE_PATH')
+        )
+
+        iam_token = yc.get_iam_token()
+
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        envs_dir = os.path.dirname(current_dir)
+        file_path = os.path.join(envs_dir, 'envs', 'prod', 'iam-token.env')
+
+        with open(file=file_path, mode='w') as f:
+            f.write(f'export TF_VAR_token={iam_token}')
+
+    else:
+        print(
+            f'conf_path is: ${conf_path} && service_account_id is: ${service_account_id} && key_id is: ${key_id}')
 
 
 if __name__ == '__main__':
