@@ -27,7 +27,7 @@ variables:
 
 # TF_USERNAME
 # TF_PASSWORD
-# ##### нужно ли? YC_KEY_SECRET_FILE_PATH=${YC_KEY_SECRET_FILE}
+# YC_KEY_SECRET_FILE_PATH=${YC_KEY_SECRET_FILE}
 # TF_VAR_cloud_config_file_path=${CLOUD_CONFIG}
 
 # ########## для ansible ##########
@@ -206,8 +206,8 @@ ansible:
         - cd ./ansible
         - ansible-config view
         # - ansible-galaxy collection install ansible.posix
-        - ls -al ./inventory/$TF_ENV 2>/dev/null
-        - cat ./inventory/$TF_ENV/inventory 2>/dev/null
+        - ls -al ./environments/$TF_ENV 2>/dev/null
+        - cat ./environments/$TF_ENV/inventory 2>/dev/null
         - sleep 40
         # - env_name="env_ansible_${TF_ENV}"
         # - env_file=$(eval "echo \$$env_name")
