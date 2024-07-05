@@ -20,27 +20,25 @@ variables:
 
 # # как ФАЙЛ
 
-# CLOUD_CONFIG
-# YC_KEY_SECRET_FILE
+# CLOUD_CONFIG (внутри cloud-config)
+# YC_KEY_SECRET_FILE (внутри приватный ключ)
 
 # # как ПЕРЕМЕННАЯ
 
 # TF_USERNAME
 # TF_PASSWORD
-# YC_KEY_SECRET_FILE_PATH=${YC_KEY_SECRET_FILE}
 # TF_VAR_cloud_config_file_path=${CLOUD_CONFIG}
 
 # ########## для ansible ##########
 
 # # как ФАЙЛ
-# SSH_PRIVATE_KEY
+# SSH_PRIVATE_KEY (внутри приватный ключ)
 
 # # как ПЕРЕМЕННАЯ
 
 # SSH_USER
 # DOCKER_HUB_PASSWORD
 # PASSWORDS_SALT
-# SSH_PRIVATE_KEY_PATH=${SSH_PRIVATE_KEY}
 # USER_PASSWORDS
 
 # # переменная с абсолютным путём до ansible.cfg, иначе ansible внутри контейнера игнорирует конфиг
