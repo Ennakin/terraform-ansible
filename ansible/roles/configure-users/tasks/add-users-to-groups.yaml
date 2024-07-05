@@ -25,7 +25,7 @@
 
 - name: authenticate users with Docker Hub
   ansible.builtin.shell:
-      cmd: "sudo -u {{ item }} docker login {{ docker_hub_address }} --username {{ docker_hub_user }} --password {{ docker_hub_password }}"
+      cmd: "sudo -u {{ item }} docker login {{ docker_hub_address }} --username {{ docker_hub_username }} --password {{ docker_hub_password }}"
   loop: "{{ user_names }}"
 
 # jenkins

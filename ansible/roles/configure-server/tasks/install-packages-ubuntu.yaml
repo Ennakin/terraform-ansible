@@ -1,5 +1,5 @@
 - name: install default packages
   apt:
-    name: "{{ app_list_all | default([]) }}"
-    state: present
-    update_cache: true
+      name: "{{ app_list_all | default([]) }}"
+      state: present
+      update_cache: true

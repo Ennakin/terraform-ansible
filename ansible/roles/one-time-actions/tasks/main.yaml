@@ -1,2 +1,10 @@
+- name: conf get
+  include_vars:
+      file: ../conf/conf.json
+      name: conf
+
+# - import_tasks: conf-show.yaml
+#   when: ansible_facts['distribution'] in ubuntu_list
+
 - import_tasks: delete-file.yaml
   when: ansible_facts['distribution'] in ubuntu_list

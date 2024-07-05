@@ -1,14 +1,14 @@
 - name: check if gitlab-runner home directory exists
   ansible.builtin.stat:
-    path: "{{ gitlab_runner_home_directory_path }}"
+      path: "{{ gitlab_runner_home_directory_path }}"
   register: gitlab_runner_home_stat
   when: ansible_hostname | regex_search('runner')
 
 - name: change mode of a gitlab-runner home directory
   ansible.builtin.file:
-    path: "{{ gitlab_runner_home_directory_path }}"
-    mode: "0775"
-    owner: "{{ gitlab_runner_username }}"
-    group: "{{ gitlab_runner_username }}"
-    state: directory
+      path: "{{ gitlab_runner_home_directory_path }}"
+      mode: "0775"
+      owner: "{{ gitlab_runner_username }}"
+      group: "{{ gitlab_runner_username }}"
+      state: directory
   when: (ansible_hostname | regex_search('runner')) and gitlab_runner_home_stat.stat.exists and gitlab_runner_username != ''

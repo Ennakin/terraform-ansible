@@ -6,7 +6,7 @@
     server_role_enabled: "{{ 'server' in ansible_run_tags }}"
     users_role_enabled: "{{ 'users' in ansible_run_tags }}"
     app_role_enabled: "{{ 'app' in ansible_run_tags }}"
-    one_time_role_enabled: "{{ 'one-time' in ansible_run_tags }}" 
+    one_time_role_enabled: "{{ 'one-time' in ansible_run_tags }}"
   roles:
     - role: configure-server
       tags: [ server ]

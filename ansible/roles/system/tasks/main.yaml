@@ -1,1 +1,6 @@
+- name: conf get
+  include_vars:
+      file: ../conf/conf.json
+      name: conf
+
 - import_tasks: wait-for-connection.yaml

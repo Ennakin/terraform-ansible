@@ -1,2 +1,2 @@
-gitlab_runner_username: gitlab-runner
-gitlab_runner_home_directory_path: /home/gitlab-runner/
+gitlab_runner_username: "{{ conf.gitlab_runner_username }}"
+gitlab_runner_home_directory_path: "{{ conf.gitlab_runner_home_directory_path }}"

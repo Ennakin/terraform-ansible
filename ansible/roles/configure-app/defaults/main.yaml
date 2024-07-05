@@ -1,4 +1,4 @@
-secondary_disk_mount_point: "{{ lookup('env', 'SECONDARY_DISK_MOUNT_POINT', default='') }}"
-filesystem_name: "{{ lookup('env', 'FILESYSTEM_NAME', default='') }}"
+secondary_disk_mount_point: "{{ conf.secondary_disk_mount_point }}"
+filesystem_name: "{{ conf.filesystem_name }}"
 
 app_archive_name_mask: app.tar.gz
