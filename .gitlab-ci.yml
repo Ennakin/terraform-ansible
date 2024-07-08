@@ -294,7 +294,7 @@ plan-compute:
     # dependencies:
     #     - create-iam
     needs:
-        - validate-plan
+        - validate-compute
         - create-iam
         # - job: validate-compute
         # #   artifacts: true
