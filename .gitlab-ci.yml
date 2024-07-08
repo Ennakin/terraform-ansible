@@ -62,7 +62,6 @@ stages:
     - configure
     - destroy
 
-# format
 .format:
     rules:
         - if: $TF_ENV
@@ -117,7 +116,6 @@ format-compute:
           variables:
               TF_STATE: compute
 
-# init
 .init:
     stage: init
     rules:
@@ -159,7 +157,6 @@ init-compute:
     rules: *compute-rules
     when: manual
 
-# validate
 .validate:
     stage: validate
     script:
@@ -198,7 +195,6 @@ validate-compute:
         - init-compute
     when: on_success
 
-# scan
 .scan:
     stage: security-scan
     #   rules:
@@ -211,7 +207,7 @@ validate-compute:
         - tfsec . # путь к запускаемому проекту?..
     allow_failure: true
 
-# create-iam
+# TODO... доступность артефакта .env для всех "потоков"
 create-iam:
     stage: create-iam
     rules:
@@ -229,7 +225,6 @@ create-iam:
             - ./terraform/envs/prod/iam-token.env
         expire_in: 1 day
 
-# plan
 .plan:
     stage: plan
     # dependencies:
@@ -251,63 +246,42 @@ plan-network:
     extends:
         - .plan
     rules: *network-rules
-    # dependencies:
-    #     - create-iam
+    dependencies:
+        - create-iam
     needs:
         - validate-network
-        - create-iam
-        # - job: validate-network
-        # #   artifacts: true
-        # - job: create-iam
-        #   artifacts: true
     when: manual
 
 plan-fs:
     extends:
         - .plan
     rules: *fs-rules
-    # dependencies:
-    #     - create-iam
+    dependencies:
+        - create-iam
     needs:
         - validate-fs
-        - create-iam
-        # - job: validate-fs
-        # #   artifacts: true
-        # - job: create-iam
-        #   artifacts: true
     when: manual
 
 plan-disk:
     extends:
         - .plan
     rules: *disk-rules
-    # dependencies:
-    #     - create-iam
+    dependencies:
+        - create-iam
     needs:
         - validate-disk
-        - create-iam
-        # - job: validate-disk
-        # #   artifacts: true
-        # - job: create-iam
-        #   artifacts: true
     when: manual
 
 plan-compute:
     extends:
         - .plan
     rules: *compute-rules
-    # dependencies:
-    #     - create-iam
+    dependencies:
+        - create-iam
     needs:
         - validate-compute
-        - create-iam
-        # - job: validate-compute
-        # #   artifacts: true
-        # - job: create-iam
-        #   artifacts: true
     when: manual
 
-# apply_configuration
 .apply_configuration:
     stage: apply
     rules:
@@ -334,7 +308,6 @@ apply-network:
     rules: *network-rules
     needs:
         - plan-network
-        - create-iam
     when: manual
 
 apply-fs:
@@ -343,7 +316,6 @@ apply-fs:
     rules: *fs-rules
     needs:
         - plan-fs
-        - create-iam
     when: manual
 
 apply-disk:
@@ -352,7 +324,6 @@ apply-disk:
     rules: *disk-rules
     needs:
         - plan-disk
-        - create-iam
     when: manual
 
 apply-compute:
@@ -361,10 +332,8 @@ apply-compute:
     rules: *compute-rules
     needs:
         - plan-compute
-        - create-iam
     when: manual
 
-# ansible
 .ansible:
     image:
         # name: docker.hr-link.ru/alpinelinux/ansible:latest
@@ -412,7 +381,6 @@ ansible-compute:
     needs:
         - apply-compute
 
-# destroy_infra
 .destroy_infra:
     stage: destroy
     rules:
@@ -428,33 +396,21 @@ ansible-compute:
         - .destroy_infra
     rules: *compute-rules
     when: manual
-    needs:
-        - plan-compute
-        - create-iam
 
 .destroy-disk:
     extends:
         - .destroy_infra
     rules: *disk-rules
     when: manual
-    needs:
-        - plan-disk
-        - create-iam
 
 .destroy-fs:
     extends:
         - .destroy_infra
     rules: *fs-rules
     when: manual
-    needs:
-        - plan-fs
-        - create-iam
 
 .destroy-network:
     extends:
         - .destroy_infra
     rules: *network-rules
     when: manual
-    needs:
-        - plan-network
-        - create-iam
