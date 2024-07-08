@@ -72,16 +72,16 @@ stages:
     cache: []
     allow_failure: true
 
-format-compute:
+format-network:
     extends:
         - .format
-    rules: &compute-rules
+    rules: &network-rules
         - exists:
-              - terraform/environments/${TF_ENV}/compute/*.tf
+              - terraform/environments/${TF_ENV}/network/*.tf
           changes:
-              - terraform/environments/${TF_ENV}/compute/*.tf
+              - terraform/environments/${TF_ENV}/network/*.tf
           variables:
-              TF_STATE: compute
+              TF_STATE: network
 
 format-fs:
     extends:
@@ -105,16 +105,16 @@ format-disk:
           variables:
               TF_STATE: disk
 
-format-network:
+format-compute:
     extends:
         - .format
-    rules: &network-rules
+    rules: &compute-rules
         - exists:
-              - terraform/environments/${TF_ENV}/network/*.tf
+              - terraform/environments/${TF_ENV}/compute/*.tf
           changes:
-              - terraform/environments/${TF_ENV}/network/*.tf
+              - terraform/environments/${TF_ENV}/compute/*.tf
           variables:
-              TF_STATE: network
+              TF_STATE: compute
 
 .init:
     stage: init
@@ -133,10 +133,10 @@ format-network:
           -backend-config=unlock_method=DELETE
           -backend-config=retry_wait_min=5
 
-init-compute:
+init-network:
     extends:
         - .init
-    rules: *compute-rules
+    rules: *network-rules
     when: manual
 
 init-fs:
@@ -151,10 +151,10 @@ init-disk:
     rules: *disk-rules
     when: manual
 
-init-network:
+init-compute:
     extends:
         - .init
-    rules: *network-rules
+    rules: *compute-rules
     when: manual
 
 .validate:
@@ -163,12 +163,12 @@ init-network:
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" validate
     allow_failure: true
 
-validate-compute:
+validate-network:
     extends:
         - .validate
-    rules: *compute-rules
+    rules: *network-rules
     needs:
-        - init-compute
+        - init-network
     when: on_success
 
 validate-fs:
@@ -187,12 +187,12 @@ validate-disk:
         - init-disk
     when: on_success
 
-validate-network:
+validate-compute:
     extends:
         - .validate
-    rules: *network-rules
+    rules: *compute-rules
     needs:
-        - init-network
+        - init-compute
     when: on_success
 
 .scan:
@@ -211,25 +211,30 @@ validate-network:
 create-iam:
     stage: create-iam
     rules:
-        - if: $TF_ENV
+        - if: $TF_ENV && $TF_STATE
           when: always
     script:
         - apk add --update --no-cache python3 py3-requests py3-jwt py3-cryptography && ln -sf python3 /usr/bin/python
         - python3 -V
         - python3 ./terraform/py/ya-iam.py
-    artifacts:
-        name: "${CI_JOB_NAME}-${CI_JOB_ID}-iam-token"
-        paths:
-            - ./terraform/envs/prod/iam-token.env
-        expire_in: 1 day
+        - source ./terraform/envs/prod/iam-token.env
+        - echo ${TF_VAR_YC_IAM_TOKEN}
+    variables:
+        TF_VAR_YC_IAM_TOKEN: ${TF_VAR_YC_IAM_TOKEN}
+    # artifacts:
+    #     name: "${CI_JOB_NAME}-${CI_JOB_ID}-iam-token"
+    #     paths:
+    #         - ./terraform/envs/prod/iam-token.env
+    #     expire_in: 1 day
 
 .plan:
     stage: plan
     script:
         - terraform -version
         - ls -al ./terraform/py/
-        - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
-        # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
+        # - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
+        - echo ${TF_VAR_YC_IAM_TOKEN}
+        - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
 
     # TODO сделать артефактом файл с результатом plan, в apply использовать этот артефакт
     artifacts:
@@ -238,12 +243,12 @@ create-iam:
             - ./terraform/environments/$TF_ENV/$TF_STATE/output.tfplan
         # expire_in: 1 day
 
-plan-compute:
+plan-network:
     extends:
         - .plan
-    rules: *compute-rules
+    rules: *network-rules
     needs:
-        - validate-compute
+        - validate-network
     when: manual
 
 plan-fs:
@@ -262,12 +267,12 @@ plan-disk:
         - validate-disk
     when: manual
 
-plan-network:
+plan-compute:
     extends:
         - .plan
-    rules: *network-rules
+    rules: *compute-rules
     needs:
-        - validate-network
+        - validate-compute
     when: manual
 
 .apply_configuration:
@@ -290,12 +295,12 @@ plan-network:
             - ./ansible/environments/$TF_ENV/inventory
         # expire_in: 1 day
 
-apply-compute:
+apply-network:
     extends:
         - .apply_configuration
-    rules: *compute-rules
+    rules: *network-rules
     needs:
-        - plan-compute
+        - plan-network
     when: manual
 
 apply-fs:
@@ -314,12 +319,12 @@ apply-disk:
         - plan-disk
     when: manual
 
-apply-network:
+apply-compute:
     extends:
         - .apply_configuration
-    rules: *network-rules
+    rules: *compute-rules
     needs:
-        - plan-network
+        - plan-compute
     when: manual
 
 .ansible:
@@ -385,16 +390,16 @@ ansible-compute:
     rules: *compute-rules
     when: manual
 
-.destroy-fs:
-    extends:
-        - .destroy_infra
-    rules: *fs-rules
-    when: manual
-
 .destroy-disk:
     extends:
         - .destroy_infra
     rules: *disk-rules
+    when: manual
+
+.destroy-fs:
+    extends:
+        - .destroy_infra
+    rules: *fs-rules
     when: manual
 
 .destroy-network:
