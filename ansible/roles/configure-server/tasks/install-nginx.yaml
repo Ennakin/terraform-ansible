@@ -1,6 +1,6 @@
 - name: install reverse packages
   apt:
-    name: "{{ app_list_reverse_nginx | default([]) }}"
+    name: "{{ app_list_nginx | default([]) }}"
     state: present
     update_cache: true
 

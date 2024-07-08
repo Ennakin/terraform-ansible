@@ -1,0 +1,27 @@
+{
+    "filesystem_name": "hrl-filesystem",
+    "secondary_disk_mount_point": "/var/hrlink",
+    "docker_hub_address": "docker.hr-link.ru",
+    "docker_hub_username": "tester",
+    "gitlab_runner_username": "gitlab-runner",
+    "gitlab_runner_home_directory_path": "/home/gitlab-runner/",
+    "jenkins_master_node_host": "10.70.1.5 ci.myhrlink.ru",
+    "nginx_hostname_mask": "nginx",
+    "users_docker": [
+        "jenkins",
+        "anozdrin",
+        "abalan",
+        "ehodkevich",
+        "ekovalchuk",
+        "yueremin",
+        "mburov"
+    ],
+    "users_jenkins": [
+        "anozdrin",
+        "abalan",
+        "ehodkevich",
+        "ekovalchuk",
+        "yueremin",
+        "mburov"
+    ]
+}

@@ -1,3 +1,13 @@
+variable "folder_id" {
+  description = "Filesystem folder.id"
+  default     = ""
+}
+
+variable "zone" {
+  description = "Filesystem zone"
+  default     = ""
+}
+
 variable "filesystem_name" {
   description = "Filesystem name"
 }

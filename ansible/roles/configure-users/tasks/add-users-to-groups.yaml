@@ -1,0 +1,39 @@
+# docker
+- name: ensure group "docker" exists
+  ansible.builtin.group:
+      name: docker
+      state: present
+
+- name: adding users to docker group
+  user:
+      name: "{{ item }}"
+      groups: docker
+      append: true
+      state: present
+  loop: "{{ user_list_docker | default([]) }}"
+
+- name: find all user directories in /home
+  ansible.builtin.find:
+      paths: /home
+      file_type: directory
+      excludes: "gitlab"
+  register: home_directories_docker
+
+- name: extract usernames from user directories
+  set_fact:
+      user_names: "{{ home_directories_docker.files | map(attribute='path') | map('basename') | list }}"
+
+- name: authenticate users with Docker Hub
+  ansible.builtin.shell:
+      cmd: "sudo -u {{ item }} docker login {{ docker_hub_address }} --username {{ docker_hub_username }} --password {{ docker_hub_password }}"
+  loop: "{{ user_names }}"
+
+# jenkins
+- name: adding users to jenkins group
+  user:
+      name: "{{ item }}"
+      groups: jenkins
+      append: true
+      state: present
+
+  loop: "{{ user_list_jenkins | default([]) }}"

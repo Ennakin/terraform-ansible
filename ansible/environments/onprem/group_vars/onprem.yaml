@@ -1,0 +1,19 @@
+group_list:
+    tester: {}
+    engineer: {}
+
+user_list:
+    tester:
+        {
+            comment: "tester",
+            groups: ["tester", "docker"],
+            shell: "/bin/bash",
+            home: "/home/tester/",
+        }
+    engineer:
+        {
+            comment: "engineer",
+            groups: ["engineer", "docker", "jenkins"],
+            shell: "/bin/bash",
+            home: "/home/engineer/",
+        }

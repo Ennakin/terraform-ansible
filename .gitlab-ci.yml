@@ -14,49 +14,42 @@ variables:
     TF_ADDRESS: "https://gitlab.hr-link.ru/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_FILENAME}"
     ANSIBLE_HOST_KEY_CHECKING: "False"
 
-#   # предполагается что в самом gitlab-е определены следующие переменные
-#   # внутри этих файлов должны быть записаны собственно переменные окружения необходимые проекту
+# # предполагается что в самом gitlab проекте определены следующие переменные
 
-#   # как ФАЙЛ
+# ########## для terraform ##########
 
-#   cloud_config
-#   ssh_private_key
-#   yc_key_secret_file
+# # как ФАЙЛ
 
-#   env_tf_all
-#   env_tf_common
-#   env_tf_dev
-#   env_tf_test
-#   env_tf_devops
-#   env_tf_staging
-#   env_tf_onprem
-#   env_tf_prod
+# YC_KEY_SECRET_FILE (внутри приватный ключ)
+# TF_VAR_CLOUD_CONFIG (внутри cloud-config)
 
-#   env_ansible_all
-#   env_ansible_common
-#   env_ansible_dev
-#   env_ansible_test
-#   env_ansible_devops
-#   env_ansible_staging
-#   env_ansible_onprem
-#   env_ansible_prod
+# # как ПЕРЕМЕННАЯ
 
-#   # как ПЕРЕМЕННАЯ
+# TF_USERNAME
+# TF_PASSWORD
 
-#   TF_USERNAME
-#   TF_PASSWORD
+# ########## для ansible ##########
 
-#   SSH_USER
+# # как ФАЙЛ
+# SSH_PRIVATE_KEY (внутри приватный ключ)
 
-#   # переменная с абсолютным путём до ansible.cfg, иначе ansible внутри контейнера игнорирует конфиг
-#   ANSIBLE_CONFIG
+# # как ПЕРЕМЕННАЯ
 
-#   # переменные с публичными ssh-ключами
-#   PUB_DEVELOPER
-#   PUB_TESTER
-#   PUB_ENGINEER
-#   PUB_SYSTEMS_ANALYST
-#   PUB_KASPER_OUTSOURCE
+# SSH_USER
+# DOCKER_HUB_PASSWORD
+# PASSWORDS_SALT
+# USER_PASSWORDS
+
+# # переменная с абсолютным путём до ansible.cfg, иначе ansible внутри контейнера игнорирует конфиг
+# ANSIBLE_CONFIG
+
+# # переменные с публичными ssh-ключами
+# PUB_DEVELOPER
+# PUB_TESTER
+# PUB_ENGINEER
+# PUB_SYSTEMS_ANALYST
+# PUB_KASPER_OUTSOURCE
+# PUB_PFLB_OUTSOURCE
 
 stages:
     - format
@@ -85,10 +78,6 @@ download_provider:
         - if: $TF_ENV && $TF_STATE
           when: always
     script:
-        - env_name="env_tf_${TF_ENV}"
-        - env_file=$(eval "echo \$$env_name")
-        - ls $env_tf_all 2>/dev/null && source $env_tf_all
-        - ls $env_file 2>/dev/null && source $env_file
         - cp ./terraform/.terraformrc ~/.terraformrc
         - terraform -chdir="./terraform/environments/${TF_ENV}/${TF_STATE}" init
           -backend-config=address=${TF_ADDRESS}
@@ -129,7 +118,7 @@ create-iam:
     script:
         - apk add --update --no-cache python3 py3-requests py3-jwt py3-cryptography && ln -sf python3 /usr/bin/python
         - python3 -V
-        - source $env_tf_all && python3 ./terraform/py/ya-iam.py
+        - python3 ./terraform/py/ya-iam.py
     artifacts:
         name: "${CI_JOB_NAME}-${CI_JOB_ID}-iam-token"
         paths:
@@ -143,10 +132,6 @@ plan:
           when: always
     script:
         - terraform -version
-        - env_name="env_tf_${TF_ENV}"
-        - env_file=$(eval "echo \$$env_name")
-        - realpath $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
-        - realpath $env_file 2>/dev/null && source $env_file 2>/dev/null || true
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
@@ -165,10 +150,6 @@ apply_configuration:
           when: manual
     script:
         - terraform -version
-        - env_name="env_tf_${TF_ENV}"
-        - env_file=$(eval "echo \$$env_name")
-        - realpath $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
-        - realpath $env_file 2>/dev/null && source $env_file 2>/dev/null || true
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
@@ -179,7 +160,7 @@ apply_configuration:
     artifacts:
         name: "${CI_JOB_NAME}-${CI_JOB_ID}-inventory"
         paths:
-            - ./ansible/inventory/$TF_ENV/inventory
+            - ./ansible/environments/$TF_ENV/inventory
         # expire_in: 1 day
 
 ansible:
@@ -203,20 +184,16 @@ ansible:
         - bash --version
         - ansible --version
         - eval $(ssh-agent -s)
-        - chmod 400 "$ssh_private_key"
-        - ssh-add "$ssh_private_key"
+        - chmod 400 "$SSH_PRIVATE_KEY"
+        - ssh-add "$SSH_PRIVATE_KEY"
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh
         - cd ./ansible
         - ansible-config view
         # - ansible-galaxy collection install ansible.posix
-        - ls -al ./inventory/$TF_ENV 2>/dev/null
-        - cat ./inventory/$TF_ENV/inventory 2>/dev/null
+        - ls -al ./environments/$TF_ENV 2>/dev/null
+        - cat ./environments/$TF_ENV/inventory 2>/dev/null
         - sleep 40
-        - env_name="env_ansible_${TF_ENV}"
-        - env_file=$(eval "echo \$$env_name")
-        - realpath $env_ansible_all 2>/dev/null && source $env_ansible_all 2>/dev/null
-        - realpath $env_file 2>/dev/null && source $env_file 2>/dev/null || true
         - ansible-playbook -u $SSH_USER ./playbooks/$TF_ENV.yaml $ANSIBLE_PARAMS
         - cd -
 
@@ -225,16 +202,12 @@ ansible:
     allow_failure: true
     cache: []
 
-destroy_infra:
+.destroy_infra:
     stage: destroy
     rules:
         - if: $TF_ENV && $TF_STATE
           when: manual
     script:
-        - env_name="env_tf_${TF_ENV}"
-        - env_file=$(eval "echo \$$env_name")
-        - realpath $env_tf_all 2>/dev/null && source $env_tf_all 2>/dev/null
-        - realpath $env_file 2>/dev/null && source $env_file 2>/dev/null || true
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve

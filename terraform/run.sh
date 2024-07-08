@@ -55,14 +55,14 @@ if [ $# -gt 0 ]; then
     if [ "$TF_OPERATION" == "init" ]; then
 
         ls ./envs/prod/env_tf_all.env >/dev/null && source ./envs/prod/env_tf_all.env
-        ls ./envs/prod/env_tf_${TF_ENV}.env >/dev/null && source ./envs/prod/env_tf_${TF_ENV}.env
+        # ls ./envs/prod/env_tf_${TF_ENV}.env >/dev/null && source ./envs/prod/env_tf_${TF_ENV}.env
 
         terraform -chdir="./environments/$TF_ENV/$TF_STATE" init \
-            -backend-config=address=$TV_VAR_address/$TF_ENV-$TF_STATE \
-            -backend-config=lock_address=${TV_VAR_address}/$TF_ENV-$TF_STATE/lock \
-            -backend-config=unlock_address=${TV_VAR_address}/$TF_ENV-$TF_STATE/lock \
-            -backend-config=username=${TV_VAR_username} \
-            -backend-config=password=${TV_VAR_password} \
+            -backend-config=address=$TF_ADDRESS/$TF_ENV-$TF_STATE \
+            -backend-config=lock_address=${TF_ADDRESS}/$TF_ENV-$TF_STATE/lock \
+            -backend-config=unlock_address=${TF_ADDRESS}/$TF_ENV-$TF_STATE/lock \
+            -backend-config=username=${TF_USERNAME} \
+            -backend-config=password=${TF_PASSWORD} \
             -backend-config=lock_method=POST \
             -backend-config=unlock_method=DELETE \
             -backend-config=retry_wait_min=5 \
@@ -70,9 +70,9 @@ if [ $# -gt 0 ]; then
 
     else
         ls ./envs/prod/env_tf_all.env >/dev/null && source ./envs/prod/env_tf_all.env
-        ls ./envs/prod/env_tf_${TF_ENV}.env >/dev/null && source ./envs/prod/env_tf_${TF_ENV}.env
+        # ls ./envs/prod/env_tf_${TF_ENV}.env >/dev/null && source ./envs/prod/env_tf_${TF_ENV}.env
 
-        python3 ./py/ya-iam.py
+        cd ./py && python3 ya-iam.py && cd -
         ls ./envs/prod/iam-token.env >/dev/null && source ./envs/prod/iam-token.env
 
         terraform -chdir="./environments/$TF_ENV/$TF_STATE" "$TF_OPERATION" \

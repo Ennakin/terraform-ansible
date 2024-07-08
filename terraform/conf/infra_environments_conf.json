@@ -1,0 +1,42 @@
+{
+    "devops": {
+        "vm-name-mask": "devops",
+        "disk-name-mask": "secondary-disk-devops",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/devops/inventory"
+    },
+    "dev": {
+        "vm-name-mask": "dev",
+        "disk-name-mask": "secondary-disk-dev",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/dev/inventory"
+    },
+    "test": {
+        "vm-name-mask": "test",
+        "disk-name-mask": "secondary-disk-test",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/test/inventory"
+    },
+    "staging": {
+        "vm-name-mask": "staging",
+        "disk-name-mask": "secondary-disk-staging",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/staging/inventory"
+    },
+    "onprem": {
+        "vm-name-mask": "onprem",
+        "disk-name-mask": "secondary-disk-onprem",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/onprem/inventory"
+    },
+    "prod": {
+        "vm-name-mask": "prod",
+        "disk-name-mask": "secondary-disk-prod",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/prod/inventory"
+    },
+    "common": {
+        "vm-name-mask": "common",
+        "disk-name-mask": "secondary-disk-common",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/common/inventory"
+    },
+    "runner": {
+        "vm-name-mask": "runner",
+        "disk-name-mask": "secondary-disk-runner",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/runner/inventory"
+    }
+}
