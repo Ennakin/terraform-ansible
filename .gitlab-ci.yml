@@ -249,10 +249,12 @@ plan-network:
     # dependencies:
     #     - create-iam
     needs:
-        - job: validate-network
+        - validate-network
+        - create-iam
+        # - job: validate-network
+        # #   artifacts: true
+        # - job: create-iam
         #   artifacts: true
-        - job: create-iam
-          artifacts: true
     when: manual
 
 plan-fs:
@@ -262,10 +264,12 @@ plan-fs:
     # dependencies:
     #     - create-iam
     needs:
-        - job: validate-fs
+        - validate-fs
+        - create-iam
+        # - job: validate-fs
+        # #   artifacts: true
+        # - job: create-iam
         #   artifacts: true
-        - job: create-iam
-          artifacts: true
     when: manual
 
 plan-disk:
@@ -275,9 +279,11 @@ plan-disk:
     # dependencies:
     #     - create-iam
     needs:
-        - job: validate-disk
-        #   artifacts: true
-        - job: create-iam
+        - validate-disk
+        - create-iam
+        # - job: validate-disk
+        # #   artifacts: true
+        # - job: create-iam
         #   artifacts: true
     when: manual
 
@@ -288,10 +294,12 @@ plan-compute:
     # dependencies:
     #     - create-iam
     needs:
-        - job: validate-compute
+        - validate-plan
+        - create-iam
+        # - job: validate-compute
+        # #   artifacts: true
+        # - job: create-iam
         #   artifacts: true
-        - job: create-iam
-          artifacts: true
     when: manual
 
 .apply_configuration:
@@ -320,6 +328,7 @@ apply-network:
     rules: *network-rules
     needs:
         - plan-network
+        - create-iam
     when: manual
 
 apply-fs:
@@ -328,6 +337,7 @@ apply-fs:
     rules: *fs-rules
     needs:
         - plan-fs
+        - create-iam
     when: manual
 
 apply-disk:
@@ -336,6 +346,7 @@ apply-disk:
     rules: *disk-rules
     needs:
         - plan-disk
+        - create-iam
     when: manual
 
 apply-compute:
@@ -344,6 +355,7 @@ apply-compute:
     rules: *compute-rules
     needs:
         - plan-compute
+        - create-iam
     when: manual
 
 .ansible:
@@ -408,21 +420,33 @@ ansible-compute:
         - .destroy_infra
     rules: *compute-rules
     when: manual
+    needs:
+        - plan-compute
+        - create-iam
 
 .destroy-disk:
     extends:
         - .destroy_infra
     rules: *disk-rules
     when: manual
+    needs:
+        - plan-disk
+        - create-iam
 
 .destroy-fs:
     extends:
         - .destroy_infra
     rules: *fs-rules
     when: manual
+    needs:
+        - plan-fs
+        - create-iam
 
 .destroy-network:
     extends:
         - .destroy_infra
     rules: *network-rules
     when: manual
+    needs:
+        - plan-network
+        - create-iam
