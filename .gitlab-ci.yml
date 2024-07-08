@@ -355,8 +355,8 @@ apply-compute:
         - if: $TF_ENV && $TF_STATE
           when: manual
     stage: configure
-    dependencies:
-        - apply_configuration
+    # dependencies:
+    #     - apply_configuration
     script:
         #- ansible --version
         #- wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
