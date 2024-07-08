@@ -246,40 +246,44 @@ plan-network:
     extends:
         - .plan
     rules: *network-rules
-    dependencies:
-        - create-iam
+    # dependencies:
+    #     - create-iam
     needs:
         - validate-network
+        - create-iam
     when: manual
 
 plan-fs:
     extends:
         - .plan
     rules: *fs-rules
-    dependencies:
-        - create-iam
+    # dependencies:
+    #     - create-iam
     needs:
         - validate-fs
+        - create-iam
     when: manual
 
 plan-disk:
     extends:
         - .plan
     rules: *disk-rules
-    dependencies:
-        - create-iam
+    # dependencies:
+    #     - create-iam
     needs:
         - validate-disk
+        - create-iam
     when: manual
 
 plan-compute:
     extends:
         - .plan
     rules: *compute-rules
-    dependencies:
-        - create-iam
+    # dependencies:
+    #     - create-iam
     needs:
         - validate-compute
+        - create-iam
     when: manual
 
 .apply_configuration:
