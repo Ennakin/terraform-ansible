@@ -211,7 +211,7 @@ validate-compute:
 create-iam:
     stage: create-iam
     rules:
-        - if: $TF_ENV && $TF_STATE
+        - if: $TF_ENV
           when: always
     script:
         - apk add --update --no-cache python3 py3-requests py3-jwt py3-cryptography && ln -sf python3 /usr/bin/python
