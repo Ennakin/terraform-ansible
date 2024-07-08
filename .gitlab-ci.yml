@@ -278,7 +278,7 @@ plan-disk:
         - job: validate-disk
         #   artifacts: true
         - job: create-iam
-          artifacts: true
+        #   artifacts: true
     when: manual
 
 plan-compute:
