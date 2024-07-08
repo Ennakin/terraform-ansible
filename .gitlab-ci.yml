@@ -246,44 +246,52 @@ plan-network:
     extends:
         - .plan
     rules: *network-rules
-    dependencies:
-        - create-iam
+    # dependencies:
+    #     - create-iam
     needs:
-        - validate-network
-        - create-iam
+        - job: validate-network
+        #   artifacts: true
+        - job: create-iam
+          artifacts: true
     when: manual
 
 plan-fs:
     extends:
         - .plan
     rules: *fs-rules
-    dependencies:
-        - create-iam
+    # dependencies:
+    #     - create-iam
     needs:
-        - validate-fs
-        - create-iam
+        - job: validate-fs
+        #   artifacts: true
+        - job: create-iam
+          artifacts: true
     when: manual
 
 plan-disk:
     extends:
         - .plan
     rules: *disk-rules
-    dependencies:
-        - create-iam
+    # dependencies:
+    #     - create-iam
     needs:
-        - validate-disk
-        - create-iam
+        - job: validate-disk
+        #   artifacts: true
+        - job: create-iam
+          artifacts: true
     when: manual
 
 plan-compute:
     extends:
         - .plan
     rules: *compute-rules
-    dependencies:
-        - create-iam
+    # dependencies:
+    #     - create-iam
     needs:
-        - validate-compute
-        - create-iam
+        - job: validate-compute
+        #   artifacts: true
+        - job: create-iam
+          artifacts: true
     when: manual
 
 .apply_configuration:
