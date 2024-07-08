@@ -1,0 +1,25 @@
+- name: conf get
+  include_vars:
+      file: ../conf/conf.json
+      name: conf
+
+- import_tasks: create-users-system.yaml
+  when: ansible_facts['distribution'] in ubuntu_list
+
+- import_tasks: create-users-runner-test.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('runner-test'))
+
+- import_tasks: create-users-external-kaspersky.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('kaspersky'))
+
+- import_tasks: create-users-external-pflb.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('hrl-test-stress-1'))
+
+- import_tasks: create-users.yaml
+  when: ansible_facts['distribution'] in ubuntu_list
+
+- import_tasks: add-users-to-groups.yaml
+  when: ansible_facts['distribution'] in ubuntu_list
+
+- import_tasks: users-settings.yaml
+  when: ansible_facts['distribution'] in ubuntu_list

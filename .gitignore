@@ -29,6 +29,8 @@ inventory
 inventory-*
 inventory_*
 
+*.retry
+
 *.pub
 
 yc_key_secret_file

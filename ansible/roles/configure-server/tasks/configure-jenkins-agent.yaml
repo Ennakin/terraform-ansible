@@ -1,63 +1,63 @@
 # добавление пользователя jenkins в sudoers
 - name: copy sudoers configuration file
   ansible.builtin.copy:
-    content: "jenkins ALL=(ALL) NOPASSWD:ALL"
-    dest: /etc/sudoers.d/jenkins
-    owner: root
-    group: root
-    mode: "0440"
+      content: "jenkins ALL=(ALL) NOPASSWD:ALL"
+      dest: /etc/sudoers.d/jenkins
+      owner: root
+      group: root
+      mode: "0440"
 
 - name: install java 11
   apt:
-    name: openjdk-11-jdk-headless
-    state: present
-    #   update_cache: true
+      name: openjdk-11-jdk-headless
+      state: present
+      #   update_cache: true
 
 - name: jenkins agent systemctl config copy
   ansible.builtin.template:
-    src: jenkins-agent.service.j2
-    dest: /etc/systemd/system/jenkins-agent.service
-    mode: "0644"
-    owner: root
-    group: root
+      src: jenkins-agent.service.j2
+      dest: /etc/systemd/system/jenkins-agent.service
+      mode: "0644"
+      owner: root
+      group: root
 
 - name: jenkins agent directory create
   ansible.builtin.file:
-    path: /usr/local/jenkins-service/
-    owner: jenkins
-    group: jenkins
-    mode: "0755"
-    state: directory
+      path: /usr/local/jenkins-service/
+      owner: jenkins
+      group: jenkins
+      mode: "0755"
+      state: directory
 
 - name: jenkins agent start script copy
   ansible.builtin.template:
-    src: start-agent.sh.j2
-    dest: /usr/local/jenkins-service/start-agent.sh
-    mode: "0755"
-    owner: jenkins
-    group: jenkins
+      src: start-agent.sh.j2
+      dest: /usr/local/jenkins-service/start-agent.sh
+      mode: "0755"
+      owner: jenkins
+      group: jenkins
 
 - name: jenkins agent env copy
   ansible.builtin.template:
-    src: agent.env.j2
-    dest: /usr/local/jenkins-service/agent.env
-    mode: "0644"
-    owner: jenkins
-    group: jenkins
-    force: false
+      src: agent.env.j2
+      dest: /usr/local/jenkins-service/agent.env
+      mode: "0644"
+      owner: jenkins
+      group: jenkins
+      force: false
 
 - name: jenkins master add to hosts
   ansible.builtin.lineinfile:
-    path: /etc/hosts
-    line: "{{ jenkins_master_node_host }}"
-    insertafter: "^127.0.0.1 localhost$"
-    create: true
-    state: present
+      path: /etc/hosts
+      line: "{{ jenkins_master_node_host }}"
+      insertafter: "^127.0.0.1 localhost$"
+      create: true
+      state: present
 
 - name: jenkins master add to cloud templates hosts
   ansible.builtin.lineinfile:
-    path: /etc/cloud/templates/hosts.debian.tmpl
-    line: "{{ jenkins_master_node_host }}"
-    insertafter: "^127.0.0.1 localhost$"
-    create: true
-    state: present
+      path: /etc/cloud/templates/hosts.debian.tmpl
+      line: "{{ jenkins_master_node_host }}"
+      insertafter: "^127.0.0.1 localhost$"
+      create: true
+      state: present

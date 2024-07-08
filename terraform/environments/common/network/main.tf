@@ -12,32 +12,47 @@ terraform {
 }
 
 provider "yandex" {
-  token     = var.token
-  cloud_id  = var.cloud_id
-  folder_id = var.folder_id
-  zone      = var.zone
+  token     = var.YC_IAM_TOKEN
+  folder_id = local.folder_hr_link_tf_id
+  zone      = local.zone
+  #   cloud_id  = var.cloud_id
+}
+
+data "local_file" "main_config" {
+  filename = var.main_config
+}
+
+locals {
+  parsed_main_config          = jsondecode(data.local_file.main_config.content)
+  zone                        = local.parsed_main_config["zone"]
+  filesystem_name_mask        = local.parsed_main_config["filesystem-name-mask"]
+  filesystem_device_name_mask = local.parsed_main_config["filesystem-device-name-mask"]
+  folder_hr_link_tf_id        = local.parsed_main_config["folders"]["folder-hr-link-tf"]["id"]
+
+  network_name_mask    = local.parsed_main_config["network-name-mask"]
+  subnetwork_name_mask = local.parsed_main_config["subnetwork-name-mask"]
 }
 
 module "network" {
-  source              = "../../../modules/vpc-network"
-  network_name        = var.network_name
+  source              = "../../../modules/yandex/vpc-network"
+  network_name        = local.network_name_mask
   network_description = "Сеть"
 }
 
 module "subnetwork-private" {
-  source = "../../../modules/vpc-subnetwork"
+  source = "../../../modules/yandex/vpc-subnetwork"
 
   network_id             = module.network.id
-  subnetwork_name        = "${var.subnetwork_name}-private"
+  subnetwork_name        = "${local.subnetwork_name_mask}-private"
   subnetwork_description = "Приватная подсеть"
   cidr_v4                = var.subnetwork_cidr_v4_private
 }
 
 module "subnetwork-public" {
-  source = "../../../modules/vpc-subnetwork"
+  source = "../../../modules/yandex/vpc-subnetwork"
 
   network_id             = module.network.id
-  subnetwork_name        = "${var.subnetwork_name}-public"
+  subnetwork_name        = "${local.subnetwork_name_mask}-public"
   subnetwork_description = "Публичная подсеть"
   cidr_v4                = var.subnetwork_cidr_v4_public
 }

@@ -1,0 +1,21 @@
+passwords_salt: "{{ lookup('env', 'PASSWORDS_SALT') | default('default_salt') }}"
+user_passwords: "{{ lookup('env', 'USER_PASSWORDS', default='{}') }}"
+
+docker_hub_address: "{{ conf.docker_hub_address }}"
+docker_hub_username: "{{ conf.docker_hub_username }}"
+docker_hub_password: "{{ lookup('env', 'DOCKER_HUB_PASSWORD', default='') }}"
+
+user_list_jenkins: "{{ conf.users_jenkins }}"
+user_list_docker: "{{ conf.users_docker }}"
+user_list_service: "{{ conf.users_service }}"
+
+bash_aliases:
+    cdd: "cd /var/hrlink/"
+    cdv: "cd /var/hrlink/vms/"
+    cdw: "cd /var/hrlink/working-data/"
+    cdc: "cd /var/hrlink/conf/"
+    cdf: "cd /mnt/"
+
+app_paths:
+    # - /var/hrlink/vms/
+    - /var/hrlink/vms/scripts/

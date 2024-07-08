@@ -1,0 +1,26 @@
+# системные пользователи
+group_list_system:
+    service: { gid: 1186 }
+
+user_list_system:
+    service:
+        {
+            comment: "service",
+            groups: ["service", "docker", "jenkins"],
+            shell: "/bin/bash",
+            home: "/home/service/",
+            uid: 1186,
+        }
+
+# обычные пользователи для всех
+group_list:
+    engineer: {}
+
+user_list:
+    engineer:
+        {
+            comment: "engineer",
+            groups: ["engineer", "docker", "service"],
+            shell: "/bin/bash",
+            home: "/home/engineer/",
+        }

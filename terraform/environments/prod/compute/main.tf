@@ -12,83 +12,89 @@ terraform {
 }
 
 provider "yandex" {
-  token     = var.token
-  cloud_id  = var.cloud_id
-  folder_id = var.folder_id
-  zone      = var.zone
+  token     = var.YC_IAM_TOKEN
+  folder_id = local.folder_hr_link_tf_id
+  zone      = local.zone
+  #   cloud_id  = var.cloud_id
+}
+
+data "local_file" "main_config" {
+  filename = var.main_config
+}
+
+data "local_file" "environments_config" {
+  filename = var.environments_config
+}
+
+data "local_file" "servers_and_disks" {
+  filename = var.servers_and_disks
 }
 
 locals {
-  parsed_servers_hrl = jsondecode(var.servers_hrl)
-  #   parsed_servers_strl  = jsondecode(var.servers_strl)
-  #   parsed_servers_space = jsondecode(var.servers_space)
-}
+  parsed_main_config          = jsondecode(data.local_file.main_config.content)
+  zone                        = local.parsed_main_config["zone"]
+  network_name_mask           = local.parsed_main_config["network-name-mask"]
+  subnetwork_name_mask        = local.parsed_main_config["subnetwork-name-mask"]
+  boot_disk_image_id          = local.parsed_main_config["boot-disk-image-id"]
+  filesystem_name_mask        = local.parsed_main_config["filesystem-name-mask"]
+  filesystem_device_name_mask = local.parsed_main_config["filesystem-device-name-mask"]
+  folder_hr_link_id           = local.parsed_main_config["folders"]["folder-hr-link"]["id"]
+  folder_hr_link_network_name = local.parsed_main_config["folders"]["folder-hr-link"]["network-name"]
+  folder_hr_link_tf_id        = local.parsed_main_config["folders"]["folder-hr-link-tf"]["id"]
 
-# # пока используется подсеть из основной директории
-# data "yandex_vpc_subnet" "subnetwork" {
-#   name = "${var.subnetwork_name}-private"
-# }
+  parsed_environments_config = jsondecode(data.local_file.environments_config.content)
+  vm_name_mask               = local.parsed_environments_config["prod"]["vm-name-mask"]
+  disk_name_mask             = local.parsed_environments_config["prod"]["disk-name-mask"]
+  inventory_result_path      = local.parsed_environments_config["prod"]["vms-hosts-inventory-result-path"]
+
+  parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
+  servers_and_disks_hrl              = local.parsed_servers_and_disks["hrl"]["prod"]
+  servers_and_disks_strl             = local.parsed_servers_and_disks["strl"]["prod"]
+}
 
 # подсеть из другой директории
 data "yandex_vpc_subnet" "subnetwork" {
-  folder_id = var.folder_id_main_folder
-  name      = var.subnetwork_name_main_folder
+  folder_id = local.folder_hr_link_id
+  name      = local.folder_hr_link_network_name
 }
 
 # sudo mkdir /mnt/$FS_NAME && sudo mount -t virtiofs $FS_NAME /mnt/$FS_NAME
 # TODO FS один и для HRL, и для STRL
 data "yandex_compute_filesystem" "fs_hrl" {
-  count = var.filesystem_name != "" ? 1 : 0
-  name  = "hrl-${var.filesystem_name}"
+  count = local.filesystem_name_mask != "" ? 1 : 0
+  name  = "hrl-${local.filesystem_name_mask}"
 }
-
-# # файловое хранилище из другой директории
-# data "yandex_compute_filesystem" "fs_hrl" {
-#   count     = var.filesystem_name != "" ? 1 : 0
-#   folder_id = var.folder_id_main_folder
-#   name      = var.filesystem_name_main_folder
-# }
 
 data "yandex_compute_disk" "secondary_disk_hrl" {
-  for_each = var.secondary_disk_name != "" ? local.parsed_servers_hrl : {}
-  name     = var.secondary_disk_name != "" ? "hrl-${var.secondary_disk_name}-${each.key}" : ""
+  for_each = local.disk_name_mask != "" ? local.servers_and_disks_hrl : {}
+  name     = local.disk_name_mask != "" ? "hrl-${local.disk_name_mask}-${each.key}" : ""
 }
 
-# data "yandex_compute_disk" "secondary_disk_strl" {
-#   for_each = var.secondary_disk_name != "" ? local.parsed_servers_strl : {}
-#   name     = var.secondary_disk_name != "" ? "strl-${var.secondary_disk_name}-${each.key}" : ""
-# }
-
-# data "yandex_compute_disk" "secondary_disk_space" {
-#   for_each = var.secondary_disk_name != "" ? local.parsed_servers_space : {}
-#   name     = var.secondary_disk_name != "" ? "space-${var.secondary_disk_name}-${each.key}" : ""
-# }
-
 module "vm-prod-hrl-external-grafana" {
-  source = "../../../modules/vm"
+  source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.parsed_servers_hrl : key => value if key == "external-grafana"
+    for key, value in local.servers_and_disks_hrl : key => value if key == "external-grafana"
   }
 
-  name        = "hrl-${var.vm_name}-${each.key}"
-  hostname    = "hrl-${var.vm_name}-${each.key}"
+  name        = "hrl-${local.vm_name_mask}-${each.key}"
+  hostname    = "hrl-${local.vm_name_mask}-${each.key}"
   description = "HRL-VM-prod-${each.value}"
   preemptible = false
   nat         = false
 
   cpu                = 2
   ram                = 4
-  boot_disk_image_id = var.boot_disk_image_id
+  boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
-  cloud_config_path  = file(var.cloud_config_file_path)
+  cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = var.secondary_disk_name != "" ? data.yandex_compute_disk.secondary_disk_hrl["external-grafana"].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl["external-grafana"].id : ""
 
   # TODO FS HRL-овский
-  filesystem_id          = var.filesystem_name != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
-  filesystem_device_name = var.filesystem_name != "" ? "hrl-${var.filesystem_device_name}" : ""
+  filesystem_id          = local.filesystem_name_mask != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+  filesystem_device_name = local.filesystem_name_mask != "" ? "hrl-${local.filesystem_device_name_mask}" : ""
 }
 
 # вывод в файл полученных hostname и ip vm-ок
@@ -105,5 +111,5 @@ resource "local_file" "vm_ips" {
     }
   )
 
-  filename = var.vm_hosts_result_file_path
+  filename = local.inventory_result_path
 }

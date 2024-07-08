@@ -14,42 +14,18 @@ app_list_all:
     - traceroute
     - iproute2
     - iputils-ping
+    - sshfs
     - python3.10-venv
     # - python3-pip
 
-app_list_working:
-    - vsftpd
-
-app_list_reverse_nginx:
+app_list_nginx:
     - nginx
 
-secondary_disk_mount_point: "{{ lookup('env', 'SECONDARY_DISK_MOUNT_POINT', default='') }}"
-filesystem_name: "{{ lookup('env', 'FILESYSTEM_NAME', default='') }}"
-app_archive_name_mask: app.tar.gz
+secondary_disk_mount_point: "{{ conf.secondary_disk_mount_point }}"
+filesystem_name: "{{ conf.filesystem_name }}"
 
-user_list_docker: "{{ lookup('env', 'USERS_DOCKER', default='').split(',') }}"
-user_list_jenkins: "{{ lookup('env', 'USERS_JENKINS', default='').split(',') }}"
+jenkins_master_node_host: "{{ conf.jenkins_master_node_host }}"
 
-passwords_salt: "{{ lookup('env', 'PASSWORDS_SALT') | default('default_salt') }}"
-user_passwords: "{{ lookup('env', 'USER_PASSWORDS', default='{}') }}"
-
-jenkins_master_node_host: "10.70.1.5 ci.myhrlink.ru"
-
-docker_hub_address: docker.hr-link.ru
-docker_hub_user: "{{ lookup('env', 'DOCKER_HUB_USER', default='') }}"
-docker_hub_password: "{{ lookup('env', 'DOCKER_HUB_PASSWORD', default='') }}"
-
-bash_aliases:
-    cdd: "cd /var/hrlink/"
-    cdv: "cd /var/hrlink/vms/"
-    cdw: "cd /var/hrlink/working-data/"
-    cdc: "cd /var/hrlink/conf/"
-    cdf: "cd /mnt/"
-
-app_paths:
-    # - /var/hrlink/vms/
-    - /var/hrlink/vms/scripts/
-
-reverse_nginx_hostname: "{{ lookup('env', 'REVERSE_NGINX_HOSTNAME', default='') }}"
+nginx_hostname_mask: "{{ conf.nginx_hostname_mask }}"
 vms:
     localhost: 127.0.0.1

@@ -1,0 +1,54 @@
+# обычные пользователи для всех
+group_list:
+    developer: {}
+    tester: {}
+    engineer: {}
+
+user_list:
+    developer:
+        {
+            comment: "developer",
+            groups: ["developer", "docker"],
+            shell: "/bin/bash",
+            home: "/home/developer/",
+        }
+    tester:
+        {
+            comment: "tester",
+            groups: ["tester", "docker"],
+            shell: "/bin/bash",
+            home: "/home/tester/",
+        }
+    engineer:
+        {
+            comment: "engineer",
+            groups: ["engineer", "docker"],
+            shell: "/bin/bash",
+            home: "/home/engineer/",
+        }
+
+# пользователи для серверов с kaspersky
+group_list_external_kaspersky:
+    kasper-outsource: {}
+
+user_list_external_kaspersky:
+    kasper-outsource:
+        {
+            comment: "kasper-outsource",
+            groups: ["kasper-outsource", "docker", "jenkins"],
+            shell: "/bin/bash",
+            home: "/home/kasper-outsource/",
+        }
+
+# пользователи для серверов с pflb
+group_list_external_pflb:
+    pflb-outsource: {}
+
+user_list_external_pflb:
+    pflb-outsource:
+        {
+            comment: "pflb-outsource",
+            groups: ["pflb-outsource", "docker", "jenkins"],
+            shell: "/bin/bash",
+            home: "/home/pflb-outsource/",
+        }

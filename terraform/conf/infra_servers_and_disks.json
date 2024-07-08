@@ -1,0 +1,77 @@
+{
+    "hrl": {
+        "runner": {
+            "gitlab-runner-test-1": "gitlab-runner-test-1"
+        },
+        "devops": {
+            "1": "ehodkevich",
+            "2": "yueremin"
+        },
+        "dev": {
+            "1": "sgavrilov",
+            "2": "lalefrienko",
+            "3": "kkutepov",
+            "4": "afakhrutdinova",
+            "5": "aionov"
+        },
+        "test": {
+            "auto-1": "auto-1",
+            "auto-2": "auto-2",
+            "stress-1": "stress-1",
+            "1": "evkrasnova",
+            "2": "yugorohova",
+            "3": "gkrapivina",
+            "5": "ashitova",
+            "9": "dchistyakova",
+            "11": "aluchkin",
+            "12": "asokhareva",
+            "13": "eponomareva",
+            "15": "dgordeeva",
+            "16": "dgudov",
+            "19": "nanufriev",
+            "20": "emelnikova",
+            "25": "sviridovsk",
+            "regress-release": "regress-release",
+            "regress-master": "regress-master",
+            "kaspersky-app": "kaspersky-app"
+        },
+        "staging": {
+            "1": "business",
+            "2": "engineers"
+        },
+        "onprem": {
+            "1": "ekoebve",
+            "3": "agontarenko"
+        },
+        "sales": {},
+        "prod": {
+            "external-grafana": "external-grafana"
+        }
+    },
+    "strl": {
+        "devops": {
+            "1": "ehodkevich"
+        },
+        "dev": {},
+        "test": {
+            "1": "yunovikova",
+            "kaspersky-app": "kaspersky-app"
+        },
+        "staging": {
+            "1": "business"
+        },
+        "onprem": {
+            "1": "gkoshkin"
+        },
+        "sales": {
+            "app-1": "app-1"
+        },
+        "prod": {}
+    },
+    "space": {
+        "common": {},
+        "test": {
+            "kaspersky-admin": "kaspersky-admin"
+        }
+    }
+}

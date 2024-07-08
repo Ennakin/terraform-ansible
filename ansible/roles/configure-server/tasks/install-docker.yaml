@@ -1,70 +1,46 @@
 - name: install dependencies
   apt:
-    name: "{{ item }}"
-    state: present
+      name: "{{ item }}"
+      state: present
 
-    # # кэш обновляется выше, в install-packages-ubuntu.yaml, если обновлять его и здесь, то таска падает...
-    #   update_cache: true
+      # # кэш обновляется выше, в install-packages-ubuntu.yaml, если обновлять его и здесь, то таска падает...
+      #   update_cache: true
   loop:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - gnupg-agent
-    - software-properties-common
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
 
 - name: add GPG key
   apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
 
 - name: add docker repository to apt
   apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu bionic stable
-    state: present
+      repo: deb https://download.docker.com/linux/ubuntu bionic stable
+      state: present
 
 - name: install docker
   apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: true
+      name: "{{ item }}"
+      state: latest
+      update_cache: true
   loop:
-    - docker-ce
-    - docker-ce-cli
-    - containerd.io
-    - docker-buildx-plugin
-    - docker-compose-plugin
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
 
 - name: check docker is active
   service:
-    name: docker
-    state: started
-    enabled: true
+      name: docker
+      state: started
+      enabled: true
 
 - name: ensure group "docker" exists
   ansible.builtin.group:
-    name: docker
-    state: present
-
-- name: adding users to docker group
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: true
-    state: present
-  loop: "{{ user_list_docker | default([]) }}"
-
-- name: find all user directories in /home
-  ansible.builtin.find:
-    paths: /home
-    file_type: directory
-    excludes: "gitlab"
-  register: home_directories_docker
-
-- name: extract usernames from user directories
-  set_fact:
-    user_names: "{{ home_directories_docker.files | map(attribute='path') | map('basename') | list }}"
-
-- name: authenticate users with Docker Hub
-  ansible.builtin.shell:
-    cmd: "sudo -u {{ item }} docker login {{ docker_hub_address }} --username {{ docker_hub_user }} --password {{ docker_hub_password }}"
-  loop: "{{ user_names }}"
+      name: docker
+      state: present

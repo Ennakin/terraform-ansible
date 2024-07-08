@@ -1,36 +1,29 @@
-- import_tasks: create-users.yaml
-  when: ansible_facts['distribution'] in ubuntu_list
+- name: conf get
+  include_vars:
+      file: ../conf/conf.json
+      name: conf
 
 - import_tasks: install-packages-ubuntu.yaml
-  when: ansible_facts['distribution'] in ubuntu_list
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|regress|staging|onprem|sales|prod|runner'))
 
 - import_tasks: mount-disk.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|prod'))
+  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod')) and not (inventory_hostname | regex_search('runner'))
 
 - import_tasks: mount-filesystem.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and filesystem_name != '' and (inventory_hostname | regex_search('dev|test|devops|staging'))
+  when: ansible_facts['distribution'] in ubuntu_list and filesystem_name != '' and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))
 
-# TODO reverse_nginx_hostname - переменная из defaults/main.yaml
-- import_tasks: install-nginx.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and inventory_hostname == reverse_nginx_hostname
+# # TODO nginx_hostname_mask - переменная из defaults/main.yaml
+# - import_tasks: install-nginx.yaml
+#   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search(nginx_hostname_mask))
 
 - import_tasks: install-docker.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|prod'))
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|runner'))
 
-- import_tasks: install-ftp-client.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))
+- import_tasks: install-ftp-server.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))
 
 - import_tasks: install-postgresql.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))
 
 - import_tasks: configure-jenkins-agent.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))
-
-- import_tasks: configure-app-files.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('kaspersky-admin'))
-
-- import_tasks: create-users-external-kaspersky.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('kaspersky'))
-
-# - import_tasks: delete-file.yaml
-#   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging'))
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))

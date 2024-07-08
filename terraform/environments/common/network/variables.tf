@@ -1,10 +1,11 @@
-variable "token" {}
-variable "cloud_id" {}
-variable "folder_id" {}
-variable "zone" {}
+variable "main_config" {
+  description = "PATH to main config file"
+  default     = "../../../conf/infra_main_conf.json"
+}
 
-variable "network_name" {}
-variable "subnetwork_name" {}
+variable "YC_IAM_TOKEN" {
+  description = "Access token for cloud"
+}
 
 variable "subnetwork_cidr_v4_private" {
   default = "10.70.0.0/16"

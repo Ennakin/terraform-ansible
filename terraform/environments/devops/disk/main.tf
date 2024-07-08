@@ -12,33 +12,53 @@ terraform {
 }
 
 provider "yandex" {
-  token     = var.token
-  cloud_id  = var.cloud_id
-  folder_id = var.folder_id
-  zone      = var.zone
+  token     = var.YC_IAM_TOKEN
+  folder_id = local.folder_hr_link_tf_id
+  zone      = local.zone
+  #   cloud_id  = var.cloud_id
+}
+
+data "local_file" "main_config" {
+  filename = var.main_config
+}
+
+data "local_file" "environments_config" {
+  filename = var.environments_config
+}
+
+data "local_file" "servers_and_disks" {
+  filename = var.servers_and_disks
 }
 
 locals {
-  parsed_servers_hrl  = jsondecode(var.servers_hrl)
-  parsed_servers_strl = jsondecode(var.servers_strl)
+  parsed_main_config   = jsondecode(data.local_file.main_config.content)
+  zone                 = local.parsed_main_config["zone"]
+  folder_hr_link_tf_id = local.parsed_main_config["folders"]["folder-hr-link-tf"]["id"]
+
+  parsed_environment_config = jsondecode(data.local_file.environments_config.content)
+  disk_name_mask            = local.parsed_environment_config["devops"]["disk-name-mask"]
+
+  parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
+  servers_and_disks_hrl    = local.parsed_servers_and_disks["hrl"]["devops"]
+  servers_and_disks_strl   = local.parsed_servers_and_disks["strl"]["devops"]
 }
 
 module "disk-hrl" {
-  source = "../../../modules/disk"
+  source = "../../../modules/yandex/disk"
 
-  for_each = local.parsed_servers_hrl
+  for_each = local.servers_and_disks_hrl
 
-  secondary_disk_name        = "hrl-${var.secondary_disk_name}-${each.key}"
+  secondary_disk_name        = "hrl-${local.disk_name_mask}-${each.key}"
   secondary_disk_description = "HRL-DISK-devops-${each.value}"
   secondary_disk_size        = var.secondary_disk_size
 }
 
 module "disk-strl" {
-  source = "../../../modules/disk"
+  source = "../../../modules/yandex/disk"
 
-  for_each = local.parsed_servers_strl
+  for_each = local.servers_and_disks_strl
 
-  secondary_disk_name        = "strl-${var.secondary_disk_name}-${each.key}"
+  secondary_disk_name        = "strl-${local.disk_name_mask}-${each.key}"
   secondary_disk_description = "STRL-DISK-devops-${each.value}"
   secondary_disk_size        = var.secondary_disk_size
 }

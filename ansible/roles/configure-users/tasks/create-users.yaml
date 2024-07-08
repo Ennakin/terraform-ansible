@@ -1,0 +1,105 @@
+- name: create group
+  ansible.builtin.group:
+      name: "{{ item.key }}"
+      state: present
+  loop: "{{ group_list | default({}) | dict2items }}"
+
+# # создание домашних директорий пользователей
+# # нужно т.к. не получается сделать так чтобы ansible НЕ создавал группу users, и не отдавал этой группу домашние директории пользователей
+# - name: create user home directory
+#   ansible.builtin.file:
+#       path: "{{ item.value.home }}"
+#       state: directory
+#       owner: "{{ item.key }}"
+#       group: "{{ item.key }}"
+#       mode: 0750
+#   loop: "{{ user_list | default({}) | dict2items }}"
+
+- name: create user
+  ansible.builtin.user:
+      name: "{{ item.key }}"
+      comment: "{{ item.value.comment }}"
+      groups: "{{ item.value.groups }}"
+      shell: "{{ item.value.shell }}"
+      home: "{{ item.value.home }}"
+      create_home: true
+      #   move_home: true
+      password: "{{ user_passwords[item.key] | default(omit) | password_hash('sha512', passwords_salt) }}"
+
+      # # TODO password_hash отмечен как deprecated, в дальнейшем нужно будет делать установку pip install passlib и использовать его
+      # password: "{{ user_passwords[item.key] | default(omit) | passlib.hash.sha512_crypt.encrypt('password', rounds=5000, salt=passwords_salt) }}"
+      append: false
+  loop: "{{ user_list | default({}) | dict2items }}"
+
+- name: change owner and group of a directory
+  ansible.builtin.file:
+      path: "{{ item.value.home }}"
+      owner: "{{ item.key }}"
+      group: "{{ item.key }}"
+      recurse: true
+  loop: "{{ user_list | default({}) | dict2items }}"
+
+# # TODO не нашёл как сделать так чтобы ansible НЕ добавлял пользователей в стандартную группу users
+# # но удалить пользователей из неё по итогу вроде как нельзя
+# - name: remove user from group
+#   ansible.builtin.user:
+#       name: "{{ item.key }}"
+#       groups: "{{ item.value.groups | difference([ 'users' ]) }}"
+#       append: no
+#   loop: "{{ user_list | default({}) | dict2items }}"
+
+# # удаление группы users создаваемой ansible-ом автоматически
+# # сама группа так же не удаляется
+# - name: remove group
+#   ansible.builtin.group:
+#       name: users
+#       state: absent
+
+# # добавление публичных ssh ключей из переменных окружения
+# - name: get authorized keys from environment variable
+#   ansible.posix.authorized_key:
+#       user: "{{ item.key }}"
+#       state: present
+#       exclusive: true
+#       key: "{{ lookup('env', 'PUB_' + item.key | upper, errors='ignore') }}"
+#   loop: "{{ user_list | default({}) | dict2items }}"
+# #   when: lookup('env', 'PUB_' + item.key | upper) != ''
+
+# - name: debug authorized keys env name for tester
+#   debug:
+#       msg: "{{ 'PUB_' + item.key | upper }}"
+#   loop: "{{ user_list | default({}) | dict2items }}"
+
+# - name: debug authorized keys for tester
+#   debug:
+#       msg: "{{ lookup('env', 'PUB_TESTER') }}"
+
+# добавление публичных ssh ключей из переменных
+- name: get authorized keys from environment variable
+  ansible.posix.authorized_key:
+      user: "{{ item.key }}"
+      state: present
+      exclusive: true
+      key: "{{ lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') }}"
+  loop: "{{ user_list | default({}) | dict2items }}"
+  when: lookup('env', 'PUB_' + item.key | replace('-', '_') | upper, errors='ignore') | default('') != ''
+
+# - name: fetch authorized_keys file for tester
+#   ansible.builtin.fetch:
+#       src: /home/tester/.ssh/authorized_keys
+#       dest: /tmp/authorized_keys_tester
+#       flat: yes
+
+# - name: debug fetched authorized keys for tester
+#   debug:
+#       msg: "authorized keys for tester: {{ lookup('file', '/tmp/authorized_keys_tester') }}"
+
+# добавление публичных ssh ключей из файлов
+- name: get authorized keys from files
+  ansible.posix.authorized_key:
+      user: "{{ item.key }}"
+      state: present
+      exclusive: true
+      key: "{{ lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') }}"
+  loop: "{{ user_list | default({}) | dict2items }}"
+  when: lookup('file', '../roles/configure-users/files/' + item.key + '.pub', errors='ignore') | default(false)
