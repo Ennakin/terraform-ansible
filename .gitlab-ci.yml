@@ -391,6 +391,7 @@ ansible-compute:
     rules: *compute-rules
     when: manual
     needs:
+        - plan-compute
         - apply-compute
 
 .destroy_infra:
