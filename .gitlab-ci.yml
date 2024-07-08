@@ -64,7 +64,7 @@ stages:
 
 .format:
     rules:
-        - if: $TF_ENV # && $TF_STATE
+        - if: $TF_ENV
           when: always
     stage: format
     script:
@@ -74,52 +74,52 @@ stages:
 
 format-compute:
     extends:
-    - .format
-    rules: &compute-rules        
-        - exists: 
-          - terraform/environments/${TF_ENV}/compute/*.tf
+        - .format
+    rules: &compute-rules
+        - exists:
+              - terraform/environments/${TF_ENV}/compute/*.tf
           changes:
-            - terraform/environments/${TF_ENV}/compute/*.tf
-          variables: 
-            TF_STATE: compute
+              - terraform/environments/${TF_ENV}/compute/*.tf
+          variables:
+              TF_STATE: compute
 
 format-fs:
     extends:
-    - .format
-    rules: &fs-rules        
-        - exists: 
-          - terraform/environments/${TF_ENV}/fs/*.tf
+        - .format
+    rules: &fs-rules
+        - exists:
+              - terraform/environments/${TF_ENV}/fs/*.tf
           changes:
-            - terraform/environments/${TF_ENV}/fs/*.tf
-          variables: 
-            TF_STATE: fs
-        
+              - terraform/environments/${TF_ENV}/fs/*.tf
+          variables:
+              TF_STATE: fs
+
 format-disk:
     extends:
-    - .format
-    rules: &disk-rules        
-        - exists: 
-          - terraform/environments/${TF_ENV}/disk/*.tf
+        - .format
+    rules: &disk-rules
+        - exists:
+              - terraform/environments/${TF_ENV}/disk/*.tf
           changes:
-            - terraform/environments/${TF_ENV}/disk/*.tf
-          variables: 
-            TF_STATE: disk
-        
+              - terraform/environments/${TF_ENV}/disk/*.tf
+          variables:
+              TF_STATE: disk
+
 format-network:
     extends:
-    - .format
-    rules: &network-rules        
-        - exists: 
-          - terraform/environments/${TF_ENV}/network/*.tf
+        - .format
+    rules: &network-rules
+        - exists:
+              - terraform/environments/${TF_ENV}/network/*.tf
           changes:
-            - terraform/environments/${TF_ENV}/network/*.tf
-          variables: 
-            TF_STATE: network
+              - terraform/environments/${TF_ENV}/network/*.tf
+          variables:
+              TF_STATE: network
 
 .init:
     stage: init
     rules:
-        - if: $TF_ENV # && $TF_STATE
+        - if: $TF_ENV
           when: always
     script:
         - cp ./terraform/.terraformrc ~/.terraformrc
@@ -135,25 +135,25 @@ format-network:
 
 init-compute:
     extends:
-      - .init
+        - .init
     rules: *compute-rules
     when: manual
 
 init-fs:
     extends:
-      - .init
+        - .init
     rules: *fs-rules
     when: manual
 
 init-disk:
     extends:
-      - .init
+        - .init
     rules: *disk-rules
     when: manual
 
 init-network:
     extends:
-      - .init
+        - .init
     rules: *network-rules
     when: manual
 
@@ -165,7 +165,7 @@ init-network:
 
 validate-compute:
     extends:
-      - .validate
+        - .validate
     rules: *compute-rules
     needs:
         - init-compute
@@ -173,7 +173,7 @@ validate-compute:
 
 validate-fs:
     extends:
-      - .validate
+        - .validate
     rules: *fs-rules
     needs:
         - init-fs
@@ -181,7 +181,7 @@ validate-fs:
 
 validate-disk:
     extends:
-      - .validate
+        - .validate
     rules: *disk-rules
     needs:
         - init-disk
@@ -189,7 +189,7 @@ validate-disk:
 
 validate-network:
     extends:
-      - .validate
+        - .validate
     rules: *network-rules
     needs:
         - init-network
@@ -198,7 +198,7 @@ validate-network:
 .scan:
     stage: security-scan
     #   rules:
-    #     - if: $TF_ENV && $TF_STATE
+    #     - if: $TF_ENV
     #       when: always
     image:
         name: aquasec/tfsec-ci
@@ -207,10 +207,11 @@ validate-network:
         - tfsec . # путь к запускаемому проекту?..
     allow_failure: true
 
+# TODO... доступность артефакта .env для всех "потоков"
 create-iam:
     stage: create-iam
     rules:
-        - if: $TF_ENV # && $TF_STATE
+        - if: $TF_ENV
           when: always
     script:
         - apk add --update --no-cache python3 py3-requests py3-jwt py3-cryptography && ln -sf python3 /usr/bin/python
@@ -239,7 +240,7 @@ create-iam:
 
 plan-compute:
     extends:
-      - .plan
+        - .plan
     rules: *compute-rules
     needs:
         - validate-compute
@@ -247,7 +248,7 @@ plan-compute:
 
 plan-fs:
     extends:
-      - .plan
+        - .plan
     rules: *fs-rules
     needs:
         - validate-fs
@@ -255,7 +256,7 @@ plan-fs:
 
 plan-disk:
     extends:
-      - .plan
+        - .plan
     rules: *disk-rules
     needs:
         - validate-disk
@@ -263,7 +264,7 @@ plan-disk:
 
 plan-network:
     extends:
-      - .plan
+        - .plan
     rules: *network-rules
     needs:
         - validate-network
@@ -280,7 +281,7 @@ plan-network:
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
 
-    allow_failure: true
+    # allow_failure: true
 
     # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
     artifacts:
@@ -291,7 +292,7 @@ plan-network:
 
 apply-compute:
     extends:
-      - .apply_configuration
+        - .apply_configuration
     rules: *compute-rules
     needs:
         - plan-compute
@@ -299,7 +300,7 @@ apply-compute:
 
 apply-fs:
     extends:
-      - .apply_configuration
+        - .apply_configuration
     rules: *fs-rules
     needs:
         - plan-fs
@@ -307,7 +308,7 @@ apply-fs:
 
 apply-disk:
     extends:
-      - .apply_configuration
+        - .apply_configuration
     rules: *disk-rules
     needs:
         - plan-disk
@@ -315,7 +316,7 @@ apply-disk:
 
 apply-network:
     extends:
-      - .apply_configuration
+        - .apply_configuration
     rules: *network-rules
     needs:
         - plan-network
@@ -362,7 +363,7 @@ apply-network:
 
 ansible-compute:
     extends:
-      - .ansible
+        - .ansible
     rules: *compute-rules
     when: manual
     needs:
@@ -378,26 +379,26 @@ ansible-compute:
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
 
-destroy-compute:
+.destroy-compute:
     extends:
-      - .destroy_infra
+        - .destroy_infra
     rules: *compute-rules
     when: manual
 
-destroy-fs:
+.destroy-fs:
     extends:
-      - .destroy_infra
+        - .destroy_infra
     rules: *fs-rules
     when: manual
 
-destroy-disk:
+.destroy-disk:
     extends:
-      - .destroy_infra
+        - .destroy_infra
     rules: *disk-rules
     when: manual
 
-destroy-network:
+.destroy-network:
     extends:
-      - .destroy_infra
+        - .destroy_infra
     rules: *network-rules
     when: manual
