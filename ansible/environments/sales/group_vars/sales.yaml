@@ -24,3 +24,5 @@ user_list:
             shell: "/bin/bash",
             home: "/home/engineer/",
         }
+
+user_list_service: "{{ conf.users_service }}"

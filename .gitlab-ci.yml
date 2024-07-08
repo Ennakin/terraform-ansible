@@ -240,12 +240,11 @@ create-iam:
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" plan -out output.tfplan
 
-    # TODO сделать артефактом файл с результатом plan, в apply использовать этот артефакт
     artifacts:
         name: "${CI_JOB_NAME}-${CI_JOB_ID}-tfplan"
         paths:
             - ./terraform/environments/$TF_ENV/$TF_STATE/output.tfplan
-        # expire_in: 1 day
+        expire_in: 1 day
 
 plan-network:
     extends:
@@ -394,6 +393,8 @@ ansible-compute:
     rules:
         - if: $TF_ENV && $TF_STATE
           when: manual
+    # dependencies:
+    #     - create-iam
     script:
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" destroy -auto-approve
@@ -405,7 +406,6 @@ ansible-compute:
     rules: *compute-rules
     when: manual
     needs:
-        - plan-compute
         - create-iam
 
 .destroy-disk:
@@ -414,7 +414,6 @@ ansible-compute:
     rules: *disk-rules
     when: manual
     needs:
-        - plan-disk
         - create-iam
 
 .destroy-fs:
@@ -423,7 +422,6 @@ ansible-compute:
     rules: *fs-rules
     when: manual
     needs:
-        - plan-fs
         - create-iam
 
 .destroy-network:
@@ -432,5 +430,4 @@ ansible-compute:
     rules: *network-rules
     when: manual
     needs:
-        - plan-network
         - create-iam
