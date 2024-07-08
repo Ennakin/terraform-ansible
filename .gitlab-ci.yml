@@ -246,6 +246,8 @@ plan-network:
     extends:
         - .plan
     rules: *network-rules
+    dependencies:
+        - create-iam
     needs:
         - validate-network
     when: manual
@@ -254,6 +256,8 @@ plan-fs:
     extends:
         - .plan
     rules: *fs-rules
+    dependencies:
+        - create-iam
     needs:
         - validate-fs
     when: manual
@@ -262,6 +266,8 @@ plan-disk:
     extends:
         - .plan
     rules: *disk-rules
+    dependencies:
+        - create-iam
     needs:
         - validate-disk
     when: manual
@@ -270,6 +276,8 @@ plan-compute:
     extends:
         - .plan
     rules: *compute-rules
+    dependencies:
+        - create-iam
     needs:
         - validate-compute
     when: manual
