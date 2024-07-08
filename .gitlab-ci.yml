@@ -251,60 +251,36 @@ plan-network:
     extends:
         - .plan
     rules: *network-rules
-    # dependencies:
-    #     - create-iam
     needs:
         - validate-network
         - create-iam
-        # - job: validate-network
-        # #   artifacts: true
-        # - job: create-iam
-        #   artifacts: true
     when: manual
 
 plan-fs:
     extends:
         - .plan
     rules: *fs-rules
-    # dependencies:
-    #     - create-iam
     needs:
         - validate-fs
         - create-iam
-        # - job: validate-fs
-        # #   artifacts: true
-        # - job: create-iam
-        #   artifacts: true
     when: manual
 
 plan-disk:
     extends:
         - .plan
     rules: *disk-rules
-    # dependencies:
-    #     - create-iam
     needs:
         - validate-disk
         - create-iam
-        # - job: validate-disk
-        # #   artifacts: true
-        # - job: create-iam
-        #   artifacts: true
     when: manual
 
 plan-compute:
     extends:
         - .plan
     rules: *compute-rules
-    # dependencies:
-    #     - create-iam
     needs:
         - validate-compute
         - create-iam
-        # - job: validate-compute
-        # #   artifacts: true
-        # - job: create-iam
-        #   artifacts: true
     when: manual
 
 # apply_configuration
@@ -313,20 +289,20 @@ plan-compute:
     rules:
         - if: $TF_ENV && $TF_STATE
           when: manual
+    # dependencies:
+    #     - plan
     script:
         - terraform -version
         - ls -al ./terraform/py/
         - source ./terraform/envs/prod/iam-token.env && terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
         # - terraform -chdir="./terraform/environments/$TF_ENV/$TF_STATE" apply -auto-approve output.tfplan
 
-    # allow_failure: true
-
     # сохранение артефакта, артефакт здесь - inventory файл, он потом будет использоваться ansible-ом
     artifacts:
         name: "${CI_JOB_NAME}-${CI_JOB_ID}-inventory"
         paths:
             - ./ansible/environments/$TF_ENV/inventory
-        # expire_in: 1 day
+        expire_in: 1 day
 
 apply-network:
     extends:
@@ -370,10 +346,10 @@ apply-compute:
         # name: docker.hr-link.ru/alpinelinux/ansible:latest
         name: docker.hr-link.ru/litmuschaos/ansible-runner:3.5.0
         entrypoint: [""]
+    stage: configure
     rules:
         - if: $TF_ENV && $TF_STATE
           when: manual
-    stage: configure
     # dependencies:
     #     - apply_configuration
     script:
