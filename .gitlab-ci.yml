@@ -62,6 +62,7 @@ stages:
     - configure
     - destroy
 
+# format
 .format:
     rules:
         - if: $TF_ENV
@@ -116,6 +117,7 @@ format-compute:
           variables:
               TF_STATE: compute
 
+# init
 .init:
     stage: init
     rules:
@@ -157,6 +159,7 @@ init-compute:
     rules: *compute-rules
     when: manual
 
+# validate
 .validate:
     stage: validate
     script:
@@ -195,6 +198,7 @@ validate-compute:
         - init-compute
     when: on_success
 
+# scan
 .scan:
     stage: security-scan
     #   rules:
@@ -207,7 +211,7 @@ validate-compute:
         - tfsec . # путь к запускаемому проекту?..
     allow_failure: true
 
-# TODO... доступность артефакта .env для всех "потоков"
+# create-iam
 create-iam:
     stage: create-iam
     rules:
@@ -225,6 +229,7 @@ create-iam:
             - ./terraform/envs/prod/iam-token.env
         expire_in: 1 day
 
+# plan
 .plan:
     stage: plan
     # dependencies:
@@ -302,6 +307,7 @@ plan-compute:
         #   artifacts: true
     when: manual
 
+# apply_configuration
 .apply_configuration:
     stage: apply
     rules:
@@ -358,6 +364,7 @@ apply-compute:
         - create-iam
     when: manual
 
+# ansible
 .ansible:
     image:
         # name: docker.hr-link.ru/alpinelinux/ansible:latest
@@ -405,6 +412,7 @@ ansible-compute:
     needs:
         - apply-compute
 
+# destroy_infra
 .destroy_infra:
     stage: destroy
     rules:
