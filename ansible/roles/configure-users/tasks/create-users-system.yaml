@@ -1,3 +1,6 @@
+# разница с create-users.yaml - явное определение в переменных ..._system и использование здесь
+# uid: "{{ item.value.uid }}" и gid: "{{ item.value.gid }}"
+
 - name: create group
   ansible.builtin.group:
       name: "{{ item.key }}"

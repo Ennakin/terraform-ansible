@@ -43,6 +43,7 @@
             "1": "ekoebve",
             "3": "agontarenko"
         },
+        "sales": {},
         "prod": {
             "external-grafana": "external-grafana"
         }
@@ -61,6 +62,9 @@
         },
         "onprem": {
             "1": "gkoshkin"
+        },
+        "sales": {
+            "app-1": "app-1"
         },
         "prod": {}
     },

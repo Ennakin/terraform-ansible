@@ -35,5 +35,13 @@
       groups: jenkins
       append: true
       state: present
-
   loop: "{{ user_list_jenkins | default([]) }}"
+
+# service
+- name: adding users to service group
+  user:
+      name: "{{ item }}"
+      groups: service
+      append: true
+      state: present
+  loop: "{{ user_list_service | default([]) }}"

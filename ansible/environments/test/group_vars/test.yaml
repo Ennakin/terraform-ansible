@@ -1,3 +1,4 @@
+# обычные пользователи для всех
 group_list:
     developer: {}
     tester: {}
@@ -26,6 +27,7 @@ user_list:
             home: "/home/engineer/",
         }
 
+# пользователи для серверов с kaspersky
 group_list_external_kaspersky:
     kasper-outsource: {}
 
@@ -38,6 +40,7 @@ user_list_external_kaspersky:
             home: "/home/kasper-outsource/",
         }
 
+# пользователи для серверов с pflb
 group_list_external_pflb:
     pflb-outsource: {}
 

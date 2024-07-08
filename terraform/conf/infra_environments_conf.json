@@ -24,6 +24,11 @@
         "disk-name-mask": "secondary-disk-onprem",
         "vms-hosts-inventory-result-path": "../../../../ansible/environments/onprem/inventory"
     },
+    "sales": {
+        "vm-name-mask": "sales",
+        "disk-name-mask": "secondary-disk-sales",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/sales/inventory"
+    },
     "prod": {
         "vm-name-mask": "prod",
         "disk-name-mask": "secondary-disk-prod",

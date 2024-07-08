@@ -1,3 +1,4 @@
+# системные пользователи
 group_list_system:
     gitlab-runner: { gid: 1186 }
 
@@ -11,6 +12,7 @@ user_list_system:
             uid: 1186,
         }
 
+# для test runner-ов
 group_list_test_runners:
     tester: {}
 
