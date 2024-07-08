@@ -250,6 +250,7 @@ plan-network:
         - create-iam
     needs:
         - validate-network
+        - create-iam
     when: manual
 
 plan-fs:
@@ -260,6 +261,7 @@ plan-fs:
         - create-iam
     needs:
         - validate-fs
+        - create-iam
     when: manual
 
 plan-disk:
@@ -270,6 +272,7 @@ plan-disk:
         - create-iam
     needs:
         - validate-disk
+        - create-iam
     when: manual
 
 plan-compute:
@@ -280,6 +283,7 @@ plan-compute:
         - create-iam
     needs:
         - validate-compute
+        - create-iam
     when: manual
 
 .apply_configuration:
