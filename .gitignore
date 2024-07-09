@@ -33,4 +33,4 @@ inventory_*
 
 *.pub
 
-yc_key_secret_file
+yc_key_secret

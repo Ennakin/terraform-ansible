@@ -116,7 +116,7 @@ def main():
             # key_id=get_env('YC_KEY_ID'),
             service_account_id=service_account_id,
             key_id=key_id,
-            key_secret_file_path=get_env('YC_KEY_SECRET_FILE')
+            key_secret_file_path=get_env('YC_KEY_SECRET')
         )
 
         iam_token = yc.get_iam_token()

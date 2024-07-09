@@ -20,7 +20,7 @@ variables:
 
 # # как ФАЙЛ
 
-# YC_KEY_SECRET_FILE (внутри приватный ключ)
+# YC_KEY_SECRET (внутри приватный ключ)
 # TF_VAR_CLOUD_CONFIG (внутри cloud-config)
 
 # # как ПЕРЕМЕННАЯ
