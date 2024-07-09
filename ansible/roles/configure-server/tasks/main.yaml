@@ -4,10 +4,10 @@
       name: conf
 
 - import_tasks: install-packages-ubuntu.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|regress|staging|onprem|sales|prod|runner'))
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|regress|staging|onprem|sales|prod|runner|infra'))
 
 - import_tasks: mount-disk.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod')) and not (inventory_hostname | regex_search('runner'))
+  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|infra')) and not (inventory_hostname | regex_search('runner'))
 
 - import_tasks: mount-filesystem.yaml
   when: ansible_facts['distribution'] in ubuntu_list and filesystem_name != '' and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))
@@ -17,7 +17,7 @@
 #   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search(nginx_hostname_mask))
 
 - import_tasks: install-docker.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|runner'))
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|runner|infra'))
 
 - import_tasks: install-ftp-server.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))

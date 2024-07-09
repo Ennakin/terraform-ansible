@@ -3,6 +3,7 @@
         "runner": {
             "gitlab-runner-test-1": "gitlab-runner-test-1"
         },
+        "infra": {},
         "devops": {
             "1": "ehodkevich",
             "2": "yueremin"
@@ -49,6 +50,8 @@
         }
     },
     "strl": {
+        "runner": {},
+        "infra": {},
         "devops": {
             "1": "ehodkevich"
         },
@@ -69,6 +72,10 @@
         "prod": {}
     },
     "space": {
+        "runner": {},
+        "infra": {
+            "external-grafana": "external-grafana"
+        },
         "common": {},
         "test": {
             "kaspersky-admin": "kaspersky-admin"

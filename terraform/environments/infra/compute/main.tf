@@ -43,13 +43,14 @@ locals {
   folder_hr_link_tf_id        = local.parsed_main_config["folders"]["folder-hr-link-tf"]["id"]
 
   parsed_environments_config = jsondecode(data.local_file.environments_config.content)
-  vm_name_mask               = local.parsed_environments_config["prod"]["vm-name-mask"]
-  disk_name_mask             = local.parsed_environments_config["prod"]["disk-name-mask"]
-  inventory_result_path      = local.parsed_environments_config["prod"]["vms-hosts-inventory-result-path"]
+  vm_name_mask               = local.parsed_environments_config["infra"]["vm-name-mask"]
+  disk_name_mask             = local.parsed_environments_config["infra"]["disk-name-mask"]
+  inventory_result_path      = local.parsed_environments_config["infra"]["vms-hosts-inventory-result-path"]
 
   parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
-  servers_and_disks_hrl    = local.parsed_servers_and_disks["hrl"]["prod"]
-  servers_and_disks_strl   = local.parsed_servers_and_disks["strl"]["prod"]
+  servers_and_disks_space  = local.parsed_servers_and_disks["space"]["infra"]
+  #   servers_and_disks_hrl    = local.parsed_servers_and_disks["hrl"]["infra"]
+  #   servers_and_disks_strl   = local.parsed_servers_and_disks["strl"]["infra"]
 }
 
 # подсеть из другой директории
@@ -65,9 +66,36 @@ data "yandex_compute_filesystem" "fs_hrl" {
   name  = "hrl-${local.filesystem_name_mask}"
 }
 
-data "yandex_compute_disk" "secondary_disk_hrl" {
-  for_each = local.disk_name_mask != "" ? local.servers_and_disks_hrl : {}
-  name     = local.disk_name_mask != "" ? "hrl-${local.disk_name_mask}-${each.key}" : ""
+data "yandex_compute_disk" "secondary_disk_space" {
+  for_each = local.disk_name_mask != "" ? local.servers_and_disks_space : {}
+  name     = local.disk_name_mask != "" ? "space-${local.disk_name_mask}-${each.key}" : ""
+}
+
+module "vm-infra-space-external-grafana" {
+  source = "../../../modules/yandex/vm"
+
+  for_each = {
+    for key, value in local.servers_and_disks_space : key => value if key == "external-grafana"
+  }
+
+  name        = "space-${local.vm_name_mask}-${each.key}"
+  hostname    = "space-${local.vm_name_mask}-${each.key}"
+  description = "SPACE-VM-infra-${each.value}"
+  preemptible = false
+  nat         = false
+
+  cpu                = 2
+  ram                = 4
+  boot_disk_image_id = local.boot_disk_image_id
+  boot_disk_size     = var.boot_disk_size
+  cloud_config_path  = file(var.CLOUD_CONFIG)
+
+  subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_space["external-grafana"].id : ""
+
+  # TODO FS HRL-овский
+  filesystem_id          = local.filesystem_name_mask != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+  filesystem_device_name = local.filesystem_name_mask != "" ? "hrl-${local.filesystem_device_name_mask}" : ""
 }
 
 # вывод в файл полученных hostname и ip vm-ок
@@ -75,11 +103,11 @@ resource "local_file" "vm_ips" {
 
   content = templatefile("${path.module}/inventory.tpl", {
     vm_hostnames = concat(
-      []
+      [for instance in module.vm-infra-space-external-grafana : instance.hostname]
     )
 
     vm_ips = concat(
-      []
+      [for instance in module.vm-infra-space-external-grafana : instance.internal_ip]
     )
     }
   )

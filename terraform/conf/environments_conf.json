@@ -1,4 +1,14 @@
 {
+    "runner": {
+        "vm-name-mask": "runner",
+        "disk-name-mask": "secondary-disk-runner",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/runner/inventory"
+    },
+    "infra": {
+        "vm-name-mask": "infra",
+        "disk-name-mask": "secondary-disk-infra",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/infra/inventory"
+    },
     "devops": {
         "vm-name-mask": "devops",
         "disk-name-mask": "secondary-disk-devops",
@@ -38,10 +48,5 @@
         "vm-name-mask": "common",
         "disk-name-mask": "secondary-disk-common",
         "vms-hosts-inventory-result-path": "../../../../ansible/environments/common/inventory"
-    },
-    "runner": {
-        "vm-name-mask": "runner",
-        "disk-name-mask": "secondary-disk-runner",
-        "vms-hosts-inventory-result-path": "../../../../ansible/environments/runner/inventory"
     }
 }

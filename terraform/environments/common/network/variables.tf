@@ -1,6 +1,6 @@
 variable "main_config" {
   description = "PATH to main config file"
-  default     = "../../../conf/infra_main_conf.json"
+  default     = "../../../conf/main_conf.json"
 }
 
 variable "YC_IAM_TOKEN" {

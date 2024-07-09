@@ -99,7 +99,7 @@ def main():
     """
 
     conf_path = os.path.dirname(os.path.dirname(__file__))
-    conf_path = os.path.join(conf_path, 'conf', 'infra_main_conf.json')
+    conf_path = os.path.join(conf_path, 'conf', 'main_conf.json')
 
     with open(file=conf_path, mode='r') as file:
         conf = json.load(fp=file)
