@@ -49,8 +49,8 @@ locals {
 
   parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
   servers_and_disks_hrl    = local.parsed_servers_and_disks["hrl"]["runner"]
-#   servers_and_disks_strl   = local.parsed_servers_and_disks["strl"]["runner"]
-#   servers_and_disks_space  = local.parsed_servers_and_disks["space"]["runner"]
+  #   servers_and_disks_strl   = local.parsed_servers_and_disks["strl"]["runner"]
+  #   servers_and_disks_space  = local.parsed_servers_and_disks["space"]["runner"]
 }
 
 # подсеть из другой директории
@@ -71,11 +71,14 @@ data "yandex_vpc_subnet" "subnetwork" {
 #   name     = local.disk_name_mask != "" ? "hrl-${local.disk_name_mask}-${each.key}" : ""
 # }
 
-module "vm-gitlab-runner-hrl" {
+# hrl - используется в HRL
+# middle - средний по ресурсам
+# test - используется в QA
+module "vm-gitlab-runner-hrl-middle-test" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.servers_and_disks_hrl : key => value
+    for key, value in local.servers_and_disks_hrl : key => value if length(regexall("(gitlab-runner-test-1)", key)) > 0
   }
 
   name        = "hrl-${each.key}"
@@ -85,7 +88,7 @@ module "vm-gitlab-runner-hrl" {
   nat         = var.nat
 
   cpu                = var.cpu
-  ram                = var.ram
+  ram                = 4
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.CLOUD_CONFIG)
@@ -97,17 +100,16 @@ module "vm-gitlab-runner-hrl" {
   #   filesystem_device_name = local.filesystem_name_mask != "" ? "hrl-${local.filesystem_device_name_mask}" : ""
 }
 
-
 # вывод в файл полученных hostname и ip vm-ок
 resource "local_file" "vm_ips" {
 
   content = templatefile("${path.module}/inventory.tpl", {
     vm_hostnames = concat(
-      [for instance in module.vm-gitlab-runner-hrl : instance.hostname]
+      [for instance in module.vm-gitlab-runner-hrl-middle-test : instance.hostname],
     )
 
     vm_ips = concat(
-      [for instance in module.vm-gitlab-runner-hrl : instance.internal_ip]
+      [for instance in module.vm-gitlab-runner-hrl-middle-test : instance.internal_ip],
     )
     }
   )
