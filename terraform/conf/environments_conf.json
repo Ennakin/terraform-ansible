@@ -9,6 +9,11 @@
         "disk-name-mask": "secondary-disk-infra",
         "vms-hosts-inventory-result-path": "../../../../ansible/environments/infra/inventory"
     },
+    "mock": {
+        "vm-name-mask": "mock",
+        "disk-name-mask": "secondary-disk-mock",
+        "vms-hosts-inventory-result-path": "../../../../ansible/environments/mock/inventory"
+    },
     "devops": {
         "vm-name-mask": "devops",
         "disk-name-mask": "secondary-disk-devops",

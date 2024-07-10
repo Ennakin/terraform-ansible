@@ -66,28 +66,6 @@ data "yandex_compute_filesystem" "fs_hrl" {
   name  = "hrl-${local.filesystem_name_mask}"
 }
 
-# module "vm-open-vpn" {
-#   source = "../../../modules/yandex/vm"
-
-#   # TODO space?
-#   name        = "open-vpn"
-#   hostname    = "open-vpn"
-#   description = "Open VPN"
-#   preemptible = var.preemptible
-#   nat         = true
-
-#   cpu                = var.cpu
-#   ram                = var.ram
-#   boot_disk_image_id = local.boot_disk_image_id
-
-#   boot_disk_size    = var.boot_disk_size
-#   cloud_config_path = file(var.CLOUD_CONFIG)
-
-#   subnetwork_id          = data.yandex_vpc_subnet.subnetwork.id
-#   filesystem_id          = local.filesystem_name_mask != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
-#   filesystem_device_name = local.filesystem_name_mask != "" ? "hrl-${local.filesystem_device_name_mask}" : ""
-# }
-
 # module "vm-reverse-nginx" {
 #   source = "../../../modules/yandex/vm"
 
@@ -110,23 +88,19 @@ data "yandex_compute_filesystem" "fs_hrl" {
 #   filesystem_device_name = local.filesystem_name_mask != "" ? "hrl-${local.filesystem_device_name_mask}" : ""
 # }
 
-# вывод в файл полученных hostname и ip vm-ок
-resource "local_file" "vm_ips" {
+# # вывод в файл полученных hostname и ip vm-ок
+# resource "local_file" "vm_ips" {
 
-  content = templatefile("${path.module}/inventory.tpl", {
-    vm_hostnames = concat(
-      [for instance in module.vm-open-vpn : instance.hostname],
-      [for instance in module.vm-reverse-nginx : instance.hostname],
-      [for instance in module.vm-gitlab-runner : instance.hostname],
-    )
+#   content = templatefile("${path.module}/inventory.tpl", {
+#     vm_hostnames = concat(
+#       [for instance in module.vm-reverse-nginx : instance.hostname],
+#     )
 
-    vm_ips = concat(
-      [for instance in module.vm-open-vpn : instance.internal_ip],
-      [for instance in module.vm-reverse-nginx : instance.internal_ip],
-      [for instance in module.vm-gitlab-runner : instance.internal_ip],
-    )
-    }
-  )
+#     vm_ips = concat(
+#       [for instance in module.vm-reverse-nginx : instance.internal_ip],
+#     )
+#     }
+#   )
 
-  filename = local.inventory_result_path
-}
+#   filename = local.inventory_result_path
+# }
