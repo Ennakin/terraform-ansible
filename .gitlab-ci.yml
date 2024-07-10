@@ -251,7 +251,7 @@ plan-network:
     needs:
         - validate-network
         - create-iam
-    when: manual
+    # when: manual
 
 plan-fs:
     extends:
@@ -260,7 +260,7 @@ plan-fs:
     needs:
         - validate-fs
         - create-iam
-    when: manual
+    # when: manual
 
 plan-disk:
     extends:
@@ -269,7 +269,7 @@ plan-disk:
     needs:
         - validate-disk
         - create-iam
-    when: manual
+    # when: manual
 
 plan-compute:
     extends:
@@ -278,7 +278,7 @@ plan-compute:
     needs:
         - validate-compute
         - create-iam
-    when: manual
+    # when: manual
 
 # apply_configuration
 .apply_configuration:
