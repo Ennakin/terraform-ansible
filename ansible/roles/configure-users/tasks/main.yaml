@@ -13,7 +13,7 @@
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('kaspersky'))
 
 - import_tasks: create-users-external-pflb.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('hrl-test-stress-1'))
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('hrl-test-stress-1|astral-1'))
 
 - import_tasks: create-users.yaml
   when: ansible_facts['distribution'] in ubuntu_list

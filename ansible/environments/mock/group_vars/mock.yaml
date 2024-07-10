@@ -1,0 +1,28 @@
+# системные пользователи
+group_list_system:
+    service: { gid: 1186 }
+
+user_list_system:
+    service:
+        {
+            comment: "service",
+            groups: ["service", "docker", "jenkins"],
+            shell: "/bin/bash",
+            home: "/home/service/",
+            uid: 1186,
+        }
+
+# пользователи для серверов с pflb
+group_list_external_pflb:
+    pflb-outsource: {}
+
+user_list_external_pflb:
+    pflb-outsource:
+        {
+            comment: "pflb-outsource",
+            groups: ["pflb-outsource", "docker", "jenkins"],
+            shell: "/bin/bash",
+            home: "/home/pflb-outsource/",
+        }
+
+user_list_service: "{{ conf.users_service }}"

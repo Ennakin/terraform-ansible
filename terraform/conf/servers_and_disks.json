@@ -4,6 +4,9 @@
             "gitlab-runner-test-1": "gitlab-runner-test-1"
         },
         "infra": {},
+        "mock": {
+            "astral-1": "astral-1"
+        },
         "devops": {
             "1": "ehodkevich",
             "2": "yueremin"
@@ -52,6 +55,7 @@
     "strl": {
         "runner": {},
         "infra": {},
+        "mock": {},
         "devops": {
             "1": "ehodkevich"
         },
@@ -76,6 +80,7 @@
         "infra": {
             "external-grafana": "external-grafana"
         },
+        "mock": {},
         "common": {},
         "test": {
             "kaspersky-admin": "kaspersky-admin"
