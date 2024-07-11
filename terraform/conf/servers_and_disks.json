@@ -78,7 +78,7 @@
     "space": {
         "runner": {},
         "infra": {
-            "external-grafana": "external-grafana"
+            "grafana-external": "grafana-external"
         },
         "mock": {},
         "common": {},

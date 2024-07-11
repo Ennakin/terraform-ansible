@@ -71,11 +71,11 @@ data "yandex_compute_disk" "secondary_disk_space" {
   name     = local.disk_name_mask != "" ? "space-${local.disk_name_mask}-${each.key}" : ""
 }
 
-module "vm-infra-space-external-grafana" {
+module "vm-infra-space-grafana-external" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.servers_and_disks_space : key => value if key == "external-grafana"
+    for key, value in local.servers_and_disks_space : key => value if key == "grafana-external"
   }
 
   name        = "space-${local.vm_name_mask}-${each.key}"
@@ -87,11 +87,11 @@ module "vm-infra-space-external-grafana" {
   cpu                = 2
   ram                = 4
   boot_disk_image_id = local.boot_disk_image_id
-  boot_disk_size     = var.boot_disk_size
+  boot_disk_size     = 20
   cloud_config_path  = file(var.CLOUD_CONFIG)
 
   subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
-  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_space["external-grafana"].id : ""
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_space["grafana-external"].id : ""
 
   # TODO FS HRL-овский
   filesystem_id          = local.filesystem_name_mask != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
@@ -103,11 +103,11 @@ resource "local_file" "vm_ips" {
 
   content = templatefile("${path.module}/inventory.tpl", {
     vm_hostnames = concat(
-      [for instance in module.vm-infra-space-external-grafana : instance.hostname]
+      [for instance in module.vm-infra-space-grafana-external : instance.hostname]
     )
 
     vm_ips = concat(
-      [for instance in module.vm-infra-space-external-grafana : instance.internal_ip]
+      [for instance in module.vm-infra-space-grafana-external : instance.internal_ip]
     )
     }
   )

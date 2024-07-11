@@ -42,11 +42,11 @@ locals {
   servers_and_disks_space  = local.parsed_servers_and_disks["space"]["infra"]
 }
 
-module "disk-space-external-grafana" {
+module "disk-space-grafana-external" {
   source = "../../../modules/yandex/disk"
 
   for_each = {
-    for key, value in local.servers_and_disks_space : key => value if key == "external-grafana"
+    for key, value in local.servers_and_disks_space : key => value if key == "grafana-external"
   }
 
   secondary_disk_name        = "space-${local.disk_name_mask}-${each.key}"
