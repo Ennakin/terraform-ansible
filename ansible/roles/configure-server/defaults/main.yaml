@@ -27,6 +27,8 @@ filesystem_name: "{{ conf.filesystem_name }}"
 
 jenkins_master_node_host: "{{ conf.jenkins_master_node_host }}"
 
+dns_host_for_hosts: "{{ conf.dns_host_for_hosts }}"
+
 nginx_hostname_mask: "{{ conf.nginx_hostname_mask }}"
 vms:
     localhost: 127.0.0.1

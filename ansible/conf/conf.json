@@ -6,6 +6,7 @@
     "gitlab_runner_username": "gitlab-runner",
     "gitlab_runner_home_directory_path": "/home/gitlab-runner/",
     "jenkins_master_node_host": "10.70.1.5 ci.myhrlink.ru",
+    "dns_host_for_hosts": "10.1.1.100 gitlab.hr-link.ru docker.hr-link.ru",
     "nginx_hostname_mask": "nginx",
     "users_docker": [
         "jenkins",

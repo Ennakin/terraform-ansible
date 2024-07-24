@@ -1,0 +1,15 @@
+- name: add dns for hosts to hosts
+  ansible.builtin.lineinfile:
+      path: /etc/hosts
+      line: "{{ dns_host_for_hosts }}"
+      insertafter: "^127.0.0.1 localhost$"
+      create: true
+      state: present
+
+- name: add dns for hosts to cloud templates hosts
+  ansible.builtin.lineinfile:
+      path: /etc/cloud/templates/hosts.debian.tmpl
+      line: "{{ dns_host_for_hosts }}"
+      insertafter: "^127.0.0.1 localhost$"
+      create: true
+      state: present
