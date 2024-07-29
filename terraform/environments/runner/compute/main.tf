@@ -78,7 +78,7 @@ module "vm-gitlab-runner-hrl-middle-test" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.servers_and_disks_hrl : key => value if length(regexall("(gitlab-runner-test-1)", key)) > 0
+    for key, value in local.servers_and_disks_hrl : key => value if length(regexall("(gitlab-runner-test)", key)) > 0
   }
 
   name        = "hrl-${each.key}"

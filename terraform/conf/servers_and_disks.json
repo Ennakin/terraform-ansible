@@ -1,7 +1,8 @@
 {
     "hrl": {
         "runner": {
-            "gitlab-runner-test-1": "gitlab-runner-test-1"
+            "gitlab-runner-test-1": "gitlab-runner-test-1",
+            "gitlab-runner-test-2": "gitlab-runner-test-2"
         },
         "infra": {},
         "mock": {
