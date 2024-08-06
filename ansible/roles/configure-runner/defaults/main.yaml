@@ -1,2 +1,6 @@
+secondary_disk_mount_point: "{{ conf.secondary_disk_mount_point }}"
+
 gitlab_runner_username: "{{ conf.gitlab_runner_username }}"
-gitlab_runner_home_directory_path: "{{ conf.gitlab_runner_home_directory_path }}"
+
+# # больше не требуется, но пусть пока побудет
+# gitlab_runner_home_directory_path: "{{ conf.gitlab_runner_home_directory_path }}"

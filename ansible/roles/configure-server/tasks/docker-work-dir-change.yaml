@@ -1,0 +1,76 @@
+- name: check /var/lib/docker/
+  ansible.builtin.stat:
+      # ВАЖНО, без / в конце
+      path: /var/lib/docker
+  register: docker_directory_state
+
+- name: find files in /var/lib/docker/
+  ansible.builtin.find:
+      paths: /var/lib/docker
+      recurse: no
+  register: docker_directory_contents
+
+- name: check {{ secondary_disk_mount_point }}/.docker/
+  ansible.builtin.stat:
+      path: "{{ secondary_disk_mount_point }}/.docker/"
+  register: docker_new_directory_state
+
+- name: stop docker.service
+  ansible.builtin.systemd:
+      name: docker.service
+      state: stopped
+  when: not docker_directory_state.stat.islnk
+
+- name: stop docker.socket
+  ansible.builtin.systemd:
+      name: docker.socket
+      state: stopped
+  when: not docker_directory_state.stat.islnk
+
+- name: create {{ secondary_disk_mount_point }}/.docker/ directory if it doesn't exist
+  ansible.builtin.file:
+      path: "{{ secondary_disk_mount_point }}/.docker/"
+      state: directory
+      owner: root
+      group: root
+      mode: "0750"
+  when:
+      - not docker_new_directory_state.stat.exists
+
+- name: move docker files to {{ secondary_disk_mount_point }}/.docker/ if /var/lib/docker/ is not a symlink
+  ansible.builtin.shell:
+      cmd: mv /var/lib/docker/* {{ secondary_disk_mount_point }}/.docker/
+  when:
+      - docker_directory_state.stat.exists
+      - not docker_directory_state.stat.islnk
+      - docker_directory_contents.matched > 0
+
+- name: remove /var/lib/docker/ if it's not a symlink
+  ansible.builtin.file:
+      path: /var/lib/docker/
+      state: absent
+  when:
+      - docker_directory_state.stat.exists
+      - not docker_directory_state.stat.islnk
+
+- name: create symlink from {{ secondary_disk_mount_point }}/.docker/ to /var/lib/docker/ if /var/lib/docker/ is not a symlink
+  ansible.builtin.file:
+      src: "{{ secondary_disk_mount_point }}/.docker/"
+
+      # ВАЖНО, без / в конце
+      dest: /var/lib/docker
+      state: link
+  when:
+      - not docker_directory_state.stat.islnk
+
+- name: start docker.service
+  ansible.builtin.systemd:
+      name: docker.service
+      state: started
+  when: not docker_directory_state.stat.islnk
+
+- name: start docker.socket
+  ansible.builtin.systemd:
+      name: docker.socket
+      state: started
+  when: not docker_directory_state.stat.islnk

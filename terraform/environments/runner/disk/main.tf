@@ -41,4 +41,29 @@ locals {
   parsed_servers_and_disks = jsondecode(data.local_file.servers_and_disks.content)
   servers_and_disks_hrl    = local.parsed_servers_and_disks["hrl"]["runner"]
   servers_and_disks_strl   = local.parsed_servers_and_disks["strl"]["runner"]
+  servers_and_disks_space  = local.parsed_servers_and_disks["space"]["runner"]
+}
+
+module "disk-hrl-gitlab-runner-test" {
+  source = "../../../modules/yandex/disk"
+
+  for_each = {
+    for key, value in local.servers_and_disks_hrl : key => value if length(regexall("(gitlab-runner-test)", key)) > 0
+  }
+
+  secondary_disk_name        = "hrl-${local.disk_name_mask}-${each.key}"
+  secondary_disk_description = "HRL-DISK-runner-${each.value}"
+  secondary_disk_size        = 20
+}
+
+module "disk-space-gitlab-runner-docker" {
+  source = "../../../modules/yandex/disk"
+
+  for_each = {
+    for key, value in local.servers_and_disks_space : key => value if length(regexall("(gitlab-runner-docker)", key)) > 0
+  }
+
+  secondary_disk_name        = "space-${local.disk_name_mask}-${each.key}"
+  secondary_disk_description = "SPACE-DISK-runner-${each.value}"
+  secondary_disk_size        = 100
 }

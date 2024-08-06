@@ -1,14 +1,41 @@
-- name: check if gitlab-runner home directory exists
-  ansible.builtin.stat:
-      path: "{{ gitlab_runner_home_directory_path }}"
-  register: gitlab_runner_home_stat
-  when: ansible_hostname | regex_search('runner')
+# # пока не нужно, т.к. "проекты" раннера теперь располагаются в /var/hrlink/ с 775 правами, а не в его домашней директории
+# - name: check if gitlab-runner home directory exists
+#   ansible.builtin.stat:
+#       path: "{{ gitlab_runner_home_directory_path }}"
+#   register: gitlab_runner_home_stat
+#   when: ansible_hostname | regex_search('runner')
 
-- name: change mode of a gitlab-runner home directory
+# - name: change mode of a gitlab-runner home directory
+#   ansible.builtin.file:
+#       path: "{{ gitlab_runner_home_directory_path }}"
+#       mode: "0775"
+#       owner: "{{ gitlab_runner_username }}"
+#       group: "{{ gitlab_runner_username }}"
+#       state: directory
+#   when: (ansible_hostname | regex_search('runner')) and gitlab_runner_home_stat.stat.exists and gitlab_runner_username != ''
+
+# если сервер -- gitlab-runner
+- name: mount point set permissions gitlab-runner
   ansible.builtin.file:
-      path: "{{ gitlab_runner_home_directory_path }}"
+      path: "{{ secondary_disk_mount_point }}"
       mode: "0775"
       owner: "{{ gitlab_runner_username }}"
       group: "{{ gitlab_runner_username }}"
       state: directory
-  when: (ansible_hostname | regex_search('runner')) and gitlab_runner_home_stat.stat.exists and gitlab_runner_username != ''
+  when: inventory_hostname | regex_search('gitlab-runner')
+
+- name: ensure cron job for docker system prune is present
+  ansible.builtin.cron:
+      name: "docker system prune"
+      user: "gitlab-runner"
+      minute: "0"
+      hour: "*"
+      job: 'docker system prune -af --filter "until=1h"'
+
+- name: ensure cron job for docker volume prune is present
+  ansible.builtin.cron:
+      name: "docker volume prune"
+      user: "gitlab-runner"
+      minute: "0"
+      hour: "0"
+      job: 'docker volume prune -af --filter "until=1h"'

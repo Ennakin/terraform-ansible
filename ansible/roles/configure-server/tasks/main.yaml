@@ -7,7 +7,8 @@
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|regress|staging|onprem|sales|prod|runner|infra|mock'))
 
 - import_tasks: mount-disk.yaml
-  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|infra|mock')) and not (inventory_hostname | regex_search('runner'))
+  when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|infra|runner|mock'))
+#   when: ansible_facts['distribution'] in ubuntu_list and secondary_disk_mount_point != '' and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|infra|mock')) and not (inventory_hostname | regex_search('runner'))
 
 - import_tasks: mount-filesystem.yaml
   when: ansible_facts['distribution'] in ubuntu_list and filesystem_name != '' and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))
@@ -18,6 +19,9 @@
 
 - import_tasks: install-docker.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|runner|infra|mock'))
+
+- import_tasks: docker-work-dir-change.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('runner'))
 
 - import_tasks: install-ftp-server.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))
