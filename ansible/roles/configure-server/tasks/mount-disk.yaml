@@ -12,6 +12,32 @@
       dev: /dev/vdb1
       state: present
 
+- name: get size of /dev/vdb
+  ansible.builtin.command: "lsblk -nb -o SIZE /dev/vdb"
+  register: vdb_size
+
+- name: get size of /dev/vdb1
+  ansible.builtin.command: "lsblk -nb -o SIZE /dev/vdb1"
+  register: vdb1_size
+
+# # кажется что пакет установлен по дефолту, но пусть таск побудет здесь на всякий
+# - name: ensure cloud-utils-growpart is installed
+#   ansible.builtin.package:
+#       name: cloud-utils-growpart
+#   state: present
+
+- name: resize the partition if needed using growpart
+  ansible.builtin.command: "growpart /dev/vdb 1"
+  when: vdb_size.stdout | int > vdb1_size.stdout | int
+
+- name: inform the OS of partition table changes
+  ansible.builtin.command: "partprobe /dev/vdb"
+  when: vdb_size.stdout | int > vdb1_size.stdout | int
+
+- name: resize the filesystem on /dev/vdb1
+  ansible.builtin.command: "resize2fs /dev/vdb1"
+  when: vdb_size.stdout | int > vdb1_size.stdout | int
+
 - name: create mount point
   ansible.builtin.file:
       path: "{{ secondary_disk_mount_point }}"
@@ -27,10 +53,11 @@
       opts: defaults,nofail
 
 # если по простому, то изменить здесь на 775
-- name: mount point set permissions
+- name: mount point set permissions jenkins
   ansible.builtin.file:
       path: "{{ secondary_disk_mount_point }}"
       mode: "0775"
       owner: jenkins
       group: jenkins
       state: directory
+  when: not inventory_hostname | regex_search('gitlab-runner')

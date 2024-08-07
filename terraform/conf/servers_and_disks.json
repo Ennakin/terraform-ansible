@@ -77,7 +77,9 @@
         "prod": {}
     },
     "space": {
-        "runner": {},
+        "runner": {
+            "gitlab-runner-docker-1": "gitlab-runner-docker-1"
+        },
         "infra": {
             "grafana-external": "grafana-external"
         },
