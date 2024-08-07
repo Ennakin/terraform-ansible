@@ -52,7 +52,14 @@
       path: "{{ secondary_disk_mount_point }}/working-data/.env"
       regexp: "^INSTANCE_HOST=.*$"
       replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2:] | join("") }}'
-  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
+
+- name: replace test-stress-services INSTANCE_HOST value in .env file
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^INSTANCE_HOST=.*$"
+      replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2:] | join("-") }}'
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(test-stress-services).*$'))
 
 - name: replace regress-release INSTANCE_HOST value in .env file
   ansible.builtin.replace:
@@ -95,7 +102,14 @@
       path: "{{ secondary_disk_mount_point }}/working-data/.env"
       regexp: "^HOST_IP=.*$"
       replace: "HOST_IP=10.70.1.104"
-  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
+
+- name: replace HOST_IP value in .env file by test-stress-services
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^HOST_IP=.*$"
+      replace: "HOST_IP=10.70.1.116"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-services).*$'))
 
 - name: replace MAX_MEM value in .env file by test-stress
   ansible.builtin.replace:

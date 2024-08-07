@@ -48,12 +48,25 @@ module "disk-hrl" {
   source = "../../../modules/yandex/disk"
 
   for_each = {
-    for key, value in local.servers_and_disks_hrl : key => value if key != "stress-1"
+    for key, value in local.servers_and_disks_hrl : key => value if length(regexall("(stress)", key)) == 0
   }
 
   secondary_disk_name        = "hrl-${local.disk_name_mask}-${each.key}"
   secondary_disk_description = "HRL-DISK-test-${each.value}"
   secondary_disk_size        = var.secondary_disk_size
+}
+
+module "disk-hrl-middle-ssd" {
+  source = "../../../modules/yandex/disk"
+
+  for_each = {
+    for key, value in local.servers_and_disks_hrl : key => value if key == "stress-services"
+  }
+
+  secondary_disk_name        = "hrl-${local.disk_name_mask}-${each.key}"
+  secondary_disk_description = "HRL-DISK-test-${each.value}"
+  secondary_disk_size        = 100
+  secondary_disk_type        = "network-ssd"
 }
 
 module "disk-hrl-large-ssd" {
