@@ -1,24 +1,27 @@
-- name: perform disk setup if /dev/vdb1 is not in /etc/fstab
+# TODO необходимо сделать resize таски для корня (/) на случай если он будет увеличиваться
+# в conf.json уже есть переменные main_disk_device_name & main_disk_partition_name & main_disk_mount_point
+
+- name: perform disk setup if {{ secondary_disk_device_name }} is not in /etc/fstab
   ansible.builtin.parted:
-      device: /dev/vdb
+      device: "{{ secondary_disk_device_name }}"
       number: 1
       state: present
       align: optimal
       part_end: 100%
 
-- name: create ext4 filesystem on /dev/vdb1
+- name: create ext4 filesystem on {{ secondary_disk_partition_name }}
   ansible.builtin.filesystem:
       fstype: ext4
-      dev: /dev/vdb1
+      dev: "{{ secondary_disk_partition_name }}"
       state: present
 
-- name: get size of /dev/vdb
-  ansible.builtin.command: "lsblk -nb -o SIZE /dev/vdb"
-  register: vdb_size
+- name: get size of {{ secondary_disk_device_name }}
+  ansible.builtin.command: "lsblk -nb -o SIZE {{ secondary_disk_device_name }}"
+  register: device_size
 
-- name: get size of /dev/vdb1
-  ansible.builtin.command: "lsblk -nb -o SIZE /dev/vdb1"
-  register: vdb1_size
+- name: get size of {{ secondary_disk_partition_name }}
+  ansible.builtin.command: "lsblk -nb -o SIZE {{ secondary_disk_partition_name }}"
+  register: partition_size
 
 # # кажется что пакет установлен по дефолту, но пусть таск побудет здесь на всякий
 # - name: ensure cloud-utils-growpart is installed
@@ -26,34 +29,34 @@
 #       name: cloud-utils-growpart
 #   state: present
 
-- name: resize the partition if needed using growpart
-  ansible.builtin.command: "growpart /dev/vdb 1"
-  when: vdb_size.stdout | int > vdb1_size.stdout | int
+- name: resize the partition {{ secondary_disk_device_name }} if needed using growpart
+  ansible.builtin.command: "growpart {{ secondary_disk_device_name }} 1"
+  when: device_size.stdout | int > partition_size.stdout | int
 
-- name: inform the OS of partition table changes
-  ansible.builtin.command: "partprobe /dev/vdb"
-  when: vdb_size.stdout | int > vdb1_size.stdout | int
+- name: inform the OS of partition {{ secondary_disk_device_name }} table changes
+  ansible.builtin.command: "partprobe {{ secondary_disk_device_name }}"
+  when: device_size.stdout | int > partition_size.stdout | int
 
-- name: resize the filesystem on /dev/vdb1
-  ansible.builtin.command: "resize2fs /dev/vdb1"
-  when: vdb_size.stdout | int > vdb1_size.stdout | int
+- name: resize the filesystem on {{ secondary_disk_partition_name }}
+  ansible.builtin.command: "resize2fs {{ secondary_disk_partition_name }}"
+  when: device_size.stdout | int > partition_size.stdout | int
 
-- name: create mount point
+- name: create mount point {{ secondary_disk_mount_point }}
   ansible.builtin.file:
       path: "{{ secondary_disk_mount_point }}"
       mode: "0755"
       state: directory
 
-- name: mount /dev/vdb1 to mount point
+- name: mount {{ secondary_disk_partition_name }} to mount point
   ansible.builtin.mount:
-      src: /dev/vdb1
+      src: "{{ secondary_disk_partition_name }}"
       path: "{{ secondary_disk_mount_point }}"
       fstype: ext4
       state: mounted
       opts: defaults,nofail
 
 # если по простому, то изменить здесь на 775
-- name: mount point set permissions jenkins
+- name: mount point {{ secondary_disk_mount_point }} set permissions jenkins
   ansible.builtin.file:
       path: "{{ secondary_disk_mount_point }}"
       mode: "0775"

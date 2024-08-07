@@ -22,7 +22,14 @@ app_list_all:
 app_list_nginx:
     - nginx
 
+main_disk_device_name: "{{ conf.main_disk_device_name }}"
+main_disk_partition_name: "{{ conf.main_disk_partition_name }}"
+main_disk_mount_point: "{{ conf.main_disk_mount_point }}"
+
+secondary_disk_device_name: "{{ conf.secondary_disk_device_name }}"
+secondary_disk_partition_name: "{{ conf.secondary_disk_partition_name }}"
 secondary_disk_mount_point: "{{ conf.secondary_disk_mount_point }}"
+
 filesystem_name: "{{ conf.filesystem_name }}"
 
 jenkins_master_node_host: "{{ conf.jenkins_master_node_host }}"

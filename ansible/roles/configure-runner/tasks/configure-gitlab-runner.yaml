@@ -23,19 +23,3 @@
       group: "{{ gitlab_runner_username }}"
       state: directory
   when: inventory_hostname | regex_search('gitlab-runner')
-
-- name: ensure cron job for docker system prune is present
-  ansible.builtin.cron:
-      name: "docker system prune"
-      user: "gitlab-runner"
-      minute: "0"
-      hour: "*"
-      job: 'docker system prune -af --filter "until=1h"'
-
-- name: ensure cron job for docker volume prune is present
-  ansible.builtin.cron:
-      name: "docker volume prune"
-      user: "gitlab-runner"
-      minute: "0"
-      hour: "0"
-      job: 'docker volume prune -af --filter "until=1h"'

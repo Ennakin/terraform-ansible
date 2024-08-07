@@ -34,3 +34,6 @@
 
 - import_tasks: add-dns-for-hosts.yaml
   when: ansible_facts['distribution'] in ubuntu_list
+
+- import_tasks: add-cron-jobs.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|runner'))

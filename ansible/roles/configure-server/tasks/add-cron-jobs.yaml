@@ -1,0 +1,26 @@
+- name: ensure cron job for server_clean.sh is present
+  ansible.builtin.cron:
+      name: "server_clean.sh"
+      user: "jenkins"
+      minute: "0"
+      hour: "17"
+      job: "/bin/bash {{ secondary_disk_mount_point }}/vms/scripts/server_clean.sh"
+  when: not inventory_hostname | regex_search('runner')
+
+- name: ensure cron job for docker system prune is present
+  ansible.builtin.cron:
+      name: "docker system prune"
+      user: "gitlab-runner"
+      minute: "0"
+      hour: "*"
+      job: 'docker system prune -af --filter "until=1h"'
+  when: inventory_hostname | regex_search('runner')
+
+- name: ensure cron job for docker volume prune is present
+  ansible.builtin.cron:
+      name: "docker volume prune"
+      user: "gitlab-runner"
+      minute: "0"
+      hour: "0"
+      job: 'docker volume prune -af --filter "until=1h"'
+  when: inventory_hostname | regex_search('runner')
