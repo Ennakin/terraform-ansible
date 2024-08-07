@@ -91,7 +91,7 @@ module "vm-test-hrl" {
   name        = "hrl-${local.vm_name_mask}-${each.key}"
   hostname    = "hrl-${local.vm_name_mask}-${each.key}"
   description = "HRL-VM-test-${each.value}"
-  preemptible = var.preemptible
+  preemptible = !contains(["auto-2"], each.key)
   nat         = false
 
   cpu                = var.cpu
