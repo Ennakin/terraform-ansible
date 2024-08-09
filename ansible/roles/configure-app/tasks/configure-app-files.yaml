@@ -38,7 +38,7 @@
       path: "{{ secondary_disk_mount_point }}/working-data/.env"
       regexp: "^INSTANCE_HOST=.*$"
       replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[1:] | join("") }}'
-  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(dev|test|devops|staging).*$')) and not (ansible_hostname | regex_search('\\b(auto|stress|regress|kaspersky).*$'))
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(dev|test|devops|staging).*$')) and not (ansible_hostname | regex_search('\\b(auto|stress|regress|kaspersky|mobile).*$'))
 
 - name: replace test-auto INSTANCE_HOST value in .env file
   ansible.builtin.replace:
@@ -61,26 +61,33 @@
       replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2:] | join("-") }}'
   when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(test-stress-services).*$'))
 
-- name: replace regress-release INSTANCE_HOST value in .env file
+- name: replace test-regress-release INSTANCE_HOST value in .env file
   ansible.builtin.replace:
       path: "{{ secondary_disk_mount_point }}/working-data/.env"
       regexp: "^INSTANCE_HOST=.*$"
       replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2] }}'
   when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(regress-release).*$'))
 
-- name: replace regress-master INSTANCE_HOST value in .env file
+- name: replace test-regress-master INSTANCE_HOST value in .env file
   ansible.builtin.replace:
       path: "{{ secondary_disk_mount_point }}/working-data/.env"
       regexp: "^INSTANCE_HOST=.*$"
       replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[3] }}'
   when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(regress-master).*$'))
 
-- name: replace kaspersky-app INSTANCE_HOST value in .env file
+- name: replace test-kaspersky-app INSTANCE_HOST value in .env file
   ansible.builtin.replace:
       path: "{{ secondary_disk_mount_point }}/working-data/.env"
       regexp: "^INSTANCE_HOST=.*$"
       replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2] }}'
   when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(kaspersky-app).*$'))
+
+- name: replace dev-mobile INSTANCE_HOST value in .env file
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^INSTANCE_HOST=.*$"
+      replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2:] | join("") }}'
+  when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(dev-mobile).*$'))
 
 # - name: replace MAX_MEM value in .env file by regress-release and regress-master
 #   ansible.builtin.replace:
