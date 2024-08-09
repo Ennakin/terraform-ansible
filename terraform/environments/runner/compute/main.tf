@@ -89,7 +89,7 @@ module "vm-gitlab-runner-hrl-middle-test" {
   name        = "hrl-${each.key}"
   hostname    = "hrl-${each.key}"
   description = "HRL-VM-${each.value}"
-  preemptible = var.preemptible
+  preemptible = !contains(["gitlab-runner-test-2"], each.key)
   nat         = var.nat
 
   cpu                = var.cpu
