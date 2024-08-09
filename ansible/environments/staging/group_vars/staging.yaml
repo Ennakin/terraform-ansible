@@ -1,9 +1,17 @@
 group_list:
+    developer: {}
     tester: {}
     engineer: {}
     systems-analyst: {}
 
 user_list:
+    developer:
+        {
+            comment: "developer",
+            groups: ["developer", "docker"],
+            shell: "/bin/bash",
+            home: "/home/developer/",
+        }
     tester:
         {
             comment: "tester",
