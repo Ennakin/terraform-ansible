@@ -1,6 +1,9 @@
 # TODO необходимо сделать resize таски для корня (/) на случай если он будет увеличиваться
 # в conf.json уже есть переменные main_disk_device_name & main_disk_partition_name & main_disk_mount_point
 
+# TODO resize корня (/) судя по всему не имеет смысла, т.к. terraform при изменении размера корня пересоздаёт vm-ку, автоматически размечая при этом диск..
+
+# второй диск
 - name: perform disk setup if {{ secondary_disk_device_name }} is not in /etc/fstab
   ansible.builtin.parted:
       device: "{{ secondary_disk_device_name }}"
