@@ -87,7 +87,7 @@ module "vm-staging-hrl" {
   name        = "hrl-${local.vm_name_mask}-${each.key}"
   hostname    = "hrl-${local.vm_name_mask}-${each.key}"
   description = "HRL-VM-staging-${each.value}"
-  preemptible = var.preemptible
+  preemptible = false
   nat         = false
 
   cpu                = var.cpu
