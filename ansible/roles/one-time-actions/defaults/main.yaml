@@ -1,0 +1,3 @@
+docker_hub_address: "{{ conf.docker_hub_address }}"
+docker_hub_username: "{{ conf.docker_hub_username }}"
+docker_hub_password: "{{ lookup('env', 'DOCKER_HUB_PASSWORD', default='') }}"

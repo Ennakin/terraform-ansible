@@ -4,6 +4,72 @@
       state: latest
       #   update_cache: true
 
+- name: check {{ postgresql_data_dir }}
+  ansible.builtin.stat:
+      # ВАЖНО, без / в конце
+      path: "{{ postgresql_data_dir }}"
+  register: postgresql_directory_state
+
+- name: find files in {{ postgresql_data_dir }}
+  ansible.builtin.find:
+      paths: "{{ postgresql_data_dir }}"
+      recurse: no
+  register: postgresql_directory_contents
+
+- name: check {{ secondary_disk_mount_point }}/.postgresql/
+  ansible.builtin.stat:
+      path: "{{ secondary_disk_mount_point }}/.postgresql/"
+  register: postgresql_new_directory_state
+
+- name: stop postgresql.service
+  ansible.builtin.systemd:
+      name: postgresql.service
+      state: stopped
+  when: not postgresql_directory_state.stat.islnk
+
+- name: create {{ secondary_disk_mount_point }}/.postgresql/ directory if it doesn't exist
+  ansible.builtin.file:
+      path: "{{ secondary_disk_mount_point }}/.postgresql/"
+      state: directory
+      owner: postgres
+      group: postgres
+      mode: "0755"
+  when:
+      - not postgresql_new_directory_state.stat.exists
+
+- name: move postgresql files to {{ secondary_disk_mount_point }}/.postgresql/ if {{ postgresql_data_dir }} is not a symlink
+  ansible.builtin.shell:
+      cmd: mv {{ postgresql_data_dir }}/* {{ secondary_disk_mount_point }}/.postgresql/
+  when:
+      - postgresql_directory_state.stat.exists
+      - not postgresql_directory_state.stat.islnk
+      - postgresql_directory_contents.matched > 0
+
+- name: remove {{ postgresql_data_dir }} if it's not a symlink
+  ansible.builtin.file:
+      path: "{{ postgresql_data_dir }}/"
+      state: absent
+  when:
+      - postgresql_directory_state.stat.exists
+      - not postgresql_directory_state.stat.islnk
+
+- name: create symlink from {{ secondary_disk_mount_point }}/.postgresql/ to {{ postgresql_data_dir }} if {{ postgresql_data_dir }} is not a symlink
+  ansible.builtin.file:
+      src: "{{ secondary_disk_mount_point }}/.postgresql/"
+
+      # ВАЖНО, без / в конце
+      dest: "{{ postgresql_data_dir }}"
+      state: link
+  when:
+      - not postgresql_directory_state.stat.islnk
+
+- name: start postgresql.service
+  ansible.builtin.systemd:
+      name: postgresql.service
+      state: started
+  when: not postgresql_directory_state.stat.islnk
+
+# написать условие, если на каком-то сервере postgresql всё таки нужно включить
 - name: stop postgresql service
   service:
       name: postgresql

@@ -1,12 +1,12 @@
-- name: check /var/lib/docker/
+- name: check {{ docker_data_dir }}
   ansible.builtin.stat:
       # ВАЖНО, без / в конце
-      path: /var/lib/docker
+      path: "{{ docker_data_dir }}"
   register: docker_directory_state
 
-- name: find files in /var/lib/docker/
+- name: find files in {{ docker_data_dir }}
   ansible.builtin.find:
-      paths: /var/lib/docker
+      paths: "{{ docker_data_dir }}"
       recurse: no
   register: docker_directory_contents
 
@@ -37,28 +37,29 @@
   when:
       - not docker_new_directory_state.stat.exists
 
-- name: move docker files to {{ secondary_disk_mount_point }}/.docker/ if /var/lib/docker/ is not a symlink
-  ansible.builtin.shell:
-      cmd: mv /var/lib/docker/* {{ secondary_disk_mount_point }}/.docker/
-  when:
-      - docker_directory_state.stat.exists
-      - not docker_directory_state.stat.islnk
-      - docker_directory_contents.matched > 0
+# # перемещение может слишком долго длиться, проще удалять
+# - name: move docker files to {{ secondary_disk_mount_point }}/.docker/ if {{ docker_data_dir }} is not a symlink
+#   ansible.builtin.shell:
+#       cmd: mv {{ docker_data_dir }}/* {{ secondary_disk_mount_point }}/.docker/
+#   when:
+#       - docker_directory_state.stat.exists
+#       - not docker_directory_state.stat.islnk
+#       - docker_directory_contents.matched > 0
 
-- name: remove /var/lib/docker/ if it's not a symlink
+- name: remove {{ docker_data_dir }} if it's not a symlink
   ansible.builtin.file:
-      path: /var/lib/docker/
+      path: "{{ docker_data_dir }}/"
       state: absent
   when:
       - docker_directory_state.stat.exists
       - not docker_directory_state.stat.islnk
 
-- name: create symlink from {{ secondary_disk_mount_point }}/.docker/ to /var/lib/docker/ if /var/lib/docker/ is not a symlink
+- name: create symlink from {{ secondary_disk_mount_point }}/.docker/ to {{ docker_data_dir }} if {{ docker_data_dir }} is not a symlink
   ansible.builtin.file:
       src: "{{ secondary_disk_mount_point }}/.docker/"
 
       # ВАЖНО, без / в конце
-      dest: /var/lib/docker
+      dest: "{{ docker_data_dir }}"
       state: link
   when:
       - not docker_directory_state.stat.islnk

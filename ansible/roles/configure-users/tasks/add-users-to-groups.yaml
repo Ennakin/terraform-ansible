@@ -16,7 +16,7 @@
   ansible.builtin.find:
       paths: /home
       file_type: directory
-      excludes: "gitlab"
+      # excludes: "gitlab"
   register: home_directories_docker
 
 - name: extract usernames from user directories
