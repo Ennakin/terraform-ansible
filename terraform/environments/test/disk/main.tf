@@ -53,7 +53,7 @@ module "disk-hrl" {
 
   secondary_disk_name        = "hrl-${local.disk_name_mask}-${each.key}"
   secondary_disk_description = "HRL-DISK-test-${each.value}"
-  secondary_disk_size        = var.secondary_disk_size
+  secondary_disk_size        = 70
 }
 
 module "disk-hrl-middle-ssd" {

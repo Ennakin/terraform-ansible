@@ -7,3 +7,39 @@
   ansible.builtin.shell:
       cmd: "sudo rm /some/file/on/server.txt"
   when: file_exists.stat.exists and ansible_hostname | regex_search('hrl')
+
+# - name: docker compose down
+#   ansible.builtin.shell:
+#       cmd: "cd /var/hrlink/vms/ && docker compose down"
+#   when: ansible_facts['distribution'] in ubuntu_list and not (inventory_hostname | regex_search('stress|admin'))
+
+# - name: server clean
+#   ansible.builtin.shell:
+#       cmd: "/bin/bash /var/hrlink/vms/scripts/server_clean.sh"
+#   when: ansible_facts['distribution'] in ubuntu_list and not (inventory_hostname | regex_search('stress|admin'))
+
+# - name: cp config
+#   ansible.builtin.shell:
+#       cmd: "cp /var/hrlink/working-data/.env /var/hrlink/vms/.env"
+#   when: ansible_facts['distribution'] in ubuntu_list and not (inventory_hostname | regex_search('stress|admin'))
+
+# - name: docker compose up -d
+#   ansible.builtin.shell:
+#       cmd: "cd /var/hrlink/vms/ && docker login {{ docker_hub_address }} --username {{ docker_hub_username }} --password {{ docker_hub_password }} && docker compose up -d"
+#   when: ansible_facts['distribution'] in ubuntu_list and not (inventory_hostname | regex_search('stress|admin'))
+
+# - name: stop docker.service
+#   ansible.builtin.systemd:
+#       name: docker.service
+#       state: stopped
+# #   when: not docker_directory_state.stat.islnk
+
+# - name: stop docker.socket
+#   ansible.builtin.systemd:
+#       name: docker.socket
+#       state: stopped
+# #   when: not docker_directory_state.stat.islnk
+
+# - name: rm .docker/
+#   ansible.builtin.shell:
+#       cmd: "sudo rm -rf /var/hrlink/.docker/"

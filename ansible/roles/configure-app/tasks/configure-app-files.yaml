@@ -89,12 +89,19 @@
       replace: 'INSTANCE_HOST=app-{{ ansible_hostname.split("-")[2:] | join("") }}'
   when: (hrl_archive_stat.stat.exists or strl_archive_stat.stat.exists) and (ansible_hostname | regex_search('\\b(dev-mobile).*$'))
 
-# - name: replace MAX_MEM value in .env file by regress-release and regress-master
-#   ansible.builtin.replace:
-#     path: "{{ secondary_disk_mount_point }}/working-data/.env"
-#     regexp: "^MAX_MEM=.*$"
-#     replace: "MAX_MEM=7000"
-#   when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(regress).*$'))
+- name: replace HOST_IP value in .env file by regress-release
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^HOST_IP=.*$"
+      replace: "HOST_IP=10.70.1.39"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(regress-release).*$'))
+
+- name: replace MAX_MEM value in .env file by regress-release and regress-master
+  ansible.builtin.replace:
+    path: "{{ secondary_disk_mount_point }}/working-data/.env"
+    regexp: "^MAX_MEM=.*$"
+    replace: "MAX_MEM=16000"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(regress).*$'))
 
 # - name: replace EKD_MONOLITH_MEM_ALLOC value in .env file by regress-release and regress-master
 #   ansible.builtin.replace:

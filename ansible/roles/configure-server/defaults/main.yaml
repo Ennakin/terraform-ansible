@@ -30,6 +30,9 @@ secondary_disk_device_name: "{{ conf.secondary_disk_device_name }}"
 secondary_disk_partition_name: "{{ conf.secondary_disk_partition_name }}"
 secondary_disk_mount_point: "{{ conf.secondary_disk_mount_point }}"
 
+docker_data_dir: "{{ conf.docker_data_dir }}"
+postgresql_data_dir: "{{ conf.postgresql_data_dir }}"
+
 filesystem_name: "{{ conf.filesystem_name }}"
 
 jenkins_master_node_host: "{{ conf.jenkins_master_node_host }}"
