@@ -9,3 +9,6 @@ user_list:
             shell: "/bin/bash",
             home: "/home/tester/",
         }
+
+app_list_environment:
+    - kafkacat

@@ -3,3 +3,9 @@
       name: "{{ app_list_all | default([]) }}"
       state: present
       update_cache: true
+
+- name: install environment packages
+  apt:
+      name: "{{  app_list_environment | default([]) }}"
+      state: present
+      update_cache: false
