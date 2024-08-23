@@ -52,3 +52,6 @@ user_list_external_pflb:
             shell: "/bin/bash",
             home: "/home/pflb-outsource/",
         }
+
+app_list_environment:
+    - kafkacat
