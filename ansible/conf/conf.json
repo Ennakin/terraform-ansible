@@ -23,7 +23,9 @@
         "ehodkevich",
         "ekovalchuk",
         "yueremin",
-        "mburov"
+        "mburov",
+        "dsemenov",
+        "vvelsovsky"
     ],
     "users_jenkins": [
         "anozdrin",
@@ -31,7 +33,9 @@
         "ehodkevich",
         "ekovalchuk",
         "yueremin",
-        "mburov"
+        "mburov",
+        "dsemenov",
+        "vvelsovsky"
     ],
     "users_service": [
         "anozdrin",
@@ -39,6 +43,8 @@
         "ehodkevich",
         "ekovalchuk",
         "yueremin",
-        "mburov"
+        "mburov",
+        "dsemenov",
+        "vvelsovsky"
     ]
 }

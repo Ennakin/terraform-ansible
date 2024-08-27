@@ -1,3 +1,25 @@
 docker_hub_address: "{{ conf.docker_hub_address }}"
 docker_hub_username: "{{ conf.docker_hub_username }}"
 docker_hub_password: "{{ lookup('env', 'DOCKER_HUB_PASSWORD', default='') }}"
+
+# новые devops-ы которых нужно добавить на сервера
+group_list_cloud_config:
+    dsemenov: {}
+    vvelsovsky: {}
+
+user_list_cloud_config:
+    dsemenov:
+        {
+            comment: "dsemenov",
+            groups: ["dsemenov", "sudo"],
+            shell: "/bin/bash",
+            home: "/home/dsemenov/",
+        }
+
+    vvelsovsky:
+        {
+            comment: "vvelsovsky",
+            groups: ["vvelsovsky", "sudo"],
+            shell: "/bin/bash",
+            home: "/home/vvelsovsky/",
+        }

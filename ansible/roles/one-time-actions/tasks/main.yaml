@@ -6,5 +6,8 @@
 # - import_tasks: conf-show.yaml
 #   when: ansible_facts['distribution'] in ubuntu_list
 
-- import_tasks: delete-file.yaml
-  when: ansible_facts['distribution'] in ubuntu_list
+# - import_tasks: delete-file.yaml
+#   when: ansible_facts['distribution'] in ubuntu_list
+
+# - import_tasks: create-users-cloud-config.yaml
+#   when: ansible_facts['distribution'] in ubuntu_list
