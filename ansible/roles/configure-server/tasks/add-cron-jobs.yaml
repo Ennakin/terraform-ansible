@@ -24,3 +24,12 @@
       hour: "0"
       job: 'docker volume prune -af --filter "until=1h"'
   when: inventory_hostname | regex_search('runner')
+
+- name: ensure cron job for integral deploy on dev branch is present
+  ansible.builtin.cron:
+      name: "integral deploy on dev branch"
+      user: "jenkins"
+      minute: "*/5"
+      hour: "*"
+      job: "cd /var/hrlink/vms && make deploy s=integral v=dev"
+  when: inventory_hostname | regex_search('hrl-staging-1')
