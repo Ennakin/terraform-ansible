@@ -4,13 +4,33 @@
       name: docker
       state: present
 
+# - name: adding users to docker group
+#   user:
+#       name: "{{ item }}"
+#       groups: docker
+#       append: true
+#       state: present
+#   loop: "{{ user_list_docker | default([]) }}"
+
+- name: check if user exists for docker group
+  ansible.builtin.getent:
+      database: passwd
+      key: "{{ item }}"
+  register: user_check_docker
+  loop: "{{ user_list_docker | default([]) }}"
+  ignore_errors: true
+  changed_when: false
+
 - name: adding users to docker group
-  user:
+  ansible.builtin.user:
       name: "{{ item }}"
       groups: docker
       append: true
       state: present
   loop: "{{ user_list_docker | default([]) }}"
+  when:
+      - "item in user_check_docker.results | map(attribute='item')"
+      - "user_check_docker.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
 
 - name: find all user directories in /home
   ansible.builtin.find:
@@ -28,16 +48,53 @@
       cmd: "sudo -u {{ item }} docker login {{ docker_hub_address }} --username {{ docker_hub_username }} --password {{ docker_hub_password }}"
   loop: "{{ user_names }}"
 
-# jenkins
+# # jenkins
+# - name: adding users to jenkins group
+#   user:
+#       name: "{{ item }}"
+#       groups: jenkins
+#       append: true
+#       state: present
+#   loop: "{{ user_list_jenkins | default([]) }}"
+
+- name: check if user exists for jenkins group
+  ansible.builtin.getent:
+      database: passwd
+      key: "{{ item }}"
+  register: user_check_jenkins
+  loop: "{{ user_list_jenkins | default([]) }}"
+  ignore_errors: true
+  changed_when: false
+
 - name: adding users to jenkins group
-  user:
+  ansible.builtin.user:
       name: "{{ item }}"
       groups: jenkins
       append: true
       state: present
   loop: "{{ user_list_jenkins | default([]) }}"
+  when:
+      - "item in user_check_jenkins.results | map(attribute='item')"
+      - "user_check_jenkins.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
 
-# service
+# # service
+# - name: adding users to service group
+#   user:
+#       name: "{{ item }}"
+#       groups: service
+#       append: true
+#       state: present
+#   loop: "{{ user_list_service | default([]) }}"
+
+- name: check if user exists for service group
+  ansible.builtin.getent:
+      database: passwd
+      key: "{{ item }}"
+  register: user_check_service
+  loop: "{{ user_list_service | default([]) }}"
+  ignore_errors: true
+  changed_when: false
+
 - name: adding users to service group
   user:
       name: "{{ item }}"
@@ -45,3 +102,6 @@
       append: true
       state: present
   loop: "{{ user_list_service | default([]) }}"
+  when:
+      - "item in user_list_service.results | map(attribute='item')"
+      - "user_list_service.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
