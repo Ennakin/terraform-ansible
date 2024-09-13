@@ -225,7 +225,7 @@ module "vm-test-strl" {
   nat         = false
 
   cpu                = 4
-  ram                = 12
+  ram                = contains(["kaspersky-app"], each.key) ? 16 : 12
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.CLOUD_CONFIG)
