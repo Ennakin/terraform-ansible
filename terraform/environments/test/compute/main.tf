@@ -95,7 +95,7 @@ module "vm-test-hrl" {
   nat         = false
 
   cpu                = var.cpu
-  ram                = 24
+  ram                = contains(["kaspersky-app"], each.key) ? 30 : 24
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.CLOUD_CONFIG)
