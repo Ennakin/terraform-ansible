@@ -77,6 +77,27 @@
       - "item in user_check_jenkins.results | map(attribute='item')"
       - "user_check_jenkins.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
 
+# gitlab-runner
+- name: check if user exists for gitlab-runner group
+  ansible.builtin.getent:
+      database: passwd
+      key: "{{ item }}"
+  register: user_check_gitlab_runner
+  loop: "{{ user_list_gitlab_runner | default([]) }}"
+  ignore_errors: true
+  changed_when: false
+
+- name: adding users to gitlab-runner group
+  ansible.builtin.user:
+      name: "{{ item }}"
+      groups: gitlab-runner
+      append: true
+      state: present
+  loop: "{{ user_list_gitlab_runner | default([]) }}"
+  when:
+      - "item in user_check_gitlab_runner.results | map(attribute='item')"
+      - "user_check_gitlab_runner.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
+
 # # service
 # - name: adding users to service group
 #   user:

@@ -6,6 +6,7 @@ docker_hub_username: "{{ conf.docker_hub_username }}"
 docker_hub_password: "{{ lookup('env', 'DOCKER_HUB_PASSWORD', default='') }}"
 
 user_list_jenkins: "{{ conf.users_jenkins }}"
+user_list_gitlab_runner: "{{ conf.users_gitlab_runner }}"
 user_list_docker: "{{ conf.users_docker }}"
 
 bash_aliases:
