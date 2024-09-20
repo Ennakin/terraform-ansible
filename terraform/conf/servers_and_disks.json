@@ -37,7 +37,7 @@
             "12": "asokhareva",
             "13": "eponomareva",
             "15": "dgordeeva",
-            "16": "dgudov",
+            "16": "bpershko",
             "19": "nanufriev",
             "20": "emelnikova",
             "25": "sviridovsk",
@@ -66,7 +66,6 @@
         },
         "dev": {},
         "test": {
-            "1": "yunovikova",
             "2": "echekryzhova",
             "kaspersky-app": "kaspersky-app"
         },
