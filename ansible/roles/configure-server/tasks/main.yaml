@@ -22,6 +22,9 @@
 - import_tasks: docker-work-dir-change.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|runner|infra|mock'))
 
+- import_tasks: docker-override-conf.yaml
+  when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging|onprem|sales|prod|runner|infra|mock'))
+
 - import_tasks: install-ftp-server.yaml
   when: ansible_facts['distribution'] in ubuntu_list and (inventory_hostname | regex_search('dev|test|devops|staging')) and not (inventory_hostname | regex_search('runner'))
 

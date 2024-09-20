@@ -8,6 +8,7 @@
     "secondary_disk_mount_point": "/var/hrlink",
     "docker_data_dir": "/var/lib/docker",
     "postgresql_data_dir": "/var/lib/postgresql",
+    "docker_override_conf": "/etc/systemd/system/docker.service.d/override.conf",
     "docker_hub_address": "docker.hr-link.ru",
     "docker_hub_username": "tester",
     "gitlab_runner_username": "gitlab-runner",

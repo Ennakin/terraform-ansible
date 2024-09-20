@@ -1,0 +1,40 @@
+- name: check if docker installed
+  command: which docker
+  register: docker_check
+  ignore_errors: true
+
+- name: create docker.service.d directory if not exists
+  file:
+      path: /etc/systemd/system/docker.service.d
+      state: directory
+      owner: root
+      group: root
+      mode: "0755"
+  when: docker_check.rc == 0
+
+- name: add {{ docker_override_conf }} with mount dependencies
+  copy:
+      dest: /etc/systemd/system/docker.service.d/override.conf
+
+      # форматированный для {{ docker_override_conf }}
+      # [Unit]
+      # Requires=var-hrlink.mount
+      # After=var-hrlink.mount
+      content: |
+          [Unit]
+          After="{{ secondary_disk_mount_point | regex_replace('^/', '') | replace('-', '\\x2d') | replace('/', '-') }}.mount"
+          Requires="{{ secondary_disk_mount_point | regex_replace('^/', '') | replace('-', '\\x2d') | replace('/', '-') }}.mount"
+      owner: root
+      group: root
+      mode: "0644"
+  when: docker_check.rc == 0
+
+- name: reload systemd to apply new configuration
+  command: systemctl daemon-reload
+  when: docker_check.rc == 0
+
+- name: restart docker service to apply the changes
+  service:
+      name: docker
+      state: restarted
+  when: docker_check.rc == 0

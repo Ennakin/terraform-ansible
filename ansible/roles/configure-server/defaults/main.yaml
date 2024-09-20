@@ -33,6 +33,8 @@ secondary_disk_mount_point: "{{ conf.secondary_disk_mount_point }}"
 docker_data_dir: "{{ conf.docker_data_dir }}"
 postgresql_data_dir: "{{ conf.postgresql_data_dir }}"
 
+docker_override_conf: "{{ conf.docker_override_conf }}"
+
 filesystem_name: "{{ conf.filesystem_name }}"
 
 jenkins_master_node_host: "{{ conf.jenkins_master_node_host }}"
