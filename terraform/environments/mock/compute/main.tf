@@ -82,7 +82,7 @@ module "vm-mock-hrl-small" {
 
   name        = "hrl-mock-${each.key}"
   hostname    = "hrl-mock-${each.key}"
-  description = "HRL-VM-${each.value}"
+  description = "HRL-VM-mock-${each.value}"
   preemptible = var.preemptible
   nat         = var.nat
 
