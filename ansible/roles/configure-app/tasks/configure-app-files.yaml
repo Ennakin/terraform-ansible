@@ -98,9 +98,9 @@
 
 - name: replace MAX_MEM value in .env file by regress-release and regress-master
   ansible.builtin.replace:
-    path: "{{ secondary_disk_mount_point }}/working-data/.env"
-    regexp: "^MAX_MEM=.*$"
-    replace: "MAX_MEM=16000"
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^MAX_MEM=.*$"
+      replace: "MAX_MEM=16000"
   when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(regress).*$'))
 
 # - name: replace EKD_MONOLITH_MEM_ALLOC value in .env file by regress-release and regress-master
@@ -111,7 +111,7 @@
 #   when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(regress).*$'))
 
 # начало test-stress
-- name: replace HOST_IP value in .env file by test-stress
+- name: replace HOST_IP value in .env file by test-stress-1
   ansible.builtin.replace:
       path: "{{ secondary_disk_mount_point }}/working-data/.env"
       regexp: "^HOST_IP=.*$"
@@ -180,6 +180,55 @@
       regexp: "^MIN_CPU=.*$"
       replace: "MIN_CPU=0.50"
   when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress).*$'))
+
+- name: replace LICENSE_HOST value in .env file by test-stress-1
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^LICENSE_HOST=.*$"
+      replace: "LICENSE_HOST=https://app-stress-services-license.myhrlink.ru"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
+
+- name: replace PECHKIN_HOST value in .env file by test-stress-1
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^PECHKIN_HOST=.*$"
+      replace: "PECHKIN_HOST=https://app-stress-services-pechkin.myhrlink.ru"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
+
+- name: replace ZORRO_WEB_HOST value in .env file by test-stress-1
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^ZORRO_WEB_HOST=.*$"
+      replace: "ZORRO_WEB_HOST=https://app-stress-services-web.myhrlink.ru"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
+
+- name: replace SHARED_FILE_HOST value in .env file by test-stress-1
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^SHARED_FILE_HOST=.*$"
+      replace: "SHARED_FILE_HOST=https://app-stress-services-shared-file.myhrlink.ru"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
+
+- name: replace PINBOARD_HOST value in .env file by test-stress-1
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^PINBOARD_HOST=.*$"
+      replace: "PINBOARD_HOST=https://app-stress-services-pinboard.myhrlink.ru"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
+
+- name: replace KITCUT_HOST value in .env file by test-stress-1
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^KITCUT_HOST=.*$"
+      replace: "KITCUT_HOST=https://app-stress-services-kitcut.myhrlink.ru"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
+
+- name: replace GANDALF_HOST value in .env file by test-stress-1
+  ansible.builtin.replace:
+      path: "{{ secondary_disk_mount_point }}/working-data/.env"
+      regexp: "^GANDALF_HOST=.*$"
+      replace: "GANDALF_HOST=https://app-stress-services-gandalf.myhrlink.ru/"
+  when: hrl_archive_stat.stat.exists and (ansible_hostname | regex_search('\\b(test-stress-1).*$'))
 # конец test-stress
 
 # директория conf/ распаковывается полностью если её нет на диске
