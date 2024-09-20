@@ -57,6 +57,12 @@
 #       state: present
 #   loop: "{{ user_list_jenkins | default([]) }}"
 
+- name: check if group jenkins exists
+  ansible.builtin.command: "getent group jenkins"
+  register: jenkins_group_exists
+  ignore_errors: true
+  changed_when: false
+
 - name: check if user exists for jenkins group
   ansible.builtin.getent:
       database: passwd
@@ -74,10 +80,17 @@
       state: present
   loop: "{{ user_list_jenkins | default([]) }}"
   when:
+      - jenkins_group_exists.rc == 0
       - "item in user_check_jenkins.results | map(attribute='item')"
       - "user_check_jenkins.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
 
 # gitlab-runner
+- name: check if group gitlab-runner exists
+  ansible.builtin.command: "getent group gitlab-runner"
+  register: gitlab_runner_group_exists
+  ignore_errors: true
+  changed_when: false
+
 - name: check if user exists for gitlab-runner group
   ansible.builtin.getent:
       database: passwd
@@ -95,6 +108,7 @@
       state: present
   loop: "{{ user_list_gitlab_runner | default([]) }}"
   when:
+      - gitlab_runner_group_exists.rc == 0
       - "item in user_check_gitlab_runner.results | map(attribute='item')"
       - "user_check_gitlab_runner.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
 
@@ -106,6 +120,12 @@
 #       append: true
 #       state: present
 #   loop: "{{ user_list_service | default([]) }}"
+
+- name: check if group service exists
+  ansible.builtin.command: "getent group service"
+  register: service_group_exists
+  ignore_errors: true
+  changed_when: false
 
 - name: check if user exists for service group
   ansible.builtin.getent:
@@ -124,5 +144,6 @@
       state: present
   loop: "{{ user_list_service | default([]) }}"
   when:
-      - "item in user_list_service.results | map(attribute='item')"
-      - "user_list_service.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
+      - service_group_exists.rc == 0
+      - "item in user_check_service.results | map(attribute='item')"
+      - "user_check_service.results | selectattr('item', 'equalto', item) | map(attribute='failed') | first == false"
