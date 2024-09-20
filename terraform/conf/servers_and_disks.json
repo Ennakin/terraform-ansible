@@ -83,7 +83,8 @@
     },
     "space": {
         "runner": {
-            "gitlab-runner-docker-1": "gitlab-runner-docker-1"
+            "gitlab-runner-docker-1": "gitlab-runner-docker-1",
+            "gitlab-runner-docker-2": "gitlab-runner-docker-2"
         },
         "infra": {
             "grafana-external": "grafana-external"

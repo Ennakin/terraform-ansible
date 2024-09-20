@@ -118,8 +118,8 @@ module "vm-gitlab-runner-space-middle-docker" {
   preemptible = false
   nat         = var.nat
 
-  cpu                = 16
-  ram                = 16
+  cpu                = contains(["gitlab-runner-docker-1"], each.key) ? 16 : 4
+  ram                = contains(["gitlab-runner-docker-1"], each.key) ? 16 : 12
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.CLOUD_CONFIG)

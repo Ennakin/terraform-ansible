@@ -65,5 +65,5 @@ module "disk-space-gitlab-runner-docker" {
 
   secondary_disk_name        = "space-${local.disk_name_mask}-${each.key}"
   secondary_disk_description = "SPACE-DISK-runner-${each.value}"
-  secondary_disk_size        = 100
+  secondary_disk_size        = contains(["gitlab-runner-docker-1"], each.key) ? 200 : 100
 }
