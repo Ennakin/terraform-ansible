@@ -85,7 +85,7 @@ module "vm-test-hrl" {
   source = "../../../modules/yandex/vm"
 
   for_each = {
-    for key, value in local.servers_and_disks_hrl : key => value if key != "regress-release" && !contains(["regress-master", "stress-1", "stress-services"], key)
+    for key, value in local.servers_and_disks_hrl : key => value if key != "regress-release" && !contains(["regress-master", "stress-1", "stress-services", "stress-db"], key)
   }
 
   name        = "hrl-${local.vm_name_mask}-${each.key}"
@@ -148,6 +148,32 @@ module "vm-test-hrl-stress-services" {
 
   cpu                = 16
   ram                = 32
+  boot_disk_image_id = local.boot_disk_image_id
+  boot_disk_size     = var.boot_disk_size
+  cloud_config_path  = file(var.CLOUD_CONFIG)
+
+  subnetwork_id           = data.yandex_vpc_subnet.subnetwork.id
+  secondary_disk_image_id = local.disk_name_mask != "" ? data.yandex_compute_disk.secondary_disk_hrl[each.key].id : ""
+
+  filesystem_id          = local.filesystem_name_mask != "" ? data.yandex_compute_filesystem.fs_hrl[0].id : ""
+  filesystem_device_name = local.filesystem_name_mask != "" ? "hrl-${local.filesystem_device_name_mask}" : ""
+}
+
+module "vm-test-hrl-stress-db" {
+  source = "../../../modules/yandex/vm"
+
+  for_each = {
+    for key, value in local.servers_and_disks_hrl : key => value if key == "stress-db"
+  }
+
+  name        = "hrl-${local.vm_name_mask}-${each.key}"
+  hostname    = "hrl-${local.vm_name_mask}-${each.key}"
+  description = "HRL-VM-test-${each.value}"
+  preemptible = var.preemptible
+  nat         = false
+
+  cpu                = 24
+  ram                = 24
   boot_disk_image_id = local.boot_disk_image_id
   boot_disk_size     = var.boot_disk_size
   cloud_config_path  = file(var.CLOUD_CONFIG)

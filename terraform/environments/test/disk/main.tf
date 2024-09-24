@@ -82,6 +82,19 @@ module "disk-hrl-large-ssd" {
   secondary_disk_type        = "network-ssd"
 }
 
+module "disk-hrl-ultra-large-ssd" {
+  source = "../../../modules/yandex/disk"
+
+  for_each = {
+    for key, value in local.servers_and_disks_hrl : key => value if key == "stress-db"
+  }
+
+  secondary_disk_name        = "hrl-${local.disk_name_mask}-${each.key}"
+  secondary_disk_description = "HRL-DISK-test-${each.value}"
+  secondary_disk_size        = 700
+  secondary_disk_type        = "network-ssd"
+}
+
 module "disk-strl" {
   source = "../../../modules/yandex/disk"
 
